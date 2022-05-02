@@ -1,0 +1,24 @@
+{
+	"name": "Learn by subtitle",
+	"description": "Save udemy notes as a pdf",
+	"version": "1.0",
+	"manifest_version": 3,
+	"permissions": [
+		"activeTab",
+		"scripting"
+	],
+	"action": {
+		"default_popup": "popup.html"
+	},
+	"content_scripts": [
+		{
+			"matches": [
+				"https://www.netflix.com/watch/*"
+			],
+			
+			"js": [
+				"index.js"
+			]
+		}
+	]
+}
