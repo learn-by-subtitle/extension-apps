@@ -13,8 +13,8 @@ document.addEventListener('keyup', (event) => {
 	})
 })
 
-function createSpanForWords(parentTag) {
-	let words = parentTag.textContent.split(' ');
+function createSpanForWords(parentTag:Element) {
+	let words = parentTag.textContent!.split(' ');
 
 	words.forEach(word => {
 		word = `<span>${word}</span>`
