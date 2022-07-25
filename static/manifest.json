@@ -15,9 +15,9 @@
 			"matches": [
 				"https://www.netflix.com/watch/*"
 			],
-
+			"css": [],
 			"js": [
-				"index.js"
+				"main.js"
 			]
 		}
 	]
