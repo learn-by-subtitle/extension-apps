@@ -1,14 +1,24 @@
 console.log("Learn by subtitle added");
 
 import { createApp } from "vue";
+import components from './common/components/components';
 import rootComponent from "./App.vue";
 
 let appDiv = document.createElement("div");
+document.body.append(appDiv);
+
 appDiv.id = "app";
 appDiv.style.position = "relative";
+appDiv.style.zIndex = "9999";
 
-document.body.append(appDiv);
-createApp(rootComponent as any).mount("#app");
+let vueApp = createApp(rootComponent as any);
+
+Object.keys(components).forEach(name => {
+	let component = (components as any)[name]
+	vueApp.component(name, component);
+})
+
+vueApp.mount("#app");
 
 // document.addEventListener("keyup", (event) => {
 //   if (event.code != "Space") return;
