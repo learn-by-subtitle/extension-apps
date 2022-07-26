@@ -13,13 +13,14 @@ module.exports = {
 		rules: [
 			//
 			{
-				test: /\.ts?$/,
-				use: 'ts-loader',
-				exclude: /node_modules/,
-			},
-			{
 				test: /\.vue$/,
 				loader: 'vue-loader'
+			},
+			{
+				test: /\.ts?$/,
+				loader: 'ts-loader',
+				exclude: /node_modules/,
+				options: { appendTsSuffixTo: [/\.vue$/] },
 			},
 			// this will apply to both plain `.css` files
 			// AND `<style>` blocks in `.vue` files
