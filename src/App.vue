@@ -1,24 +1,28 @@
 <template>
-  <div class="vue">Hi this is vue app</div>
+  <NetflixApp v-if="getWebsiteType() == 'NETFLIX'" />
 </template>
 
-<script>
-export default {
-	data() {
-		return {
-			name:'component'
-		}
-	},
+<script lang="ts">
+import { defineComponent } from "vue";
 
-	created() {
-		console.log('from vue app');
-	}
-}
+import NetflixApp from "./module/netflix/NetflixApp.vue";
+
+export default defineComponent({
+  components: { NetflixApp },
+
+  methods: {
+    getWebsiteType() {
+      if (location.hostname.includes("netflix")) {
+        return "NETFLIX";
+      } else if (location.hostname.includes("youtube")) {
+        return "YOUTUBE";
+      } else {
+        return "UNKNOWN";
+      }
+    },
+  },
+});
 </script>
 
 <style>
-.vue {
-	background-color: blue;
-	z-index: 9999;
-}
 </style>
