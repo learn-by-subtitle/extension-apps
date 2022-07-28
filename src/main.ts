@@ -1,4 +1,4 @@
-console.log("Learn by subtitle added");
+console.log('Learn by subtitle 0.0');
 
 import { createApp } from "vue";
 import components from './common/components/components';

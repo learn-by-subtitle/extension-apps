@@ -23,7 +23,7 @@ export default {
         left: this.positionRect.x + "px",
         top: this.positionRect.top + "px",
         width: this.positionRect.width + "px",
-        height: this.positionRect.height + "px",
+        // height: this.positionRect.height + "px",
       };
     },
   },

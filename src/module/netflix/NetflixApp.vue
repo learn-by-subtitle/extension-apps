@@ -32,7 +32,7 @@ export default defineComponent({
   },
 
   mounted() {
-    console.log("from Netflix app");
+    console.log("Activated for NETFLIX");
     this.addWatcherForSubtitleContainer();
   },
 
@@ -58,17 +58,18 @@ export default defineComponent({
 
         this.fontSize = span.style.fontSize;
       });
-
-      console.log(this.position);
     },
 
     async addWatcherForSubtitleContainer() {
+      console.log("## Seeking for subtitle node")
       await this.findSubtitleContainer();
 
       this.observer = new MutationObserver(this.onSubtileChange);
       this.observer.observe(this.subtitleContainer as HTMLElement, {
         childList: true,
       });
+
+      console.log('## Watcher added for subtitle node');
     },
 
     async findSubtitleContainer() {
