@@ -2,15 +2,16 @@
   <subtitle
     v-show="active"
     :positionRect="position"
-    :text="text"
+    :textList="textList"
     :fontSize="fontSize"
+    :hoverable="true"
   />
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import { SUBTITLE_CLASS } from "../../config/static";
-import { wait, waitUntil } from "../../common/helper/promise";
+import { waitUntil } from "../../common/helper/promise";
 
 export default defineComponent({
   data(): {
@@ -29,6 +30,12 @@ export default defineComponent({
       observer: null,
       subtitleContainer: null,
     };
+  },
+
+  computed: {
+    textList(): Array<string> {
+      return this.text.split("<br>");
+    },
   },
 
   mounted() {
@@ -53,15 +60,17 @@ export default defineComponent({
 
       this.text = "";
       spans?.forEach((span) => {
-        if (!this.text.includes(span.textContent || ""))
-          this.text += span.textContent;
+        let innerHTML = span.innerHTML;
 
-        this.fontSize = span.style.fontSize;
-      });
+        if (!innerHTML.startsWith("<span")) {
+          this.text += innerHTML;
+          this.fontSize = span.style.fontSize;
+        }
+      });      
     },
 
     async addWatcherForSubtitleContainer() {
-      console.log("## Seeking for subtitle node")
+      console.log("## Seeking for subtitle node");
       await this.findSubtitleContainer();
 
       this.observer = new MutationObserver(this.onSubtileChange);
@@ -69,7 +78,7 @@ export default defineComponent({
         childList: true,
       });
 
-      console.log('## Watcher added for subtitle node');
+      console.log("## Watcher added for subtitle node");
     },
 
     async findSubtitleContainer() {
