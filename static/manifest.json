@@ -5,7 +5,9 @@
 	"manifest_version": 3,
 	"permissions": [
 		"activeTab",
-		"scripting"
+		"scripting",
+		"https://*.google.com/",
+		"https://*.googleapis.com/"
 	],
 	"action": {
 		"default_popup": "popup.html"
