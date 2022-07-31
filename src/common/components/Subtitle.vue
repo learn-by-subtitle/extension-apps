@@ -3,7 +3,7 @@
     TRANSLATE CONTENT
   -->
   <div :style="translateStyle">
-    {{normalizePhrase(activeTranslate)}}
+    {{ normalizePhrase(activeTranslate) }}
   </div>
 
   <!-- 
@@ -37,6 +37,7 @@
 
 <script lang="ts">
 import { defineComponent, StyleValue } from "vue";
+import { clamp } from "../helper/math";
 import { TranslateService } from "../services/translate.service";
 import { Dictionary, SubtitleBundingBox } from "../types/general.type";
 
@@ -71,38 +72,40 @@ export default defineComponent({
         top: this.positionRect.top - 10 + "px",
         width: this.positionRect.width + "px",
         height: this.positionRect.height + "px",
-        ...this.textStyle as any,
+        ...(this.textStyle as any),
       };
     },
 
     translateStyle(): StyleValue {
       if (!this.positionRect) return {};
 
+      let top = this.positionRect.top - clamp(this.positionRect.height, 100, 200);
+
       return {
         position: "absolute",
         "font-size": this.textStyle?.fontSize || "22px",
         // background: "black",
         left: this.positionRect.left - 8 + "px",
-        top: this.positionRect.top - 100 + "px",
+        top: top + "px",
         width: this.positionRect.width + "px",
         // height: this.positionRect.height + "px",
-        textAlign:"center",
+        textAlign: "center",
         opacity: this.activeWord.length ? 1 : 0,
-        transition: 'all ease 200ms'
+        transition: "all ease 200ms",
       };
     },
 
-
-
     activeTranslate() {
-      return this.translatedWords[this.activeWord] || ''
-    }
+      return this.translatedWords[this.activeWord] || "";
+    },
   },
 
   watch: {
     textList: {
       deep: true,
       handler(value: Array<string>, old: Array<string>) {
+        this.activeWord = '';
+        
         if (!value || !value.length) return;
         if (JSON.stringify(value) == JSON.stringify(old)) return;
 
