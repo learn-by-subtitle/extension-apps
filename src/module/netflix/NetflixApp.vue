@@ -2,8 +2,8 @@
   <subtitle
     v-show="active"
     :positionRect="position"
-    :textList="textList"
-    :fontSize="fontSize"
+    :textList="text"
+    :textStyle="style"
     :hoverable="true"
   />
 </template>
@@ -12,30 +12,25 @@
 import { defineComponent } from "vue";
 import { SUBTITLE_CLASS } from "../../config/static";
 import { waitUntil } from "../../common/helper/promise";
+import { SubtitleBundingBox } from "../../common/types/general.type";
 
 export default defineComponent({
   data(): {
     active: boolean;
-    position: null | DOMRect;
-    text: string;
-    fontSize: string;
+    position: SubtitleBundingBox;
+    text: string[];
+    style: CSSStyleDeclaration | {};
     observer: null | MutationObserver;
     subtitleContainer: null | HTMLElement;
   } {
     return {
       active: false,
-      position: null,
-      text: "",
-      fontSize: "",
+      position: { width: 0, top: 0, left: 0, height:0 },
+      text: [],
+      style: {},
       observer: null,
       subtitleContainer: null,
     };
-  },
-
-  computed: {
-    textList(): Array<string> {
-      return this.text.split("<br>");
-    },
   },
 
   mounted() {
@@ -52,21 +47,62 @@ export default defineComponent({
       console.log("Subtitle changed");
 
       this.active = true;
-      this.position = this.subtitleContainer
-        ?.querySelector(SUBTITLE_CLASS)
-        ?.getBoundingClientRect() as DOMRect;
 
+      // Get first line Rect
+      //
+      let firstRect = this.subtitleContainer
+        ?.querySelector(SUBTITLE_CLASS)
+        ?.getBoundingClientRect();
+
+      this.position = {
+        width: firstRect?.width || 0,
+        top: firstRect?.top || 0,
+        left: firstRect?.left || 0,
+        height: firstRect?.height || 0,
+      };
+
+      let minLeft = this.position.left;
+      let minRight = firstRect?.right || 0;
+      let minBottom = firstRect?.bottom || 0;
+
+      // Get All lines
+      //
       let spans = this.subtitleContainer?.querySelectorAll("span");
 
-      this.text = "";
+      this.text = [];
       spans?.forEach((span) => {
         let innerHTML = span.innerHTML;
 
         if (!innerHTML.startsWith("<span")) {
-          this.text += innerHTML;
-          this.fontSize = span.style.fontSize;
+          this.text.push(span.textContent as string);
+
+          this.style = {
+            fontSize: span.style.fontSize,
+            textAlign: span.style.textAlign,
+          };
+
+          // check if this span has bigger width
+          // then replace it width default Rect width
+          let spanRect = span.getBoundingClientRect();
+
+          if (spanRect.left < minLeft) {
+            minLeft = spanRect.left;
+          }
+
+          if (spanRect.right > minRight) {
+            minRight = spanRect.right;
+          }
+
+          if(spanRect.bottom > minBottom) {
+            minBottom = spanRect.bottom
+          }
         }
-      });      
+      });
+      
+      // Caculate subtitle bunding box
+      this.position.width = minRight - minLeft;
+      this.position.height = minBottom - this.position.top;
+      this.position.left = minLeft;
     },
 
     async addWatcherForSubtitleContainer() {
