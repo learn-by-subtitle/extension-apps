@@ -79,7 +79,8 @@ export default defineComponent({
     translateStyle(): StyleValue {
       if (!this.positionRect) return {};
 
-      let top = this.positionRect.top - clamp(this.positionRect.height, 100, 200);
+      let top =
+        this.positionRect.top - clamp(this.positionRect.height, 100, 200);
 
       return {
         position: "absolute",
@@ -104,10 +105,11 @@ export default defineComponent({
     textList: {
       deep: true,
       handler(value: Array<string>, old: Array<string>) {
-        this.activeWord = '';
-        
-        if (!value || !value.length) return;
         if (JSON.stringify(value) == JSON.stringify(old)) return;
+
+        this.activeWord = "";
+
+        if (!value || !value.length) return;
 
         this.translateWords();
       },
