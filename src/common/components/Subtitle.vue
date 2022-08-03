@@ -71,7 +71,7 @@ export default defineComponent({
         left: this.positionRect.left - 10 + "px",
         top: this.positionRect.top - 10 + "px",
         width: this.positionRect.width + "px",
-        height: this.positionRect.height + "px",
+        // height: this.positionRect.height + "px",
         ...(this.textStyle as any),
       };
     },
@@ -105,6 +105,8 @@ export default defineComponent({
     textList: {
       deep: true,
       handler(value: Array<string>, old: Array<string>) {
+        console.log('## Recieved new text list');
+        
         if (JSON.stringify(value) == JSON.stringify(old)) return;
 
         this.activeWord = "";
@@ -149,8 +151,6 @@ export default defineComponent({
           this.translatedWords[word] = resultList[i];
         });
       });
-
-      console.log("## translateWords", this.translateWords);
     },
   },
 });
