@@ -1,3 +1,5 @@
+import { App } from "vue";
+
 export type Dictionary = {
   [key: string]: any;
 };
@@ -8,3 +10,5 @@ export type SubtitleBundingBox = {
   width: number,
   height: number,
 }
+
+export type AppInitializer = (app:App) => void

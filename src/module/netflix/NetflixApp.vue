@@ -25,7 +25,7 @@ export default defineComponent({
   } {
     return {
       active: false,
-      position: { width: 0, top: 0, left: 0, height:0 },
+      position: { width: 0, top: 0, left: 0, height: 0 },
       text: [],
       style: {},
       observer: null,
@@ -35,7 +35,9 @@ export default defineComponent({
 
   mounted() {
     console.log("Activated for NETFLIX");
+    
     this.addWatcherForSubtitleContainer();
+    window.addEventListener("resize", this.addWatcherForSubtitleContainer);
   },
 
   deactivated() {
@@ -44,8 +46,7 @@ export default defineComponent({
 
   methods: {
     onSubtileChange() {
-      console.log("Subtitle changed");
-
+      
       this.active = true;
 
       // Get first line Rect
@@ -81,8 +82,8 @@ export default defineComponent({
             textAlign: span.style.textAlign,
           };
 
-          // check if this span has bigger width
-          // then replace it width default Rect width
+          // Check if this span has bigger width
+          // Then replace it width default Rect width
           let spanRect = span.getBoundingClientRect();
 
           if (spanRect.left < minLeft) {
@@ -93,23 +94,30 @@ export default defineComponent({
             minRight = spanRect.right;
           }
 
-          if(spanRect.bottom > minBottom) {
-            minBottom = spanRect.bottom
+          if (spanRect.bottom > minBottom) {
+            minBottom = spanRect.bottom;
           }
         }
       });
-      
+
       // Caculate subtitle bunding box
       this.position.width = minRight - minLeft;
       this.position.height = minBottom - this.position.top;
       this.position.left = minLeft;
+
+      console.log("## Subtitle changed", this.text);
     },
 
     async addWatcherForSubtitleContainer() {
       console.log("## Seeking for subtitle node");
       await this.findSubtitleContainer();
 
-      this.observer = new MutationObserver(this.onSubtileChange);
+      if (this.observer) {
+        this.observer.disconnect();
+      } else {
+        this.observer = new MutationObserver(this.onSubtileChange);
+      }
+
       this.observer.observe(this.subtitleContainer as HTMLElement, {
         childList: true,
       });
