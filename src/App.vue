@@ -5,7 +5,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
-import NetflixApp from "./module/netflix/NetflixApp.vue";
+import NetflixApp from "./module/netflix/Index.vue";
 
 export default defineComponent({
   components: { NetflixApp },

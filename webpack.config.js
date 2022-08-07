@@ -20,7 +20,9 @@ module.exports = {
 				test: /\.ts?$/,
 				loader: 'ts-loader',
 				exclude: /node_modules/,
-				options: { appendTsSuffixTo: [/\.vue$/] },
+				options: {
+					appendTsSuffixTo: [/\.vue$/]
+				},
 			},
 			// this will apply to both plain `.css` files
 			// AND `<style>` blocks in `.vue` files
@@ -28,9 +30,17 @@ module.exports = {
 				test: /\.css$/,
 				use: [
 					'vue-style-loader',
-					'css-loader'
+					'css-loader',
 				]
 			},
+			{
+				test: /\.scss$/,
+				use: [
+					'vue-style-loader',
+					'css-loader',
+					'sass-loader',
+				]
+			}
 		],
 	},
 

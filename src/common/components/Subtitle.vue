@@ -7,43 +7,63 @@
   </div>
 
   <!-- 
-      SIMPLE TEXT
+    SUBTITLE
   -->
-  <div v-if="!hoverable" class="container" :style="subtitleStyle">
-    <template v-for="(line, i) in textList" :key="i">
-      <br v-if="i > 0" />
-      <span>
-        {{ str(line) }}
-      </span>
-    </template>
-  </div>
-
-  <!-- 
-      HOVERABLE TEXT
-  -->
-  <div v-else class="container" :style="subtitleStyle">
-    <template v-for="(line, i) in textList" :key="i">
-      <br v-if="i > 0" />
-      <word
-        v-for="(word, i2) in line.split(' ')"
-        :key="i2"
-        :modelValue="str(word) + ' '"
-        @mouseenter="activeWord = word"
-        @mouseleave="activeWord = ''"
+  <div v-if="textList?.length" class="container" :style="subtitleStyle">
+    <!-- 
+      TRANSLATE ICON
+    -->
+    <div class="icon" :style="iconContainerStyle">
+      <img
+        v-if="!translateAll"
+        :src="translateIcon"
+        @click="translateAll = true"
       />
-    </template>
+      <img v-if="translateAll" :src="closeIcon" @click="translateAll = false" />
+    </div>
+
+    <!-- 
+      TRANSLATED LINES
+    -->
+    <div v-if="translateAll">
+      <template v-for="(line, i) in lines" :key="i">
+        <br v-if="i > 0" />
+        <span>
+          {{ line }}
+        </span>
+      </template>
+    </div>
+
+    <!-- 
+      TRANSLATE WORDS
+    -->
+    <div v-else>
+      <template v-for="(line, i) in textList" :key="i">
+        <br v-if="i > 0" />
+        <word
+          v-for="(word, i2) in line.split(' ')"
+          :key="i2"
+          :modelValue="word + ' '"
+          @mouseenter="activeWord = word"
+          @mouseleave="activeWord = ''"
+        />
+      </template>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, StyleValue } from "vue";
 import { clamp } from "../helper/math";
+import { TRANSLATE_ICON, CLOSE_ICON } from "../icons/icons";
 import { TranslateService } from "../services/translate.service";
-import { Dictionary, SubtitleBundingBox } from "../types/general.type";
+import { Dictionary } from "../types/general.type";
 
 interface DataModel {
   translatedWords: Dictionary;
+  translatedLines: String[];
   activeWord: string;
+  translateAll: boolean;
 }
 
 export default defineComponent({
@@ -51,17 +71,26 @@ export default defineComponent({
     positionRect: Object,
     textList: [String],
     textStyle: CSSStyleDeclaration,
-    hoverable: Boolean,
   },
 
   data(): DataModel {
     return {
       translatedWords: {},
+      translatedLines: [],
       activeWord: "",
+      translateAll: false,
     };
   },
 
   computed: {
+    lines() {
+      let lines = this.translatedLines.length
+        ? this.translatedLines
+        : this.textList;
+
+      return lines as string[];
+    },
+
     subtitleStyle(): StyleValue {
       if (!this.positionRect) return {};
 
@@ -99,14 +128,28 @@ export default defineComponent({
     activeTranslate() {
       return this.translatedWords[this.activeWord] || "";
     },
+
+    iconContainerStyle() {
+      return {
+        height: this.positionRect?.height + "px",
+      };
+    },
+
+    translateIcon() {
+      return TRANSLATE_ICON;
+    },
+
+    closeIcon() {
+      return CLOSE_ICON;
+    },
   },
 
   watch: {
     textList: {
       deep: true,
       handler(value: Array<string>, old: Array<string>) {
-        console.log('## Recieved new text list');
-        
+        console.log("## Recieved new text list");
+
         if (JSON.stringify(value) == JSON.stringify(old)) return;
 
         this.activeWord = "";
@@ -119,10 +162,6 @@ export default defineComponent({
   },
 
   methods: {
-    str(line: string) {
-      return line.replaceAll("<br>", "");
-    },
-
     normalizePhrase(word: string) {
       ["[", "]", "."].forEach((remove) => {
         word = word.replaceAll(remove, "");
@@ -145,20 +184,57 @@ export default defineComponent({
 
     translateWords() {
       let words = this.getWordList();
+      let lines = this.textList as unknown as Array<string>;
+      let translatingList = [...lines, ...words];
 
-      TranslateService.instance.translate(words).then((resultList) => {
-        words.forEach((word, i) => {
-          this.translatedWords[word] = resultList[i];
+      this.translatedLines = [];
+      this.translatedWords = {};
+
+      TranslateService.instance
+        .translate(translatingList)
+        .then((resultList) => {
+
+          translatingList.forEach((result, i) => {
+            // Translated line
+            if (i < lines.length) {
+              this.translatedLines.push(resultList[i]);
+            }
+            // Translated Word
+            else {
+              this.translatedWords[result] = resultList[i];
+            }
+          });
         });
-      });
     },
   },
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .container {
+  position: relative;
   padding: 8px 10px;
   text-align: center;
+}
+
+.icon {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  left: -32px;
+  opacity: 0.1;
+  transition: all ease-in 200ms;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  img {
+    cursor: pointer;
+    width: 24px;
+  }
 }
 </style>
