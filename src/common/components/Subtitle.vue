@@ -185,7 +185,7 @@ export default defineComponent({
     translateWords() {
       let words = this.getWordList();
       let lines = this.textList as unknown as Array<string>;
-      let translatingList = [...lines, ...words];
+      let translatingList = [lines.join(), ...words];
 
       this.translatedLines = [];
       this.translatedWords = {};
@@ -193,10 +193,9 @@ export default defineComponent({
       TranslateService.instance
         .translate(translatingList)
         .then((resultList) => {
-
           translatingList.forEach((result, i) => {
             // Translated line
-            if (i < lines.length) {
+            if (i == 0) {
               this.translatedLines.push(resultList[i]);
             }
             // Translated Word
