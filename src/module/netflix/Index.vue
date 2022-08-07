@@ -35,7 +35,7 @@ export default defineComponent({
 
   mounted() {
     console.log("Activated for NETFLIX");
-    
+
     this.addWatcherForSubtitleContainer();
     window.addEventListener("resize", this.addWatcherForSubtitleContainer);
   },
@@ -46,7 +46,13 @@ export default defineComponent({
 
   methods: {
     onSubtileChange() {
-      
+      // Hide original Subtitle
+      //
+      let originalSubtitle = document.querySelector(
+        SUBTITLE_CLASS
+      ) as HTMLElement;
+      originalSubtitle.style.opacity = "0";
+
       this.active = true;
 
       // Get first line Rect

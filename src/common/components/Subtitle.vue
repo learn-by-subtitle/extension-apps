@@ -96,7 +96,7 @@ export default defineComponent({
 
       return {
         position: "absolute",
-        background: "black",
+        // background: "black",
         left: this.positionRect.left - 10 + "px",
         top: this.positionRect.top - 10 + "px",
         width: this.positionRect.width + "px",
