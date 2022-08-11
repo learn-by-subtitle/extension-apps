@@ -1,53 +1,59 @@
 <template>
-  <!-- 
+  <div>
+    <!-- 
     TRANSLATE CONTENT
   -->
-  <div :style="translateStyle">
-    {{ normalizePhrase(activeTranslate) }}
-  </div>
+    <div :style="translateStyle">
+      {{ normalizePhrase(activeTranslate) }}
+    </div>
 
-  <!-- 
+    <!-- 
     SUBTITLE
   -->
-  <div v-if="textList?.length" class="container" :style="subtitleStyle">
-    <!-- 
+    <div v-if="textList?.length" class="container" :style="subtitleStyle">
+      <!-- 
       TRANSLATE ICON
     -->
-    <div class="icon" :style="iconContainerStyle">
-      <img
-        v-if="!translateAll"
-        :src="translateIcon"
-        @click="translateAll = true"
-      />
-      <img v-if="translateAll" :src="closeIcon" @click="translateAll = false" />
-    </div>
+      <div class="icon" :style="iconContainerStyle">
+        <img
+          v-if="!translateAll"
+          :src="translateIcon"
+          @click="translateAll = true"
+        />
+        <img
+          v-if="translateAll"
+          :src="closeIcon"
+          @click="translateAll = false"
+        />
+      </div>
 
-    <!-- 
+      <!-- 
       TRANSLATED LINES
     -->
-    <div v-if="translateAll">
-      <template v-for="(line, i) in lines" :key="i">
-        <br v-if="i > 0" />
-        <span>
-          {{ line }}
-        </span>
-      </template>
-    </div>
+      <div v-if="translateAll">
+        <template v-for="(line, i) in lines" :key="i">
+          <br v-if="needBreak(i)" />
+          <span>
+            {{ line }}
+          </span>
+        </template>
+      </div>
 
-    <!-- 
+      <!-- 
       TRANSLATE WORDS
     -->
-    <div v-else>
-      <template v-for="(line, i) in textList" :key="i">
-        <br v-if="i > 0" />
-        <word
-          v-for="(word, i2) in line.split(' ')"
-          :key="i2"
-          :modelValue="word + ' '"
-          @mouseenter="activeWord = word"
-          @mouseleave="activeWord = ''"
-        />
-      </template>
+      <div v-else>
+        <template v-for="(line, i) in textList" :key="i">
+          <br v-if="needBreak(i)" />
+          <word
+            v-for="(word, i2) in line.split(' ')"
+            :key="i2"
+            :modelValue="word + ' '"
+            @mouseenter="activeWord = word"
+            @mouseleave="activeWord = ''"
+          />
+        </template>
+      </div>
     </div>
   </div>
 </template>
@@ -70,7 +76,7 @@ export default defineComponent({
   props: {
     positionRect: Object,
     textList: [String],
-    textStyle: CSSStyleDeclaration,
+    textStyle: Object,
   },
 
   data(): DataModel {
@@ -109,7 +115,7 @@ export default defineComponent({
       if (!this.positionRect) return {};
 
       let top =
-        this.positionRect.top - clamp(this.positionRect.height, 100, 200);
+        this.positionRect.top - clamp(this.positionRect.height, 50, 100);
 
       return {
         position: "absolute",
@@ -148,8 +154,6 @@ export default defineComponent({
     textList: {
       deep: true,
       handler(value: Array<string>, old: Array<string>) {
-        console.log("## Recieved new text list");
-
         if (JSON.stringify(value) == JSON.stringify(old)) return;
 
         this.activeWord = "";
@@ -162,6 +166,9 @@ export default defineComponent({
   },
 
   methods: {
+    needBreak(i: number) {
+      return !!(i > 0);
+    },
     normalizePhrase(word: string) {
       ["[", "]", "."].forEach((remove) => {
         word = word.replaceAll(remove, "");
@@ -171,7 +178,7 @@ export default defineComponent({
     },
 
     getWordList() {
-      let list = <string[]>[];
+      let list: string[] = [];
       let lines = this.textList as unknown as Array<string>;
 
       for (let i = 0; i < lines.length; i++) {
@@ -185,7 +192,7 @@ export default defineComponent({
     translateWords() {
       let words = this.getWordList();
       let lines = this.textList as unknown as Array<string>;
-      let translatingList = [lines.join(), ...words];
+      let translatingList = [lines.join("\n"), ...words];
 
       this.translatedLines = [];
       this.translatedWords = {};
@@ -224,7 +231,7 @@ export default defineComponent({
   justify-content: center;
 
   left: -32px;
-  opacity: 0.1;
+  opacity: 0.3;
   transition: all ease-in 200ms;
 
   &:hover {

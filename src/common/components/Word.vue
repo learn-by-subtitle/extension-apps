@@ -14,6 +14,7 @@ export default {
 span {
   transition: all ease 200ms;
 }
+
 span:hover {
   color: yellow;
 }

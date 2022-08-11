@@ -4,11 +4,18 @@ export type Dictionary = {
   [key: string]: any;
 };
 
-export type SubtitleBundingBox = {
-  top: number,
-  left: number,
-  width: number,
-  height: number,
-}
+export interface SubtitleBundingBox {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+};
 
-export type AppInitializer = (app:App) => void
+export interface AppInitializer {
+  website: {
+    host: string;
+    path: string;
+  };
+  component: any;
+  initializer: (app: App) => Promise<App>;
+}

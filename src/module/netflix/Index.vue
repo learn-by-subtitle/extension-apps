@@ -4,7 +4,6 @@
     :positionRect="position"
     :textList="text"
     :textStyle="style"
-    :hoverable="true"
   />
 </template>
 
@@ -13,6 +12,7 @@ import { defineComponent } from "vue";
 import { SUBTITLE_CLASS } from "../../config/static";
 import { waitUntil } from "../../common/helper/promise";
 import { SubtitleBundingBox } from "../../common/types/general.type";
+import { json } from "stream/consumers";
 
 export default defineComponent({
   data(): {
@@ -51,7 +51,8 @@ export default defineComponent({
       let originalSubtitle = document.querySelector(
         SUBTITLE_CLASS
       ) as HTMLElement;
-      originalSubtitle.style.opacity = "0";
+
+      if (originalSubtitle) originalSubtitle.style.opacity = "0";
 
       this.active = true;
 
@@ -111,11 +112,10 @@ export default defineComponent({
       this.position.height = minBottom - this.position.top;
       this.position.left = minLeft;
 
-      console.log("## Subtitle changed", this.text);
+      this.text = JSON.parse(JSON.stringify(this.text));
     },
 
     async addWatcherForSubtitleContainer() {
-      console.log("## Seeking for subtitle node");
       await this.findSubtitleContainer();
 
       if (this.observer) {
@@ -127,8 +127,6 @@ export default defineComponent({
       this.observer.observe(this.subtitleContainer as HTMLElement, {
         childList: true,
       });
-
-      console.log("## Watcher added for subtitle node");
     },
 
     async findSubtitleContainer() {
