@@ -3,8 +3,8 @@
     <!-- 
     TRANSLATE CONTENT
   -->
-    <div :style="translateStyle">
-      {{ normalizePhrase(activeTranslate) }}
+    <div class="translated-word" :style="translateStyle" :dir="dir">
+      <span>{{ normalizePhrase(activeTranslate) }}</span>
     </div>
 
     <!-- 
@@ -30,7 +30,7 @@
       <!-- 
       TRANSLATED LINES
     -->
-      <div v-if="translateAll">
+      <div v-if="translateAll" :dir="dir">
         <template v-for="(line, i) in lines" :key="i">
           <br v-if="needBreak(i)" />
           <span>
@@ -42,7 +42,7 @@
       <!-- 
       TRANSLATE WORDS
     -->
-      <div v-else>
+      <div v-else :dir="sourceDir">
         <template v-for="(line, i) in textList" :key="i">
           <br v-if="needBreak(i)" />
           <word
@@ -70,6 +70,7 @@ interface DataModel {
   translatedLines: String[];
   activeWord: string;
   translateAll: boolean;
+  sourceLanguage: string;
 }
 
 export default defineComponent({
@@ -85,6 +86,7 @@ export default defineComponent({
       translatedLines: [],
       activeWord: "",
       translateAll: false,
+      sourceLanguage: "en",
     };
   },
 
@@ -102,11 +104,9 @@ export default defineComponent({
 
       return {
         position: "absolute",
-        // background: "black",
         left: this.positionRect.left - 10 + "px",
         top: this.positionRect.top - 10 + "px",
         width: this.positionRect.width + "px",
-        // height: this.positionRect.height + "px",
         ...(this.textStyle as any),
       };
     },
@@ -120,11 +120,9 @@ export default defineComponent({
       return {
         position: "absolute",
         "font-size": this.textStyle?.fontSize || "22px",
-        // background: "black",
         left: this.positionRect.left - 8 + "px",
         top: top + "px",
         width: this.positionRect.width + "px",
-        // height: this.positionRect.height + "px",
         textAlign: "center",
         opacity: this.activeWord.length ? 1 : 0,
         transition: "all ease 200ms",
@@ -148,6 +146,51 @@ export default defineComponent({
     closeIcon() {
       return CLOSE_ICON;
     },
+
+    dir() {
+      let rtls = [
+        "ar",
+        "arc",
+        "dv",
+        "fa",
+        "ha",
+        "he",
+        "khw",
+        "ks",
+        "ku",
+        "ps",
+        "ur",
+        "yi",
+      ];
+
+      let dir =
+        rtls.indexOf(TranslateService.instance.targetLanguage) != -1
+          ? "rtl"
+          : "ltr";
+
+      return dir;
+    },
+
+    sourceDir() {
+      let rtls = [
+        "ar",
+        "arc",
+        "dv",
+        "fa",
+        "ha",
+        "he",
+        "khw",
+        "ks",
+        "ku",
+        "ps",
+        "ur",
+        "yi",
+      ];
+
+      let dir = rtls.indexOf(this.sourceLanguage) != -1 ? "rtl" : "ltr";
+
+      return dir;
+    },
   },
 
   watch: {
@@ -169,6 +212,7 @@ export default defineComponent({
     needBreak(i: number) {
       return !!(i > 0);
     },
+
     normalizePhrase(word: string) {
       ["[", "]", "."].forEach((remove) => {
         word = word.replaceAll(remove, "");
@@ -199,15 +243,17 @@ export default defineComponent({
 
       TranslateService.instance
         .translate(translatingList)
-        .then((resultList) => {
+        .then(({ list, lang }) => {
+          this.sourceLanguage = lang;
+
           translatingList.forEach((result, i) => {
             // Translated line
             if (i == 0) {
-              this.translatedLines.push(resultList[i]);
+              this.translatedLines.push(list[i]);
             }
             // Translated Word
             else {
-              this.translatedWords[result] = resultList[i];
+              this.translatedWords[result] = list[i];
             }
           });
         });
@@ -231,7 +277,7 @@ export default defineComponent({
   justify-content: center;
 
   left: -32px;
-  opacity: 0.3;
+  opacity: 0.5;
   transition: all ease-in 200ms;
 
   &:hover {
@@ -241,6 +287,14 @@ export default defineComponent({
   img {
     cursor: pointer;
     width: 24px;
+  }
+}
+
+.translated-word {
+  span {
+    background: rgba(0, 0, 0, 0.635);
+    padding: 4px 10px;
+    border-radius: 4px;
   }
 }
 </style>

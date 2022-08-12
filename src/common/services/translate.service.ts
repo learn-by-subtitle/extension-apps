@@ -12,16 +12,25 @@ export class TranslateService {
     let body = {
       q: text,
       target: this.targetLanguage,
-    }
-    
+    };
+
     return fetch(url, {
       body: JSON.stringify(body),
-      method: 'POST'
+      method: "POST",
     })
       .then((res) => res.json() as Promise<Dictionary>)
-      .then((body:Dictionary) => body.data.translations)
-      .then(list => {
-        return list.map((item: { translatedText: string; }) => item.translatedText) as string[]
-      })
+      .then((body: Dictionary) => body.data.translations)
+      .then((list) => {
+        let lang = "en";
+        let newList = list.map(
+          (item: { translatedText: string; detectedSourceLanguage: string }) =>
+            item.translatedText
+        ) as string[];
+
+        return {
+          lang,
+          list: newList,
+        };
+      });
   }
 }
