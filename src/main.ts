@@ -6,6 +6,7 @@ import components from "./common/components/components";
 import { netflix } from "./module/netflix/initializer";
 import { youtube } from "./module/youtube/initializer";
 import { AppInitializer } from "./common/types/general.type";
+import { cleanText } from "./common/helper/text";
 
 let vueApp!: App;
 let appInitializer!: AppInitializer;
@@ -29,6 +30,10 @@ setInterval(() => {
     Object.keys(components).forEach((name) => {
       let component = (components as any)[name];
       vueApp.component(name, component);
+
+      vueApp.config.globalProperties.$filters = {
+        cleanText: cleanText,
+      };
     });
 
     appInitializer.initializer(vueApp);

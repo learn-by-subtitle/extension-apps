@@ -17,5 +17,6 @@ span {
 
 span:hover {
   color: yellow;
+  cursor: pointer;
 }
 </style>

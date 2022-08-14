@@ -1,3 +1,4 @@
+import { WordFromDictionaryApi } from "../types/dictionaryapi.type";
 import { Dictionary } from "../types/general.type";
 
 export class TranslateService {
@@ -5,7 +6,7 @@ export class TranslateService {
 
   targetLanguage = "fa";
 
-  async translate(text: string | string[]) {
+  async translateByGoogle(text: string | string[]) {
     let key = "AIzaSyCzR9jH7EGCHgvfHXJxM0997UmuwiSRkH0";
     let url = `https://translation.googleapis.com/language/translate/v2?key=${key}`;
 
@@ -31,6 +32,18 @@ export class TranslateService {
           lang,
           list: newList,
         };
+      });
+  }
+
+  async translateByDictionaryapi(word: string) {
+    let url = "https://api.dictionaryapi.dev/api/v2/entries/en/";
+    url += encodeURI(word);
+
+    return fetch(url)
+      .then((res) => res.json())
+      .then((body) => {
+        if (body.title) throw body;
+        else return body as Promise<WordFromDictionaryApi[]>;
       });
   }
 }

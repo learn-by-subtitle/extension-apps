@@ -4,7 +4,7 @@
     TRANSLATE CONTENT
   -->
     <div class="translated-word" :style="translateStyle" :dir="dir">
-      <span>{{ normalizePhrase(activeTranslate) }}</span>
+      <span>{{ $filters.cleanText(activeTranslate) }}</span>
     </div>
 
     <!-- 
@@ -16,21 +16,21 @@
     -->
       <div class="icon" :style="iconContainerStyle">
         <img
-          v-if="!translateAll"
+          v-if="!showTranslatedSentence"
           :src="translateIcon"
-          @click="translateAll = true"
+          @click="showTranslatedSentence = true"
         />
         <img
-          v-if="translateAll"
+          v-if="showTranslatedSentence"
           :src="closeIcon"
-          @click="translateAll = false"
+          @click="showTranslatedSentence = false"
         />
       </div>
 
       <!-- 
       TRANSLATED LINES
     -->
-      <div v-if="translateAll" :dir="dir">
+      <div v-if="showTranslatedSentence" :dir="dir">
         <template v-for="(line, i) in lines" :key="i">
           <br v-if="needBreak(i)" />
           <span>
@@ -49,12 +49,20 @@
             v-for="(word, i2) in line.split(' ')"
             :key="i2"
             :modelValue="word + ' '"
-            @mouseenter="activeWord = word"
-            @mouseleave="activeWord = ''"
+            @mouseenter="hoveredWord = word"
+            @mouseleave="hoveredWord = ''"
+            @click="
+              showWordDetail = true;
+              activeWord = word;
+            "
           />
         </template>
       </div>
     </div>
+
+    <modal v-model="showWordDetail">
+      <word-detail :word="activeWord" />
+    </modal>
   </div>
 </template>
 
@@ -68,9 +76,11 @@ import { Dictionary } from "../types/general.type";
 interface DataModel {
   translatedWords: Dictionary;
   translatedLines: String[];
+  hoveredWord: string;
   activeWord: string;
-  translateAll: boolean;
   sourceLanguage: string;
+  showTranslatedSentence: boolean;
+  showWordDetail: boolean;
 }
 
 export default defineComponent({
@@ -84,9 +94,11 @@ export default defineComponent({
     return {
       translatedWords: {},
       translatedLines: [],
+      hoveredWord: "",
       activeWord: "",
-      translateAll: false,
       sourceLanguage: "en",
+      showTranslatedSentence: false,
+      showWordDetail: false,
     };
   },
 
@@ -124,13 +136,13 @@ export default defineComponent({
         top: top + "px",
         width: this.positionRect.width + "px",
         textAlign: "center",
-        opacity: this.activeWord.length ? 1 : 0,
+        opacity: this.hoveredWord.length ? 1 : 0,
         transition: "all ease 200ms",
       };
     },
 
     activeTranslate() {
-      return this.translatedWords[this.activeWord] || "";
+      return this.translatedWords[this.hoveredWord] || "";
     },
 
     iconContainerStyle() {
@@ -199,7 +211,7 @@ export default defineComponent({
       handler(value: Array<string>, old: Array<string>) {
         if (JSON.stringify(value) == JSON.stringify(old)) return;
 
-        this.activeWord = "";
+        this.hoveredWord = "";
 
         if (!value || !value.length) return;
 
@@ -211,14 +223,6 @@ export default defineComponent({
   methods: {
     needBreak(i: number) {
       return !!(i > 0);
-    },
-
-    normalizePhrase(word: string) {
-      ["[", "]", "."].forEach((remove) => {
-        word = word.replaceAll(remove, "");
-      });
-
-      return word;
     },
 
     getWordList() {
@@ -242,7 +246,7 @@ export default defineComponent({
       this.translatedWords = {};
 
       TranslateService.instance
-        .translate(translatingList)
+        .translateByGoogle(translatingList)
         .then(({ list, lang }) => {
           this.sourceLanguage = lang;
 
