@@ -1,5 +1,7 @@
 console.log("Learn by subtitle 0.0");
 
+import './tailwind.css';
+
 import { App, createApp } from "vue";
 import components from "./common/components/components";
 
