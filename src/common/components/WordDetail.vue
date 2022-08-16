@@ -1,7 +1,16 @@
 <template>
   <div class="word-detail">
-    <template v-if="translatedList">
-      <div class="card" v-for="(detail, i) of translatedList" :key="i">
+    <template v-if="store">
+      <!-- WORD -->
+      <h1 class="word white-shadow">{{ store.word }}</h1>
+      <h3 class="phonetic white-shadow">{{ store.phonetic }}</h3>
+
+      <div>
+        <span v-for="(part, i) of store.partsOfSpeech" :key="i">
+          {{ part + "  " }}
+        </span>
+      </div>
+      <!-- <div class="card" v-for="(detail, i) of store" :key="i">
         <h1>{{ detail.word }}</h1>
         <h2>{{ detail.phonetic }}</h2>
 
@@ -18,7 +27,7 @@
             </p>
           </div>
         </div>
-      </div>
+      </div> -->
     </template>
 
     <template v-else-if="pending">
@@ -35,7 +44,7 @@
 import { defineComponent } from "@vue/runtime-core";
 import { cleanText } from "../helper/text";
 import { TranslateService } from "../services/translate.service";
-import { WordFromDictionaryApi } from "../types/dictionaryapi.type";
+import { DefinitionStore } from "../types/dictionaryapi.type";
 
 export default defineComponent({
   props: {
@@ -44,11 +53,11 @@ export default defineComponent({
   },
 
   data(): {
-    translatedList: WordFromDictionaryApi[] | null;
+    store: DefinitionStore | null;
     pending: Boolean;
   } {
     return {
-      translatedList: null,
+      store: null,
       pending: false,
     };
   },
@@ -74,7 +83,7 @@ export default defineComponent({
 
       TranslateService.instance
         .translateByDictionaryapi(cleaned)
-        .then((res) => (this.translatedList = res))
+        .then((res) => (this.store = res))
         .finally(() => (this.pending = false));
     },
   },
@@ -83,7 +92,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .word-detail {
-  background-color: white;
+  // background-color: white;
   height: 50vh;
   width: 50vw;
   color: black;
@@ -94,5 +103,21 @@ export default defineComponent({
   max-width: 940px;
   min-height: 400px;
   max-height: 760px;
+}
+
+.white-shadow {
+  color: white;
+  text-shadow: 2px 3px 0px #898999;
+}
+.word {
+  font-weight: bold;
+  line-height: 1.2;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.phonetic {
+  text-align: center;
+  margin: 0;
 }
 </style>

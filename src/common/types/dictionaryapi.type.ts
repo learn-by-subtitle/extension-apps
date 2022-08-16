@@ -37,3 +37,36 @@ export interface WordFromDictionaryApi {
   license: License2;
   sourceUrls: string[];
 }
+
+export class DefinitionStore {
+  word: string = "";
+  phonetic: string = "";
+  meanings: Meaning[] = [];
+
+  constructor(list: WordFromDictionaryApi[]) {
+    for (let i = 0; i < list.length; i++) {
+      const element = list[i];
+
+      if (element.word.length) this.word = element.word;
+      if (element.phonetic.length) this.phonetic = element.phonetic;
+
+      for (let i2 = 0; i2 < element.meanings.length; i2++) {
+        const meaning = element.meanings[i2];
+
+        let index = this.meanings.findIndex(
+          (item) => item.partOfSpeech == meaning.partOfSpeech
+        );
+
+        if (index > -1) {
+          this.meanings[index].definitions.concat(meaning.definitions);
+        } else {
+          this.meanings.push(meaning);
+        }
+      }
+    }
+  }
+
+  get partsOfSpeech() {
+    return this.meanings.map((item) => item.partOfSpeech);
+  }
+}

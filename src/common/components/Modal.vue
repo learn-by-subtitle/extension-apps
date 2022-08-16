@@ -29,7 +29,22 @@ export default defineComponent({
   position: fixed;
   width: 100vw;
   height: 100vh;
-  background-color: rgb(0 0 0 / 50%);
+
+  background-image: linear-gradient(
+    to right top,
+    #d16ba5,
+    #c777b9,
+    #ba83ca,
+    #aa8fd8,
+    #9a9ae1,
+    #8aa7ec,
+    #79b3f4,
+    #69bff8,
+    #52cffe,
+    #41dfff,
+    #46eefa,
+    #5ffbf1
+  );
 
   display: flex;
   justify-content: center;
@@ -40,7 +55,7 @@ export default defineComponent({
 /* Transition */
 .v-enter-active,
 .v-leave-active {
-  transition: opacity 0.5s ease;
+  transition: opacity 0.9s ease;
 }
 
 .v-enter-from,

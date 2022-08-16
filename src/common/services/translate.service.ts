@@ -1,4 +1,7 @@
-import { WordFromDictionaryApi } from "../types/dictionaryapi.type";
+import {
+  DefinitionStore,
+  WordFromDictionaryApi,
+} from "../types/dictionaryapi.type";
 import { Dictionary } from "../types/general.type";
 
 export class TranslateService {
@@ -43,7 +46,11 @@ export class TranslateService {
       .then((res) => res.json())
       .then((body) => {
         if (body.title) throw body;
-        else return body as Promise<WordFromDictionaryApi[]>;
+        else return body as WordFromDictionaryApi[];
+      })
+      .then((list) => {
+        let store = new DefinitionStore(list);
+        return store;
       });
   }
 }
