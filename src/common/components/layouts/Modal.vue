@@ -1,9 +1,7 @@
 <template>
   <transition>
-    <div class="modal-container" @click="close" v-if="modelValue">
-      <div @click.stop="">
-        <slot />
-      </div>
+    <div class="modal-container overflow-y-auto" @click="close" v-if="modelValue">
+      <slot />
     </div>
   </transition>
 </template>
@@ -48,8 +46,6 @@ export default defineComponent({
 
   display: flex;
   justify-content: center;
-  align-content: center;
-  align-items: center;
 }
 
 /* Transition */

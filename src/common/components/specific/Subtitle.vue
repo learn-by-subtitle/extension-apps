@@ -68,10 +68,10 @@
 
 <script lang="ts">
 import { defineComponent, StyleValue } from "vue";
-import { clamp } from "../helper/math";
-import { TRANSLATE_ICON, CLOSE_ICON } from "../icons/icons";
-import { TranslateService } from "../services/translate.service";
-import { Dictionary } from "../types/general.type";
+import { clamp } from "../../helper/math";
+import { TRANSLATE_ICON, CLOSE_ICON } from "../../icons/icons";
+import { TranslateService } from "../../services/translate.service";
+import { Dictionary } from "../../types/general.type";
 
 interface DataModel {
   translatedWords: Dictionary;
@@ -86,7 +86,7 @@ interface DataModel {
 export default defineComponent({
   props: {
     positionRect: Object,
-    textList: [String],
+    textList: {},
     textStyle: Object,
   },
 

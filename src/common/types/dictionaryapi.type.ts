@@ -48,7 +48,8 @@ export class DefinitionStore {
       const element = list[i];
 
       if (element.word.length) this.word = element.word;
-      if (element.phonetic.length) this.phonetic = element.phonetic;
+      if (element.phonetic && element.phonetic.length)
+        this.phonetic = element.phonetic;
 
       for (let i2 = 0; i2 < element.meanings.length; i2++) {
         const meaning = element.meanings[i2];
@@ -64,9 +65,15 @@ export class DefinitionStore {
         }
       }
     }
+
+    console.log(this);
   }
 
   get partsOfSpeech() {
     return this.meanings.map((item) => item.partOfSpeech);
+  }
+
+  getPartOfSpeech(part: string) {
+    return this.meanings.find((item) => item.partOfSpeech == part) as Meaning;
   }
 }

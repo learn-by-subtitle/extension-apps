@@ -1,11 +1,23 @@
-import Subtitle from "./Subtitle.vue";
-import Word from "./Word.vue";
-import Modal from "./Modal.vue";
-import WordDetail from "./WordDetail.vue";
+// Layouts
+import Modal from "./layouts/Modal.vue";
+
+// Materials
+import Tabs from "./materials/Tabs.vue";
+
+// Specifics
+import Subtitle from "./specific/Subtitle.vue";
+import Word from "./specific/Word.vue";
+import WordDetail from "./specific/WordDetail.vue";
 
 export default {
+  // Layouts
+  Modal,
+
+  // Materials
+  Tabs,
+
+  // Specifics
   Subtitle,
   Word,
-  Modal,
   WordDetail,
 };
