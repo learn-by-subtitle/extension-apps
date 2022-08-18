@@ -42,7 +42,6 @@ export default {
 
   methods: {
     activateTab(tab) {
-      console.log("activateTab");
       this.active = tab;
       this.$emit("update:modelValue", tab);
     },

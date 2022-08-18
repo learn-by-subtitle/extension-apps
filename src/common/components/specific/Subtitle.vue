@@ -61,14 +61,18 @@
     </div>
 
     <modal v-model="showWordDetail">
-      <word-detail :word="activeWord" />
+      <word-detail
+        :word="activeWord"
+        :translatedWord="translatedWords[activeWord]"
+      />
     </modal>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, StyleValue } from "vue";
+import { defineComponent, PropType, StyleValue } from "vue";
 import { clamp } from "../../helper/math";
+import { getDir, rtls } from "../../helper/text";
 import { TRANSLATE_ICON, CLOSE_ICON } from "../../icons/icons";
 import { TranslateService } from "../../services/translate.service";
 import { Dictionary } from "../../types/general.type";
@@ -86,7 +90,7 @@ interface DataModel {
 export default defineComponent({
   props: {
     positionRect: Object,
-    textList: {},
+    textList: { type: Object as PropType<string[]> },
     textStyle: Object,
   },
 
@@ -160,45 +164,10 @@ export default defineComponent({
     },
 
     dir() {
-      let rtls = [
-        "ar",
-        "arc",
-        "dv",
-        "fa",
-        "ha",
-        "he",
-        "khw",
-        "ks",
-        "ku",
-        "ps",
-        "ur",
-        "yi",
-      ];
-
-      let dir =
-        rtls.indexOf(TranslateService.instance.targetLanguage) != -1
-          ? "rtl"
-          : "ltr";
-
-      return dir;
+      return getDir();
     },
 
     sourceDir() {
-      let rtls = [
-        "ar",
-        "arc",
-        "dv",
-        "fa",
-        "ha",
-        "he",
-        "khw",
-        "ks",
-        "ku",
-        "ps",
-        "ur",
-        "yi",
-      ];
-
       let dir = rtls.indexOf(this.sourceLanguage) != -1 ? "rtl" : "ltr";
 
       return dir;

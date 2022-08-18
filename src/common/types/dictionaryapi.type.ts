@@ -65,8 +65,6 @@ export class DefinitionStore {
         }
       }
     }
-
-    console.log(this);
   }
 
   get partsOfSpeech() {
