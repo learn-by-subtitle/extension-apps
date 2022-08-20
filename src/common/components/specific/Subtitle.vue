@@ -26,34 +26,35 @@
       </div>
 
       <!-- TRANSLATED LINES -->
-      <div v-if="showTranslatedSentence" :dir="dir">
-        <template v-for="(line, i) in lines" :key="i">
-          <br v-if="needBreak(i)" />
-          <span>
+      <template v-if="showTranslatedSentence" :dir="dir">
+        <div>
+          <p v-for="(line, i) in lines" :key="i">
             {{ line }}
-          </span>
-        </template>
-      </div>
+          </p>
+        </div>
+      </template>
 
       <!-- 
       TRANSLATE WORDS
     -->
-      <div v-else :dir="sourceDir">
-        <template v-for="(line, i) in textList" :key="i">
-          <br v-if="needBreak(i)" />
-          <word
-            v-for="(word, i2) in line.split(' ')"
-            :key="i2"
-            :modelValue="word + ' '"
-            @mouseenter="hoveredWord = word"
-            @mouseleave="hoveredWord = ''"
-            @click="
-              showWordDetail = true;
-              activeWord = word;
-            "
-          />
-        </template>
-      </div>
+      <template v-else :dir="sourceDir">
+        <div v-for="(line, i) in textList" :key="i">
+          <p>
+            <word
+              :style="textStyle"
+              v-for="(word, i2) in line.split(' ')"
+              :key="i2"
+              :modelValue="word + ' '"
+              @mouseenter="hoveredWord = word"
+              @mouseleave="hoveredWord = ''"
+              @click="
+                showWordDetail = true;
+                activeWord = word;
+              "
+            />
+          </p>
+        </div>
+      </template>
     </div>
 
     <modal v-model="showWordDetail">
@@ -186,10 +187,6 @@ export default defineComponent({
   },
 
   methods: {
-    needBreak(i: number) {
-      return !!(i > 0);
-    },
-
     getWordList() {
       let list: string[] = [];
       let lines = this.textList as unknown as Array<string>;
@@ -225,7 +222,6 @@ export default defineComponent({
               this.translatedWords[result] = list[i];
             }
           });
-          
         });
     },
   },
@@ -266,5 +262,10 @@ export default defineComponent({
     padding: 4px 10px;
     border-radius: 4px;
   }
+}
+
+p {
+  display: inline;
+  white-space: nowrap;
 }
 </style>

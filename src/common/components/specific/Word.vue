@@ -16,7 +16,7 @@ span {
 }
 
 span:hover {
-  color: yellow;
+  color: yellow !important;
   cursor: pointer;
 }
 </style>

@@ -38,7 +38,7 @@
     </template>
 
     <template v-else>
-      <span>There is not any definition for {{ word }}</span>
+      <span>There is not any definition for {{ $filters.cleanText(word) }}</span>
     </template>
   </div>
 </template>

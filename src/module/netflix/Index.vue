@@ -9,10 +9,9 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { SUBTITLE_CLASS } from "../../config/static";
+import { SUBTILE_CONTAINER_CLASS, SUBTITLE_CLASS } from "../../config/static";
 import { waitUntil } from "../../common/helper/promise";
 import { SubtitleBundingBox } from "../../common/types/general.type";
-import { json } from "stream/consumers";
 
 export default defineComponent({
   data(): {
@@ -49,7 +48,7 @@ export default defineComponent({
       // Hide original Subtitle
       //
       let originalSubtitle = document.querySelector(
-        SUBTITLE_CLASS
+        SUBTILE_CONTAINER_CLASS
       ) as HTMLElement;
 
       if (originalSubtitle) originalSubtitle.style.opacity = "0";
@@ -75,35 +74,52 @@ export default defineComponent({
 
       // Get All lines
       //
-      let spans = this.subtitleContainer?.querySelectorAll("span");
+      let linesWraper = this.subtitleContainer?.querySelectorAll(
+        SUBTITLE_CLASS
+      ) as unknown as HTMLElement[];
 
       this.text = [];
-      spans?.forEach((span) => {
-        let innerHTML = span.innerHTML;
+      linesWraper?.forEach((wrapper) => {
+        this.text.push(wrapper.textContent as string);
 
-        if (!innerHTML.startsWith("<span")) {
-          this.text.push(span.textContent as string);
+        // Get line span
+        //
+        let span = wrapper.querySelector('[style*="font-size"]');
 
-          this.style = {
-            fontSize: span.style.fontSize,
-            textAlign: span.style.textAlign,
-          };
+        // Extract styles
+        //
+        if (span) {
+          let styleStr = span.getAttribute("style");
 
-          // Check if this span has bigger width
-          // Then replace it width default Rect width
-          let spanRect = span.getBoundingClientRect();
+          let styleParts = styleStr?.split(";") as string[];
 
-          if (spanRect.left < minLeft) {
-            minLeft = spanRect.left;
+          for (let i = 0; i < styleParts.length; i++) {
+            const stylePart = styleParts[i];
+            if (!stylePart.length) return;
+
+            let key = stylePart.split(":")[0];
+            let value = stylePart.split(":")[1];
+
+            this.style[key] = value;
           }
+        }
 
-          if (spanRect.right > minRight) {
-            minRight = spanRect.right;
-          }
+        // Extract bondary
 
-          if (spanRect.bottom > minBottom) {
-            minBottom = spanRect.bottom;
-          }
+        // Check if this span has bigger width
+        // Then replace it width default Rect width
+        let spanRect = wrapper.getBoundingClientRect();
+
+        if (spanRect.left < minLeft) {
+          minLeft = spanRect.left;
+        }
+
+        if (spanRect.right > minRight) {
+          minRight = spanRect.right;
+        }
+
+        if (spanRect.bottom > minBottom) {
+          minBottom = spanRect.bottom;
         }
       });
 
