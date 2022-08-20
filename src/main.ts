@@ -3,10 +3,10 @@ console.log("Learn by subtitle 0.0");
 import './tailwind.css';
 
 import { App, createApp } from "vue";
-import components from "./common/components/components";
+import components from "./module/subtitle/components/components";
 
-import { netflix } from "./module/netflix/initializer";
-import { youtube } from "./module/youtube/initializer";
+import { netflix } from "./module/subtitle/netflix/initializer";
+import { youtube } from "./module/subtitle/youtube/initializer";
 import { AppInitializer } from "./common/types/general.type";
 import { cleanText } from "./common/helper/text";
 

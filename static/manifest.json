@@ -5,9 +5,9 @@
 	"manifest_version": 3,
 	"permissions": [
 		"activeTab",
-		"scripting",
-		"https://*.google.com/",
-		"https://*.googleapis.com/"
+		"webRequest",
+		"https://translation.googleapis.com/",
+		"https://api.dictionaryapi.dev/"
 	],
 	"action": {
 		"default_popup": "popup.html"

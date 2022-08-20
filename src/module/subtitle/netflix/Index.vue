@@ -9,9 +9,9 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { SUBTILE_CONTAINER_CLASS, SUBTITLE_CLASS } from "../../config/static";
-import { waitUntil } from "../../common/helper/promise";
-import { SubtitleBundingBox } from "../../common/types/general.type";
+import { SUBTILE_CONTAINER_CLASS, SUBTITLE_CLASS } from "../config/static";
+import { waitUntil } from "../../../common/helper/promise";
+import { SubtitleBundingBox } from "../../../common/types/general.type";
 
 import TextCleaner from "text-cleaner";
 

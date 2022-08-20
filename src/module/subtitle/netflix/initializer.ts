@@ -1,15 +1,15 @@
-import { waitUntil } from "../../common/helper/promise";
-import { AppInitializer } from "../../common/types/general.type";
-import { SUBTITLE_CLASS } from "../../config/static";
+import { waitUntil } from "../../../common/helper/promise";
+import { AppInitializer } from "../../../common/types/general.type";
+import { SUBTITLE_CLASS } from "../config/static";
 
-import youtubeComponent from "./Index.vue";
+import netflixComponent from "./Index.vue";
 
-export const youtube: AppInitializer = {
+export const netflix: AppInitializer = {
   website: {
-    host: "youtube.com",
+    host: "netflix.com",
     path: "/watch",
   },
-  component: youtubeComponent,
+  component: netflixComponent,
   initializer: async (app) => {
     await waitUntil(() => !!document.querySelector(SUBTITLE_CLASS));
 
@@ -23,6 +23,7 @@ export const youtube: AppInitializer = {
     appDiv.style.zIndex = "9999";
 
     app.mount(appDiv);
+
     return app;
   },
 };

@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from "@vue/runtime-core";
-import { Definition } from "../../types/dictionaryapi.type";
+import { Definition } from "../../../../common/types/dictionaryapi.type";
 
 export default defineComponent({
   props: {

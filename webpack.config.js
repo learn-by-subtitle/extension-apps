@@ -60,6 +60,7 @@ module.exports = {
 
 	entry: {
 		main: './src/main.ts',
+		popup: './src/popup.ts',
 	},
 
 	output: {

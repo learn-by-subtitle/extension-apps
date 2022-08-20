@@ -51,9 +51,9 @@
 
 <script lang="ts">
 import { defineComponent } from "@vue/runtime-core";
-import { cleanText, getDir } from "../../helper/text";
-import { TranslateService } from "../../services/translate.service";
-import { DefinitionStore } from "../../types/dictionaryapi.type";
+import { cleanText, getDir } from "../../../../common/helper/text";
+import { TranslateService } from "../../../../common/services/translate.service";
+import { DefinitionStore } from "../../../../common/types/dictionaryapi.type";
 import Definition from "./Definition.vue";
 
 export default defineComponent({
