@@ -7,6 +7,7 @@ export function cleanText(text: string) {
     "+",
     "*",
     "?",
+    "؟",
     "[",
     "^",
     "]",

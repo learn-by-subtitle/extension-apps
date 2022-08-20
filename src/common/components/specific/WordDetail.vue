@@ -1,21 +1,21 @@
 <template>
   <div class="select-text w-3/4 xl:w-3/5 2xl:w-1/2 text-gray-900">
+    <!-- WORD -->
+    <section
+      class="mt-40 mb-36 flex flex-col justify-center items-center"
+      @click.stop=""
+    >
+      <div class="flex items-center space-x-5">
+        <h1 class="text-9xl white-shadow">{{ title }}</h1>
+        <h3 class="text-5xl white-shadow mt-8">{{ phonetic }}</h3>
+      </div>
+
+      <div class="text-7xl white-shadow mt-20" :dir="dir">
+        {{ $filters.cleanText(translatedWord) }}
+      </div>
+    </section>
+
     <template v-if="store">
-      <!-- WORD -->
-      <section
-        class="mt-40 mb-36 flex flex-col justify-center items-center"
-        @click.stop=""
-      >
-        <div class="flex items-center space-x-5">
-          <h1 class="text-9xl white-shadow">{{ store.word }}</h1>
-          <h3 class="text-5xl white-shadow mt-8">{{ store.phonetic }}</h3>
-        </div>
-
-        <div class="text-7xl white-shadow mt-20" :dir="dir">
-          {{ $filters.cleanText(translatedWord) }}
-        </div>
-      </section>
-
       <tabs class="my-4" :list="store.partsOfSpeech" v-model="activeTab" />
 
       <!-- 
@@ -34,11 +34,17 @@
     </template>
 
     <template v-else-if="pending">
-      <span>Loading...</span>
+      <div class="my-32 text-3xl text-center text-yellow-200">
+        <span>Loading...</span>
+      </div>
     </template>
 
     <template v-else>
-      <span>There is not any definition for {{ $filters.cleanText(word) }}</span>
+      <div class="my-32 text-3xl text-center text-yellow-200">
+        <span
+          >There is not any definition for {{ $filters.cleanText(word) }}</span
+        >
+      </div>
     </template>
   </div>
 </template>
@@ -73,6 +79,22 @@ export default defineComponent({
     dir() {
       return getDir();
     },
+
+    title() {
+      let word = this.word;
+
+      if (this.store) word = this.store.word;
+
+      return word;
+    },
+
+    phonetic() {
+      let phonetic = "";
+
+      if (this.store) phonetic = this.store.phonetic;
+
+      return phonetic;
+    },
   },
 
   watch: {
@@ -88,7 +110,9 @@ export default defineComponent({
   methods: {
     fetchWordDetail() {
       this.pending = true;
+
       let cleaned = cleanText(this.word as string);
+
       TranslateService.instance
         .translateByDictionaryapi(cleaned)
         .then((res) => (this.store = res))

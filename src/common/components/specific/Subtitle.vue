@@ -26,8 +26,8 @@
       </div>
 
       <!-- TRANSLATED LINES -->
-      <template v-if="showTranslatedSentence" :dir="dir">
-        <div>
+      <template v-if="showTranslatedSentence">
+        <div :dir="dir">
           <p v-for="(line, i) in lines" :key="i">
             {{ line }}
           </p>
@@ -39,7 +39,7 @@
     -->
       <template v-else :dir="sourceDir">
         <div v-for="(line, i) in textList" :key="i">
-          <p>
+          <p class="inline whitespace-nowrap">
             <word
               :style="textStyle"
               v-for="(word, i2) in line.split(' ')"
@@ -262,10 +262,5 @@ export default defineComponent({
     padding: 4px 10px;
     border-radius: 4px;
   }
-}
-
-p {
-  display: inline;
-  white-space: nowrap;
 }
 </style>
