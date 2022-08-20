@@ -24,7 +24,7 @@
       <template v-for="(part, i) in store.partsOfSpeech" :key="i">
         <div @click.stop="" v-if="activeTab == part" class="flex flex-col">
           <Definition
-            class="my-2 shadow-md last:mb-3"
+            class="my-3 shadow-md last:mb-3"
             v-for="(definition, i2) in store.getPartOfSpeech(part).definitions"
             :key="i2"
             :data="definition"
