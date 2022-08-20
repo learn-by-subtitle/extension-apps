@@ -11,9 +11,7 @@
     SUBTITLE
   -->
     <div v-if="textList?.length" class="container" :style="subtitleStyle">
-      <!-- 
-      TRANSLATE ICON
-    -->
+      <!-- ICON -->
       <div class="icon" :style="iconContainerStyle">
         <img
           v-if="!showTranslatedSentence"
@@ -27,9 +25,7 @@
         />
       </div>
 
-      <!-- 
-      TRANSLATED LINES
-    -->
+      <!-- TRANSLATED LINES -->
       <div v-if="showTranslatedSentence" :dir="dir">
         <template v-for="(line, i) in lines" :key="i">
           <br v-if="needBreak(i)" />
@@ -229,6 +225,7 @@ export default defineComponent({
               this.translatedWords[result] = list[i];
             }
           });
+          
         });
     },
   },

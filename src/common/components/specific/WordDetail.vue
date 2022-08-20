@@ -95,7 +95,8 @@ export default defineComponent({
         .finally(() => (this.pending = false));
     },
   },
-  components: { Definition },
+
+  components: { Definition: Definition as any },
 });
 </script>
 

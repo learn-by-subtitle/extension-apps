@@ -1,7 +1,28 @@
 import { TranslateService } from "../services/translate.service";
 
 export function cleanText(text: string) {
-  ["[", "]", ".", ",", "!"].forEach((remove) => {
+  [
+    "\\",
+    ".",
+    "+",
+    "*",
+    "?",
+    "[",
+    "^",
+    "]",
+    "$",
+    "(",
+    ")",
+    "{",
+    "}",
+    "=",
+    "!",
+    "<",
+    ">",
+    "|",
+    ":",
+    "-",
+  ].forEach((remove) => {
     text = text.replaceAll(remove, " ");
   });
 
