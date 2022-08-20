@@ -13,6 +13,8 @@ import { SUBTILE_CONTAINER_CLASS, SUBTITLE_CLASS } from "../../config/static";
 import { waitUntil } from "../../common/helper/promise";
 import { SubtitleBundingBox } from "../../common/types/general.type";
 
+import TextCleaner from "text-cleaner";
+
 export default defineComponent({
   data(): {
     active: boolean;
@@ -80,7 +82,25 @@ export default defineComponent({
 
       this.text = [];
       linesWraper?.forEach((wrapper) => {
-        this.text.push(wrapper.textContent as string);
+        // Extract text and <br>
+        //
+        let innerHtml = wrapper.innerHTML;
+
+        if (!innerHtml.includes("<br")) {
+          this.text.push(wrapper.textContent as string);
+        } else {
+          let innerLines = innerHtml.split("<br>");
+
+          innerLines.forEach((line) => {
+            let text = TextCleaner(line)
+              .stripHtml()
+              .condense()
+              .toLowerCase()
+              .valueOf();
+
+            this.text.push(text);
+          });
+        }
 
         // Get line span
         //
@@ -105,7 +125,7 @@ export default defineComponent({
         }
 
         // Extract bondary
-
+        //
         // Check if this span has bigger width
         // Then replace it width default Rect width
         let spanRect = wrapper.getBoundingClientRect();

@@ -24,6 +24,7 @@
     "webpack-cli": "^4.10.0"
   },
   "dependencies": {
+    "text-cleaner": "^1.2.1",
     "vue": "^3.2.37"
   }
 }
