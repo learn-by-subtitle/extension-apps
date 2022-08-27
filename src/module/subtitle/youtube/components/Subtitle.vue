@@ -1,16 +1,16 @@
 <template>
-  <div>
+  <div :style="wrapperStyle">
     <!-- 
     TRANSLATE CONTENT
   -->
     <div class="translated-word" :style="translateStyle" :dir="dir">
-      <span>{{ $filters.cleanText(activeTranslate) }}</span>
+      <span :style="textStyle">{{ $filters.cleanText(activeTranslate) }}</span>
     </div>
 
     <!-- 
     SUBTITLE
   -->
-    <div v-if="textList?.length" class="container" :style="subtitleStyle">
+    <div v-if="textList?.length" class="container" :style="subtitleWrapper">
       <!-- ICON -->
       <div class="icon" :style="iconContainerStyle">
         <img
@@ -28,20 +28,18 @@
       <!-- TRANSLATED LINES -->
       <template v-if="showTranslatedSentence">
         <div :dir="dir">
-          <p v-for="(line, i) in lines" :key="i">
+          <p :style="textStyle" v-for="(line, i) in lines" :key="i">
             {{ line }}
           </p>
         </div>
       </template>
 
-      <!-- 
-      TRANSLATE WORDS
-    -->
-      <template v-else :dir="sourceDir">
+      <!-- SUBTITLE
+      -->
+      <div v-else :dir="sourceDir" class="text-left">
         <div v-for="(line, i) in textList" :key="i">
-          <p class="inline whitespace-nowrap">
+          <p class="pl-1 pr-2 pb-0" :style="textStyle">
             <word
-              :style="textStyle"
               v-for="(word, i2) in line.split(' ')"
               :key="i2"
               :modelValue="word + ' '"
@@ -54,7 +52,7 @@
             />
           </p>
         </div>
-      </template>
+      </div>
     </div>
 
     <modal v-model="showWordDetail">
@@ -68,7 +66,6 @@
 
 <script lang="ts">
 import { defineComponent, PropType, StyleValue } from "vue";
-import { clamp } from "../../../../common/helper/math";
 import { getDir, rtls } from "../../../../common/helper/text";
 import { TRANSLATE_ICON, CLOSE_ICON } from "../../../../common/icons/icons";
 import { TranslateService } from "../../../../common/services/translate.service";
@@ -89,6 +86,7 @@ export default defineComponent({
     positionRect: Object,
     textList: { type: Object as PropType<string[]> },
     textStyle: Object,
+    wrapperStyle: Object,
   },
 
   data(): DataModel {
@@ -112,30 +110,21 @@ export default defineComponent({
       return lines as string[];
     },
 
-    subtitleStyle(): StyleValue {
-      if (!this.positionRect) return {};
-
+    subtitleWrapper(): StyleValue {
       return {
         position: "absolute",
-        left: this.positionRect.left - 10 + "px",
-        top: this.positionRect.top - 10 + "px",
-        width: this.positionRect.width + "px",
-        ...(this.textStyle as any),
+        width: "100%",
       };
     },
 
     translateStyle(): StyleValue {
-      if (!this.positionRect) return {};
-
-      let top =
-        this.positionRect.top - clamp(this.positionRect.height, 50, 100);
+      console.log(this.wrapperStyle);
 
       return {
         position: "absolute",
-        "font-size": this.textStyle?.fontSize || "22px",
-        left: this.positionRect.left - 8 + "px",
-        top: top + "px",
-        width: this.positionRect.width + "px",
+        fontSize: this.textStyle?.fontSize || "22px",
+        top: "-" + this.wrapperStyle?.height,
+        width: "100%",
         textAlign: "center",
         opacity: this.hoveredWord.length ? 1 : 0,
         transition: "all ease 200ms",
@@ -148,7 +137,7 @@ export default defineComponent({
 
     iconContainerStyle() {
       return {
-        height: this.positionRect?.height + "px",
+        height: "20px",
       };
     },
 
@@ -231,7 +220,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 .container {
   position: relative;
-  padding: 8px 10px;
   text-align: center;
 }
 
@@ -259,8 +247,12 @@ export default defineComponent({
 .translated-word {
   span {
     background: rgba(0, 0, 0, 0.635);
-    padding: 4px 10px;
     border-radius: 4px;
   }
+}
+
+p {
+  color: pink !important;
+  background: gray !important;
 }
 </style>

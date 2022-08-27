@@ -4,9 +4,9 @@ export const wait = (seconds: number) => {
   });
 };
 
-export const waitUntil = (conditionMethod: () => boolean) => {
-  return new Promise(async (done) => {
-    while (!conditionMethod()) {
+export const waitUntil = (conditionMethod: (cancel) => boolean) => {
+  return new Promise(async (done, reject) => {
+    while (!conditionMethod(reject)) {
       await wait(0.1);
     }
 

@@ -1,5 +1,5 @@
 <template>
-  <subtitle
+  <SubtitleComponent
     v-show="active"
     :positionRect="position"
     :textList="text"
@@ -9,13 +9,17 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { SUBTILE_CONTAINER_CLASS, SUBTITLE_CLASS } from "../config/static";
+import { SUBTILE_CONTAINER_CLASS, SUBTITLE_CLASS } from "./static";
 import { waitUntil } from "../../../common/helper/promise";
 import { SubtitleBundingBox } from "../../../common/types/general.type";
+
+import SubtitleComponent from "./components/Subtitle.vue";
 
 import TextCleaner from "text-cleaner";
 
 export default defineComponent({
+  components: { SubtitleComponent },
+
   data(): {
     active: boolean;
     position: SubtitleBundingBox;

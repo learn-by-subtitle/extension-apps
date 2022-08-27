@@ -14,40 +14,52 @@ let vueApp!: App;
 let appInitializer!: AppInitializer;
 let initialized = false;
 
+// Select an app initializer from existing modules
+//
 [youtube, netflix].forEach((item) => {
   if (location.hostname.includes(item.website.host)) {
     appInitializer = item;
   }
 });
 
-setInterval(() => {
-  //
-  // Mount vue app of location matchs
-  //
-  if (!initialized && location.pathname.includes(appInitializer.website.path)) {
-    initialized = true;
+// Create an interval to intializing the app
+// In each interval cycle Initializer seeks for a subtitle container,
+// Then the app being initiated if container exists
+//
+function start() {
+  setInterval(() => {
+    //
+    // Mount vue app of location matchs
+    //
+    if (!initialized && location.pathname.includes(appInitializer.website.path)) {
+      initialized = true;
+  
+      vueApp = createApp(appInitializer.component as any);
+  
+      Object.keys(components).forEach((name) => {
+        let component = (components as any)[name];
+        vueApp.component(name, component);
+  
+        vueApp.config.globalProperties.$filters = {
+          cleanText: cleanText,
+        };
+      });
+  
+      appInitializer.start(vueApp);
+    }
+    
+    //
+    // Unmount vue app if location dosent match anymore
+    //
+    else if (
+      initialized &&
+      !location.pathname.includes(appInitializer.website.path)
+    ) {
+  
+      initialized = false;
+      vueApp.unmount();
+    }
+  }, 100);
+}
 
-    vueApp = createApp(appInitializer.component as any);
-
-    Object.keys(components).forEach((name) => {
-      let component = (components as any)[name];
-      vueApp.component(name, component);
-
-      vueApp.config.globalProperties.$filters = {
-        cleanText: cleanText,
-      };
-    });
-
-    appInitializer.initializer(vueApp);
-  }
-  //
-  // Unmount vue app if location dosent match anymore
-  //
-  else if (
-    initialized &&
-    !location.pathname.includes(appInitializer.website.path)
-  ) {
-    initialized = false;
-    vueApp.unmount();
-  }
-}, 100);
+start();

@@ -5,7 +5,9 @@
 	"manifest_version": 3,
 	"permissions": [
 		"activeTab",
-		"webRequest",
+		"webRequest"
+	],
+	"host_permissions": [
 		"https://translation.googleapis.com/",
 		"https://api.dictionaryapi.dev/"
 	],
@@ -15,11 +17,20 @@
 	"content_scripts": [
 		{
 			"matches": [
-				"https://www.netflix.com/*"
+				"https://www.netflix.com/*",
+				"https://www.youtube.com/*"
 			],
 			"css": [],
 			"js": [
 				"main.js"
+			]
+		},
+		{
+			"matches": [
+				"https://www.youtube.com/*"
+			],
+			"css": [
+				"/assets/style/youtube.css"
 			]
 		}
 	]

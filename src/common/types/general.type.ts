@@ -17,5 +17,5 @@ export interface AppInitializer {
     path: string;
   };
   component: any;
-  initializer: (app: App) => Promise<App>;
+  start: (app: App) => Promise<App>;
 }
