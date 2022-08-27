@@ -1,5 +1,15 @@
 import { TranslateService } from "../services/translate.service";
 
+export function firstUpper(word: string) {
+  let parts = word.trim().split("");
+
+  try {
+    parts[0] = parts[0].toUpperCase();
+  } catch (error) {}
+
+  return parts.join("");
+}
+
 export function cleanText(text: string) {
   [
     "\\",

@@ -4,7 +4,9 @@
     TRANSLATE CONTENT
   -->
     <div class="translated-word" :style="translateStyle" :dir="dir">
-      <span :style="textStyle">{{ $filters.cleanText(activeTranslate) }}</span>
+      <span class="p-2" :style="textStyle">{{
+        $filters.cleanText(activeTranslate)
+      }}</span>
     </div>
 
     <!-- 
@@ -28,7 +30,7 @@
       <!-- TRANSLATED LINES -->
       <!-- <template v-if="showTranslatedSentence">
         <div :dir="dir">
-          <p class="pl-1 pr-2 pb-0" :style="textStyle" v-for="(line, i) in translatedLines" :key="i">
+          <p class="pl-2 pr-2 pb-0" :style="textStyle" v-for="(line, i) in translatedLines" :key="i">
             {{ line }}
           </p>
         </div>
@@ -38,7 +40,7 @@
       -->
       <div :dir="sourceDir" class="text-left">
         <div v-for="(line, i) in textList" :key="i">
-          <p class="pl-1 pr-2 pb-0" :style="textStyle">
+          <p class="pl-2 pr-2 pb-0" :style="textStyle">
             <word
               v-for="(word, i2) in line.split(' ')"
               :key="i2"
@@ -112,8 +114,6 @@ export default defineComponent({
     },
 
     translateStyle(): StyleValue {
-      console.log(this.wrapperStyle);
-
       return {
         position: "absolute",
         fontSize: this.textStyle?.fontSize || "22px",

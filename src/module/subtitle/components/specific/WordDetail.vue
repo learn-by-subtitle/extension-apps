@@ -51,7 +51,7 @@
 
 <script lang="ts">
 import { defineComponent } from "@vue/runtime-core";
-import { cleanText, getDir } from "../../../../common/helper/text";
+import { cleanText, firstUpper, getDir } from "../../../../common/helper/text";
 import { TranslateService } from "../../../../common/services/translate.service";
 import { DefinitionStore } from "../../../../common/types/dictionaryapi.type";
 import Definition from "./Definition.vue";
@@ -85,7 +85,7 @@ export default defineComponent({
 
       if (this.store) word = this.store.word;
 
-      return word;
+      return firstUpper(word || "");
     },
 
     phonetic() {

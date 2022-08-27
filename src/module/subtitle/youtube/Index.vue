@@ -67,8 +67,6 @@ export default defineComponent({
 
   methods: {
     onSubtileChange() {
-      console.log("onSubtileChange");
-
       this.active = true;
       this.key = new Date().getTime();
 
