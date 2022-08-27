@@ -12,7 +12,7 @@
   -->
     <div v-if="textList?.length" class="container" :style="subtitleWrapper">
       <!-- ICON -->
-      <div class="icon" :style="iconContainerStyle">
+      <!-- <div class="icon" :style="iconContainerStyle">
         <img
           v-if="!showTranslatedSentence"
           :src="translateIcon"
@@ -23,20 +23,20 @@
           :src="closeIcon"
           @click="showTranslatedSentence = false"
         />
-      </div>
+      </div> -->
 
       <!-- TRANSLATED LINES -->
-      <template v-if="showTranslatedSentence">
+      <!-- <template v-if="showTranslatedSentence">
         <div :dir="dir">
-          <p :style="textStyle" v-for="(line, i) in lines" :key="i">
+          <p class="pl-1 pr-2 pb-0" :style="textStyle" v-for="(line, i) in translatedLines" :key="i">
             {{ line }}
           </p>
         </div>
-      </template>
+      </template> -->
 
       <!-- SUBTITLE
       -->
-      <div v-else :dir="sourceDir" class="text-left">
+      <div :dir="sourceDir" class="text-left">
         <div v-for="(line, i) in textList" :key="i">
           <p class="pl-1 pr-2 pb-0" :style="textStyle">
             <word
@@ -55,12 +55,14 @@
       </div>
     </div>
 
-    <modal v-model="showWordDetail">
-      <word-detail
-        :word="activeWord"
-        :translatedWord="translatedWords[activeWord]"
-      />
-    </modal>
+    <teleport to="body">
+      <modal v-model="showWordDetail">
+        <word-detail
+          :word="activeWord"
+          :translatedWord="translatedWords[activeWord]"
+        />
+      </modal>
+    </teleport>
   </div>
 </template>
 
@@ -102,14 +104,6 @@ export default defineComponent({
   },
 
   computed: {
-    lines() {
-      let lines = this.translatedLines.length
-        ? this.translatedLines
-        : this.textList;
-
-      return lines as string[];
-    },
-
     subtitleWrapper(): StyleValue {
       return {
         position: "absolute",
@@ -168,7 +162,10 @@ export default defineComponent({
 
         this.hoveredWord = "";
 
-        if (!value || !value.length) return;
+        if (!value || !value.length) {
+          this.translatedLines = [];
+          return;
+        }
 
         this.translateWords();
       },
@@ -191,15 +188,15 @@ export default defineComponent({
     translateWords() {
       let words = this.getWordList();
       let lines = this.textList as unknown as Array<string>;
-      let translatingList = [lines.join("\n"), ...words];
-
-      this.translatedLines = [];
-      this.translatedWords = {};
+      let translatingList = ["" /*lines.join("\n")*/, ...words];
 
       TranslateService.instance
         .translateByGoogle(translatingList)
         .then(({ list, lang }) => {
           this.sourceLanguage = lang;
+
+          this.translatedLines = [];
+          this.translatedWords = {};
 
           translatingList.forEach((result, i) => {
             // Translated line
@@ -249,10 +246,5 @@ export default defineComponent({
     background: rgba(0, 0, 0, 0.635);
     border-radius: 4px;
   }
-}
-
-p {
-  color: pink !important;
-  background: gray !important;
 }
 </style>

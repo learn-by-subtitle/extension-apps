@@ -25,8 +25,11 @@ export default defineComponent({
 <style lang="scss" scoped>
 .modal-container {
   position: fixed;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
+  top:0;
+  left: 0;
+  z-index: 99999;
 
   background-image: linear-gradient(
     to right top,
