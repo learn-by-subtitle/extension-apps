@@ -15,12 +15,16 @@ export default {
   },
 
   mounted() {
-    this.lang = localStorage.getItem("target") || "fa";
+    // Load target language
+    //
+    chrome.storage.local.get("target", (data) => {
+      this.lang = data.target || "fa";
+    });
   },
 
   methods: {
     onChanged() {
-      localStorage.setItem("target", this.lang);
+      chrome.storage.local.set({ target: this.lang });
 
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         let tabId = tabs[0].id;

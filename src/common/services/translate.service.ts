@@ -12,8 +12,15 @@ export class TranslateService {
   _eventBus = new TinyEmitter();
 
   constructor() {
-    this.targetLanguage = localStorage.getItem("target") || "fa";
+    // Load target language
+    //
+    chrome.storage.local.get("target", (data) => {
+      this.targetLanguage = data.target || "fa";
+      console.log("Defautl languges is", this.targetLanguage);
+    });
 
+    // Listen for change on target language
+    //
     chrome.runtime.onMessage.addListener((message, sender) => {
       if (message.target) {
         console.log("Target languege changed", message.target);
