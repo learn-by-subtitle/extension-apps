@@ -2,7 +2,8 @@
 	box-sizing: unset;
 }
 
-.caption-visual-line {
-	opacity: 0 !important;
+[id^="caption-window"] {
+    z-index: 0 !important;
+    pointer-events: none !important;
 	visibility: hidden;
 }

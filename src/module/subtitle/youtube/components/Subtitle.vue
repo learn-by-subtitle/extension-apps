@@ -12,7 +12,7 @@
     <!-- 
     SUBTITLE
   -->
-    <div v-if="textList?.length" class="container" :style="subtitleWrapper">
+    <div v-if="textList?.length" class="w-full">
       <!-- ICON -->
       <!-- <div class="icon" :style="iconContainerStyle">
         <img
@@ -38,7 +38,7 @@
 
       <!-- SUBTITLE
       -->
-      <div :dir="sourceDir" class="text-left">
+      <div ref="subturtleSubtitle" :dir="sourceDir" class="text-left">
         <div v-for="(line, i) in textList" :key="i">
           <p class="pl-2 pr-2 pb-0" :style="textStyle">
             <word
@@ -106,22 +106,21 @@ export default defineComponent({
   },
 
   computed: {
-    subtitleWrapper(): StyleValue {
-      return {
-        position: "absolute",
-        width: "100%",
-      };
-    },
-
     translateStyle(): StyleValue {
+      let bottom = 20;
+
+      if (this.$refs.subturtleSubtitle) {
+        bottom = this.$refs.subturtleSubtitle.clientHeight * 1.5;
+      }
+
       return {
         position: "absolute",
         fontSize: this.textStyle?.fontSize || "22px",
-        top: "-" + this.wrapperStyle?.height,
         width: "100%",
         textAlign: "center",
         opacity: this.hoveredWord.length ? 1 : 0,
         transition: "all ease 200ms",
+        bottom: bottom + "px",
       };
     },
 

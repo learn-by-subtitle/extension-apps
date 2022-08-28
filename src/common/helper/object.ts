@@ -17,7 +17,7 @@ export const clone = function (object: Object) {
   return cloned;
 };
 
-export function mapStyleString(style: string){
+export function mapStyleString(style: string) {
   let map = {};
   let styleParts = style?.split(";") as string[];
 
@@ -32,4 +32,22 @@ export function mapStyleString(style: string){
   }
 
   return map;
+}
+
+export function getComputedStyles(styleList: string[], element: Element) {
+  let data = {};
+
+  if(!element) return data;
+
+  styleList.forEach((key) => {
+    // @ts-ignore
+    let styleMap = element.computedStyleMap().get(key);
+
+    if (styleMap) {
+      let value = styleMap.value + styleMap.unit;
+      data[key] = value;
+    }
+  });
+
+  return data;
 }

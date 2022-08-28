@@ -13,3 +13,30 @@ export const waitUntil = (conditionMethod: (cancel) => boolean) => {
     done(0);
   });
 };
+
+export class Interval {
+  isActive = false;
+  callback;
+  duration;
+
+  constructor(duration, callback: (interval: Interval) => void) {
+    this.callback = callback;
+    this.duration = duration;
+  }
+
+  async next() {
+    if (!this.isActive) return;
+
+    await wait(this.duration / 1000);
+    this.callback(this);
+  }
+
+  start() {
+    this.isActive = true;
+    this.next();
+  }
+
+  stop() {
+    this.isActive = false;
+  }
+}
