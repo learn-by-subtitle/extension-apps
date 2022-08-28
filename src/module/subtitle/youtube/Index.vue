@@ -1,5 +1,5 @@
 <template>
-  <div v-if="active">
+  <div v-if="getInsertConfirmation()">
     <teleport to="#ytp-caption-window-container">
       <SubtitleComponent
         id="subturtle-caption"
@@ -37,19 +37,19 @@ export default defineComponent({
 
   data(): {
     active: boolean;
+    oldText: string;
     text: string[];
     style: CSSStyleDeclaration | { [key: string]: string };
     wrapperStyle: {};
-    observer: null | MutationObserver;
     subtitleContainer: null | HTMLElement;
     interval?: Interval;
   } {
     return {
       active: false,
+      oldText: "",
       text: [],
       wrapperStyle: {},
       style: {},
-      observer: null,
       subtitleContainer: null,
     };
   },
@@ -61,16 +61,20 @@ export default defineComponent({
     this.interval.start();
   },
 
-  unmounted() {
+  beforeMount() {
+    this.active = false;
     this.interval?.stop();
-
-    if (this.observer) {
-      this.observer?.disconnect();
-    }
   },
 
   methods: {
+    getInsertConfirmation() {
+      return !!document.querySelector("#ytp-caption-window-container");
+    },
+
     onSubtileChange() {
+      let wholeTextContent = this.subtitleContainer?.textContent;
+      if (this.oldText == wholeTextContent) return;
+
       // Get All lines
       //
       let linesElements = this.subtitleContainer?.querySelectorAll(
@@ -113,20 +117,6 @@ export default defineComponent({
       };
     },
 
-    addWatcherForSubtitleContainer() {
-      if (this.observer) {
-        this.observer.disconnect();
-      }
-
-      this.observer = new MutationObserver(this.onSubtileChange);
-
-      this.observer.observe(this.subtitleContainer as HTMLElement, {
-        childList: true,
-        characterData: true,
-        subtree: true,
-      });
-    },
-
     onSeekForSubtitle(interval: Interval) {
       let exists = !!document.querySelector(SUBTILE_CONTAINER_CLASS);
 
@@ -134,22 +124,18 @@ export default defineComponent({
       //
       if (!exists) {
         this.active = false;
-
-        if (this.observer) {
-          this.observer?.disconnect();
-        }
       }
 
       // When subtitle exists but is off
       //
-      else if (exists && !this.active) {
+      else if (exists) {
         this.active = true;
 
         this.subtitleContainer = document.querySelector(
           SUBTILE_CONTAINER_CLASS
         );
 
-        this.addWatcherForSubtitleContainer();
+        this.onSubtileChange();
       }
 
       interval.next();
