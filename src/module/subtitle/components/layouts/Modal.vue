@@ -1,6 +1,10 @@
 <template>
   <transition>
-    <div class="modal-container overflow-y-auto" @click="close" v-if="modelValue">
+    <div
+      class="modal-container overflow-y-auto"
+      @click="close"
+      v-if="modelValue"
+    >
       <slot />
     </div>
   </transition>
@@ -8,10 +12,29 @@
 
 <script lang="ts">
 import { defineComponent } from "@vue/runtime-core";
+import { wait } from "../../../../common/helper/promise";
 
 export default defineComponent({
   props: {
     modelValue: Boolean,
+  },
+
+  data() {
+    return {
+      defaultBodyOverflowY: document.body.style.overflowY,
+    };
+  },
+
+  watch: {
+    modelValue(key) {
+      if (key) {
+        document.body.style.overflowY = "hidden";
+      } else {
+        wait(0.1).then((_) => {
+          document.body.style.overflowY = this.defaultBodyOverflowY;
+        });
+      }
+    },
   },
 
   methods: {
@@ -27,7 +50,7 @@ export default defineComponent({
   position: fixed;
   width: 100%;
   height: 100%;
-  top:0;
+  top: 0;
   left: 0;
   z-index: 99999;
 
@@ -49,16 +72,5 @@ export default defineComponent({
 
   display: flex;
   justify-content: center;
-}
-
-/* Transition */
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 0.9s ease;
-}
-
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
 }
 </style>
