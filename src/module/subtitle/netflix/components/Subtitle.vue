@@ -7,54 +7,56 @@
       <span :style="textStyle">{{ $filters.cleanText(activeTranslate) }}</span>
     </div>
 
-    <!-- 
-    SUBTITLE
-  -->
-    <div v-if="textList?.length" class="container" :style="subtitleWrapper">
-      <!-- ICON -->
-      <div class="icon" :style="iconContainerStyle">
-        <img
-          v-if="!showTranslatedSentence"
-          :src="translateIcon"
-          @click="showTranslatedSentence = true"
-        />
-        <img
-          v-if="showTranslatedSentence"
-          :src="closeIcon"
-          @click="showTranslatedSentence = false"
-        />
-      </div>
-
-      <!-- TRANSLATED LINES -->
-      <template v-if="showTranslatedSentence">
-        <div :dir="dir">
-          <p :style="textStyle" v-for="(line, i) in lines" :key="i">
-            {{ line }}
-          </p>
-        </div>
-      </template>
-
-      <!-- 
-      TRANSLATE WORDS
+    <!-- SUBTITLE
     -->
-      <template v-else :dir="sourceDir">
-        <div v-for="(line, i) in textList" :key="i">
-          <p class="inline whitespace-nowrap" :style="textStyle">
-            <word
-              v-for="(word, i2) in line.split(' ')"
-              :key="i2"
-              :modelValue="word + ' '"
-              @mouseenter="hoveredWord = word"
-              @mouseleave="hoveredWord = ''"
-              @click="
-                showWordDetail = true;
-                activeWord = word;
-              "
-            />
-          </p>
+    <transition name="fade">
+      <div v-if="textList?.length" class="container" :style="subtitleWrapper">
+        <!-- ICON 
+        -->
+        <div class="icon" :style="iconContainerStyle">
+          <img
+            v-if="!showTranslatedSentence"
+            :src="translateIcon"
+            @click="showTranslatedSentence = true"
+          />
+          <img
+            v-if="showTranslatedSentence"
+            :src="closeIcon"
+            @click="showTranslatedSentence = false"
+          />
         </div>
-      </template>
-    </div>
+
+        <!-- TRANSLATED LINES 
+        -->
+        <template v-if="showTranslatedSentence">
+          <div :dir="dir">
+            <p :style="textStyle" v-for="(line, i) in translatedLines" :key="i">
+              {{ line }}
+            </p>
+          </div>
+        </template>
+
+        <!-- TRANSLATE WORDS
+        -->
+        <template v-else :dir="sourceDir">
+          <div v-for="(line, i) in textList" :key="i">
+            <p class="inline whitespace-nowrap" :style="textStyle">
+              <word
+                v-for="(word, i2) in line.split(' ')"
+                :key="i2"
+                :modelValue="word + ' '"
+                @mouseenter="hoveredWord = word"
+                @mouseleave="hoveredWord = ''"
+                @click="
+                  showWordDetail = true;
+                  activeWord = word;
+                "
+              />
+            </p>
+          </div>
+        </template>
+      </div>
+    </transition>
 
     <modal v-model="showWordDetail">
       <word-detail

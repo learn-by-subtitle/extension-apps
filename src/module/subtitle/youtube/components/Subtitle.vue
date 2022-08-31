@@ -9,53 +9,56 @@
       }}</span>
     </div>
 
-    <!-- 
-    SUBTITLE
-  -->
-    <div v-if="textList?.length" class="w-full">
-      <!-- ICON -->
-      <!-- <div class="icon" :style="iconContainerStyle">
-        <img
-          v-if="!showTranslatedSentence"
-          :src="translateIcon"
-          @click="showTranslatedSentence = true"
-        />
-        <img
-          v-if="showTranslatedSentence"
-          :src="closeIcon"
-          @click="showTranslatedSentence = false"
-        />
-      </div> -->
+    <!-- SUBTITLE
+    -->
+    <transition name="fade">
+      <div v-if="textList?.length" class="w-full">
+        <!-- ICON 
+        -->
+        <!-- <div class="icon" :style="iconContainerStyle">
+          <img
+            v-if="!showTranslatedSentence"
+            :src="translateIcon"
+            @click="showTranslatedSentence = true"
+          />
+          <img
+            v-if="showTranslatedSentence"
+            :src="closeIcon"
+            @click="showTranslatedSentence = false"
+          />
+        </div> -->
 
-      <!-- TRANSLATED LINES -->
-      <!-- <template v-if="showTranslatedSentence">
-        <div :dir="dir">
-          <p class="pl-2 pr-2 pb-0" :style="textStyle" v-for="(line, i) in translatedLines" :key="i">
-            {{ line }}
-          </p>
-        </div>
-      </template> -->
+        <!-- TRANSLATED LINES 
+        -->
+        <!-- <template v-if="showTranslatedSentence">
+          <div :dir="dir">
+            <p class="pl-2 pr-2 pb-0" :style="textStyle" v-for="(line, i) in translatedLines" :key="i">
+              {{ line }}
+            </p>
+          </div>
+        </template> -->
 
-      <!-- SUBTITLE
-      -->
-      <div ref="subturtleSubtitle" :dir="sourceDir" class="text-left">
-        <div v-for="(line, i) in textList" :key="i">
-          <p class="pl-2 pr-2 pb-0" :style="textStyle">
-            <word
-              v-for="(word, i2) in line.split(' ')"
-              :key="i2"
-              :modelValue="word + ' '"
-              @mouseenter="hoveredWord = word"
-              @mouseleave="hoveredWord = ''"
-              @click="
-                showWordDetail = true;
-                activeWord = word;
-              "
-            />
-          </p>
+        <!-- SUBTITLE
+        -->
+        <div ref="subturtleSubtitle" :dir="sourceDir" class="text-left">
+          <div v-for="(line, i) in textList" :key="i">
+            <p class="pl-2 pr-2 pb-0" :style="textStyle">
+              <word
+                v-for="(word, i2) in line.split(' ')"
+                :key="i2"
+                :modelValue="word + ' '"
+                @mouseenter="hoveredWord = word"
+                @mouseleave="hoveredWord = ''"
+                @click="
+                  showWordDetail = true;
+                  activeWord = word;
+                "
+              />
+            </p>
+          </div>
         </div>
       </div>
-    </div>
+    </transition>
 
     <teleport to="body">
       <modal v-model="showWordDetail">
