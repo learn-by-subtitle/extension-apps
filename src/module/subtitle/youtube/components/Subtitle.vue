@@ -2,7 +2,7 @@
   <div :style="wrapperStyle">
     <!-- 
     TRANSLATE CONTENT
-  -->
+    -->
     <div class="translated-word" :style="translateStyle" :dir="dir">
       <span class="p-2" :style="textStyle">{{
         $filters.cleanText(activeTranslate)

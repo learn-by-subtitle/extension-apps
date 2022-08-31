@@ -1,19 +1,19 @@
 <template>
-  <div v-if="getInsertConfirmation()">
-    <teleport to="#ytp-caption-window-container">
+  <teleport to="#movie_player">
+    <div class="ytp-caption-window-container">
       <SubtitleComponent
+        v-model="active"
         id="subturtle-caption"
         class="
           caption-window
           ytp-caption-window-bottom ytp-caption-window-rollup
         "
-        v-show="active"
         :wrapperStyle="wrapperStyle"
         :textList="text"
         :textStyle="style"
       />
-    </teleport>
-  </div>
+    </div>
+  </teleport>
 </template>
 
 <script lang="ts">
@@ -67,13 +67,11 @@ export default defineComponent({
   },
 
   methods: {
-    getInsertConfirmation() {
-      return !!document.querySelector("#ytp-caption-window-container");
-    },
-
     onSubtileChange() {
       let wholeTextContent = this.subtitleContainer?.textContent;
+
       if (this.oldText == wholeTextContent) return;
+      else this.oldText = wholeTextContent || "";
 
       // Get All lines
       //
