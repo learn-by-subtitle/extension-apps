@@ -15,18 +15,10 @@
       <div v-if="textList?.length" class="w-full">
         <!-- ICON 
         -->
-        <!-- <div class="icon" :style="iconContainerStyle">
-          <img
-            v-if="!showTranslatedSentence"
-            :src="translateIcon"
-            @click="showTranslatedSentence = true"
-          />
-          <img
-            v-if="showTranslatedSentence"
-            :src="closeIcon"
-            @click="showTranslatedSentence = false"
-          />
-        </div> -->
+        <!-- <translate-button
+          :style="iconContainerStyle"
+          v-model="showTranslatedSentence"
+        /> -->
 
         <!-- TRANSLATED LINES 
         -->
@@ -74,7 +66,6 @@
 <script lang="ts">
 import { defineComponent, PropType, StyleValue } from "vue";
 import { getDir, rtls } from "../../../../common/helper/text";
-import { TRANSLATE_ICON, CLOSE_ICON } from "../../../../common/icons/icons";
 import { TranslateService } from "../../../../common/services/translate.service";
 import { Dictionary } from "../../../../common/types/general.type";
 
@@ -137,21 +128,12 @@ export default defineComponent({
       };
     },
 
-    translateIcon() {
-      return TRANSLATE_ICON;
-    },
-
-    closeIcon() {
-      return CLOSE_ICON;
-    },
-
     dir() {
       return getDir();
     },
 
     sourceDir() {
       let dir = rtls.indexOf(this.sourceLanguage) != -1 ? "rtl" : "ltr";
-
       return dir;
     },
   },

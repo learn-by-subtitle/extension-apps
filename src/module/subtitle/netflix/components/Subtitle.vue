@@ -2,7 +2,7 @@
   <div>
     <!-- 
     TRANSLATE CONTENT
-  -->
+    -->
     <div class="translated-word" :style="translateStyle" :dir="dir">
       <span :style="textStyle">{{ $filters.cleanText(activeTranslate) }}</span>
     </div>
@@ -13,18 +13,11 @@
       <div v-if="textList?.length" class="container" :style="subtitleWrapper">
         <!-- ICON 
         -->
-        <div class="icon" :style="iconContainerStyle">
-          <img
-            v-if="!showTranslatedSentence"
-            :src="translateIcon"
-            @click="showTranslatedSentence = true"
-          />
-          <img
-            v-if="showTranslatedSentence"
-            :src="closeIcon"
-            @click="showTranslatedSentence = false"
-          />
-        </div>
+        <translate-button
+          class="-left-10 absolute"
+          :style="iconContainerStyle"
+          v-model="showTranslatedSentence"
+        />
 
         <!-- TRANSLATED LINES 
         -->
@@ -71,7 +64,6 @@
 import { defineComponent, PropType, StyleValue } from "vue";
 import { clamp } from "../../../../common/helper/math";
 import { getDir, rtls } from "../../../../common/helper/text";
-import { TRANSLATE_ICON, CLOSE_ICON } from "../../../../common/icons/icons";
 import { TranslateService } from "../../../../common/services/translate.service";
 import { Dictionary } from "../../../../common/types/general.type";
 
@@ -152,14 +144,6 @@ export default defineComponent({
       };
     },
 
-    translateIcon() {
-      return TRANSLATE_ICON;
-    },
-
-    closeIcon() {
-      return CLOSE_ICON;
-    },
-
     dir() {
       return getDir();
     },
@@ -233,27 +217,6 @@ export default defineComponent({
   position: relative;
   padding: 8px 10px;
   text-align: center;
-}
-
-.icon {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  left: -32px;
-  opacity: 0.5;
-  transition: all ease-in 200ms;
-
-  &:hover {
-    opacity: 1;
-  }
-
-  img {
-    cursor: pointer;
-    width: 24px;
-  }
 }
 
 .translated-word {
