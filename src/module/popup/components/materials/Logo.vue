@@ -14,7 +14,7 @@ export default {
 
   computed: {
     logoPath() {
-      return getAsset("logo.jpg");
+      return getAsset("logotype.png");
     },
 
     style() {

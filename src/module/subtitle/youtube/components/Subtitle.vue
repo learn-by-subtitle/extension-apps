@@ -104,6 +104,7 @@ export default defineComponent({
       let bottom = 20;
 
       if (this.$refs.subturtleSubtitle) {
+        // @ts-ignore
         bottom = this.$refs.subturtleSubtitle.clientHeight * 1.5;
       }
 

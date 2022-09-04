@@ -1,6 +1,5 @@
 <template>
   <SubtitleComponent
-    v-show="active"
     :positionRect="position"
     :textList="text"
     :textStyle="style"
@@ -18,7 +17,7 @@ import SubtitleComponent from "./components/Subtitle.vue";
 import TextCleaner from "text-cleaner";
 
 export default defineComponent({
-  components: { SubtitleComponent },
+  components: { SubtitleComponent: SubtitleComponent as any },
 
   data(): {
     active: boolean;

@@ -5,6 +5,7 @@ import {
 
 import { Dictionary } from "../types/general.type";
 import { TinyEmitter } from "tiny-emitter";
+import { SUPPORTED_LANGUES } from "../statics/langueges.static";
 
 export class TranslateService {
   static instance = new TranslateService();
@@ -34,6 +35,10 @@ export class TranslateService {
   }
 
   targetLanguage = "fa";
+
+  get targetLanguageTitle() {
+    return SUPPORTED_LANGUES.find(l => l.code == this.targetLanguage)?.title || "";
+  }
 
   async translateByGoogle(text: string | string[]) {
     let key = "AIzaSyCzR9jH7EGCHgvfHXJxM0997UmuwiSRkH0";

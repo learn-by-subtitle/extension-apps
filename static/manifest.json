@@ -1,8 +1,12 @@
 {
-	"name": "Learn by subtitle",
-	"description": "Save udemy notes as a pdf",
+	"name": "Subturtle",
+	"description": "Learn English from any subtitle on Internet",
 	"version": "1.0",
 	"manifest_version": 3,
+	"icons": {
+		"128": "/assets/logo-128.png",
+		"256": "/assets/logo-240.png"
+	},
 	"permissions": [
 		"activeTab",
 		"webRequest",

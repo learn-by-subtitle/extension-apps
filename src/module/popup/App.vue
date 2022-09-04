@@ -3,7 +3,6 @@
     <!-- LOGO -->
     <div class="my-10 flex flex-col justify-center items-center">
       <logo></logo>
-      <h2 class="-ml-2 -mt-2 text-green-200 font-bold">SUBTURTLE</h2>
     </div>
 
     <!-- LANGUAGE FORM -->

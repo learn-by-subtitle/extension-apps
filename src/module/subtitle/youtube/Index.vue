@@ -1,19 +1,20 @@
 <template>
-  <teleport to="#movie_player">
-    <div class="ytp-caption-window-container">
-      <SubtitleComponent
-        v-model="active"
-        id="subturtle-caption"
-        class="
-          caption-window
-          ytp-caption-window-bottom ytp-caption-window-rollup
-        "
-        :wrapperStyle="wrapperStyle"
-        :textList="text"
-        :textStyle="style"
-      />
-    </div>
-  </teleport>
+  <div>
+    <teleport to="#movie_player">
+      <div class="ytp-caption-window-container">
+        <SubtitleComponent
+          id="subturtle-caption"
+          class="
+            caption-window
+            ytp-caption-window-bottom ytp-caption-window-rollup
+          "
+          :wrapperStyle="wrapperStyle"
+          :textList="text"
+          :textStyle="style"
+        />
+      </div>
+    </teleport>
+  </div>
 </template>
 
 <script lang="ts">
@@ -33,7 +34,7 @@ import {
 } from "../../../common/helper/object";
 
 export default defineComponent({
-  components: { SubtitleComponent },
+  components: { SubtitleComponent: SubtitleComponent as any },
 
   data(): {
     active: boolean;

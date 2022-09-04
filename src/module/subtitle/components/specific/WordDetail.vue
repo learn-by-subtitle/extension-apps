@@ -10,8 +10,26 @@
         <h3 class="text-5xl white-shadow mt-8">{{ phonetic }}</h3>
       </div>
 
-      <div class="text-7xl white-shadow mt-20" :dir="dir">
-        {{ $filters.cleanText(translatedWord) }}
+      <div class="mt-20 flex items-center" :dir="dir">
+        <span class="text-7xl white-shadow">{{
+          $filters.cleanText(translatedWord)
+        }}</span>
+
+        <div class="mt-6 scale-75">
+          <span
+            class="
+              text-xl
+              rounded-md
+              shadow-sm
+              bg-gray-500
+              text-white
+              justify-end
+              px-3
+              py-2
+            "
+            >{{ targetLanguageTitle }}</span
+          >
+        </div>
       </div>
     </section>
 
@@ -76,6 +94,10 @@ export default defineComponent({
   },
 
   computed: {
+    targetLanguageTitle() {
+      return TranslateService.instance.targetLanguageTitle;
+    },
+
     dir() {
       return getDir();
     },
