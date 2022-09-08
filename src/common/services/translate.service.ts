@@ -5,7 +5,8 @@ import {
 
 import { Dictionary } from "../types/general.type";
 import { TinyEmitter } from "tiny-emitter";
-import { SUPPORTED_LANGUES } from "../statics/langueges.static";
+import { SUPPORTED_LANGUES } from "../static/langueges.static";
+import { analytic } from "../../plugins/mixpanel";
 
 export class TranslateService {
   static instance = new TranslateService();
@@ -17,7 +18,8 @@ export class TranslateService {
     //
     chrome.storage.local.get("target", (data) => {
       this.targetLanguage = data.target || "fa";
-      console.log("Defautl languges is", this.targetLanguage);
+
+      analytic.register({ target: this.targetLanguage });
     });
 
     // Listen for change on target language
@@ -25,6 +27,12 @@ export class TranslateService {
     chrome.runtime.onMessage.addListener((message, sender) => {
       if (message.target) {
         console.log("Target languege changed", message.target);
+
+        analytic.track("Target changed", {
+          to: message.target,
+        });
+
+        analytic.register({ target: message.target });
 
         this.targetLanguage = message.target;
         localStorage.setItem("target", this.targetLanguage);
@@ -37,7 +45,9 @@ export class TranslateService {
   targetLanguage = "fa";
 
   get targetLanguageTitle() {
-    return SUPPORTED_LANGUES.find(l => l.code == this.targetLanguage)?.title || "";
+    return (
+      SUPPORTED_LANGUES.find((l) => l.code == this.targetLanguage)?.title || ""
+    );
   }
 
   async translateByGoogle(text: string | string[]) {

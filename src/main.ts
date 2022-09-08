@@ -1,7 +1,7 @@
 console.log("Learn by subtitle 0.0");
 
-import './style.scss';
-import './tailwind.css';
+import "./style.scss";
+import "./tailwind.css";
 
 import { App, createApp } from "vue";
 import components from "./module/subtitle/components/components";
@@ -10,6 +10,8 @@ import { netflix } from "./module/subtitle/netflix/initializer";
 import { youtube } from "./module/subtitle/youtube/initializer";
 import { AppInitializer } from "./common/types/general.type";
 import { cleanText } from "./common/helper/text";
+import "./plugins/mixpanel";
+import { analytic } from "./plugins/mixpanel";
 
 let vueApp!: App;
 let appInitializer!: AppInitializer;
@@ -32,23 +34,29 @@ function start() {
     //
     // Mount vue app of location matchs
     //
-    if (!initialized && location.pathname.includes(appInitializer.website.path)) {
+    if (
+      !initialized &&
+      location.pathname.includes(appInitializer.website.path)
+    ) {
       initialized = true;
-  
+
       vueApp = createApp(appInitializer.component as any);
-  
+
       Object.keys(components).forEach((name) => {
         let component = (components as any)[name];
         vueApp.component(name, component);
-  
+
         vueApp.config.globalProperties.$filters = {
           cleanText: cleanText,
         };
       });
-  
-      appInitializer.start(vueApp);
+
+      appInitializer
+        .start(vueApp)
+        .then((_) => analytic.track("Used In"))
+        .catch((_) => analytic.track("Error on initiating"));
     }
-    
+
     //
     // Unmount vue app if location dosent match anymore
     //
@@ -56,7 +64,6 @@ function start() {
       initialized &&
       !location.pathname.includes(appInitializer.website.path)
     ) {
-  
       initialized = false;
       vueApp.unmount();
     }

@@ -1,5 +1,9 @@
 const path = require('path');
+const Dotenv = require('dotenv-webpack');
+
+
 const CopyPlugin = require("copy-webpack-plugin");
+
 const {
 	VueLoaderPlugin
 } = require('vue-loader')
@@ -54,6 +58,9 @@ module.exports = {
 	},
 
 	plugins: [
+		new Dotenv({
+			safe: true
+		}),
 		new VueLoaderPlugin(),
 		new CopyPlugin({
 			patterns: [

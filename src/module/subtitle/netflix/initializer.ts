@@ -3,6 +3,7 @@ import { AppInitializer } from "../../../common/types/general.type";
 import { SUBTITLE_CLASS } from "./static";
 
 import netflixComponent from "./Index.vue";
+import { analytic } from "../../../plugins/mixpanel";
 
 export const netflix: AppInitializer = {
   website: {
@@ -12,6 +13,10 @@ export const netflix: AppInitializer = {
   component: netflixComponent,
   start: async (app) => {
     await waitUntil(() => !!document.querySelector(SUBTITLE_CLASS));
+
+    // Init Analytic
+    //
+    analytic.track('Netflix')
 
     let appDiv = document.createElement("div");
     let videoContainer = document.querySelector(".watch-video");

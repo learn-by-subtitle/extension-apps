@@ -31,6 +31,7 @@ import { getDir, rtls } from "../../../../common/helper/text";
 import { CLOSE_ICON, TRANSLATE_ICON } from "../../../../common/icons/icons";
 import { TranslateService } from "../../../../common/services/translate.service";
 import { Definition } from "../../../../common/types/dictionaryapi.type";
+import { analytic } from "../../../../plugins/mixpanel";
 
 export default defineComponent({
   props: {
@@ -127,6 +128,8 @@ export default defineComponent({
             }
           });
         });
+
+      analytic.track('Definition translated');
     },
   },
 });

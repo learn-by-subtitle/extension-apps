@@ -72,6 +72,7 @@ import { defineComponent } from "@vue/runtime-core";
 import { cleanText, firstUpper, getDir } from "../../../../common/helper/text";
 import { TranslateService } from "../../../../common/services/translate.service";
 import { DefinitionStore } from "../../../../common/types/dictionaryapi.type";
+import { analytic } from "../../../../plugins/mixpanel";
 import Definition from "./Definition.vue";
 
 export default defineComponent({
@@ -123,10 +124,19 @@ export default defineComponent({
     word: {
       immediate: true,
       handler(value) {
-        if (!value || this.language == "en") return;
+        if (!value) return;
+
+        analytic.track("Word clicked", { word: value });
+
         this.fetchWordDetail();
       },
     },
+
+    activeTab(value, old) {
+      if(old.length) {
+        analytic.track('Part of speech switched')
+      }
+    }
   },
 
   methods: {

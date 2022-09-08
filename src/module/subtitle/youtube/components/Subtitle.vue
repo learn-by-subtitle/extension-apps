@@ -68,6 +68,7 @@ import { defineComponent, PropType, StyleValue } from "vue";
 import { getDir, rtls } from "../../../../common/helper/text";
 import { TranslateService } from "../../../../common/services/translate.service";
 import { Dictionary } from "../../../../common/types/general.type";
+import { analytic } from "../../../../plugins/mixpanel";
 
 interface DataModel {
   translatedWords: Dictionary;
@@ -154,6 +155,12 @@ export default defineComponent({
 
         this.translateWords();
       },
+    },
+
+    hoveredWord(value) {
+      if (value.length) {
+        analytic.track("Word hovered", { word: value });
+      }
     },
   },
 
