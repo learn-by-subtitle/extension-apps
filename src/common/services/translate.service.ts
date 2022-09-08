@@ -7,6 +7,7 @@ import { Dictionary } from "../types/general.type";
 import { TinyEmitter } from "tiny-emitter";
 import { SUPPORTED_LANGUES } from "../static/langueges.static";
 import { analytic } from "../../plugins/mixpanel";
+import { log } from "../helper/log";
 
 export class TranslateService {
   static instance = new TranslateService();
@@ -26,7 +27,7 @@ export class TranslateService {
     //
     chrome.runtime.onMessage.addListener((message, sender) => {
       if (message.target) {
-        console.log("Target languege changed", message.target);
+        log("Target languege changed", message.target);
 
         analytic.track("Target changed", {
           to: message.target,

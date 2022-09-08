@@ -32,6 +32,7 @@ import {
   getComputedStyles,
   mapStyleString,
 } from "../../../common/helper/object";
+import { log } from "../../../common/helper/log";
 
 export default defineComponent({
   components: { SubtitleComponent: SubtitleComponent as any },
@@ -56,7 +57,7 @@ export default defineComponent({
   },
 
   mounted() {
-    console.log("Activated for Youtube");
+    log("Activated for Youtube");
 
     this.interval = new Interval(200, this.onSeekForSubtitle);
     this.interval.start();
