@@ -33,7 +33,7 @@
 
 <script>
 import { defineComponent } from "@vue/runtime-core";
-import { SUPPORTED_LANGUES } from "../../../../common/statics/langueges.static";
+import { SUPPORTED_LANGUES } from "../../../../common/static/langueges.static";
 
 export default defineComponent({
   props: {

@@ -1,22 +1,16 @@
 <template>
   <div class="select-none" :style="style">
-    <img class="w-full" :src="logoPath" />
+    <img class="w-full" :src="$getAsset('logotype.png')" />
   </div>
 </template>
 
 <script>
-import { getAsset } from "../../helper/assets";
-
 export default {
   props: {
     size: { type: Number, default: 100 },
   },
 
   computed: {
-    logoPath() {
-      return getAsset("logotype.png");
-    },
-
     style() {
       return {
         width: this.size + "px",
