@@ -1,5 +1,5 @@
 # Subturtle 
-### would helps you for learning English while you are watching a video on the internet. 
+### would help you for learning English while you are watching a video on the internet. 
 
 ### You can do a lot with it:
 - Translate words through hovering (moving the mouse pointer on them)
@@ -22,8 +22,8 @@ Supported websites:
 - More websites will be supported soon.
 
 Updates on v1.1:
-- Added analytic.
-- Added Guid description on extension popup.
+- Added analytics.
+- Added Guide description on extension popup.
 
 ---
 
