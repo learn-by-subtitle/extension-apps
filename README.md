@@ -6,7 +6,7 @@
 - Translate the whole subtitle to any language you want.
 - See word detail containing definitions and part of speech.
 
-[Download](https://chrome.google.com/webstore/detail/subturtle/gaplicnpaiidofkoeonioomcnadoofkf) from Chrome webstore
+[Download](https://chrome.google.com/webstore/detail/subturtle/gaplicnpaiidofkoeonioomcnadoofkf) from chrome webstore
 
 ---
 
