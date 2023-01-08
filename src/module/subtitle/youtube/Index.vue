@@ -83,7 +83,8 @@ export default defineComponent({
 
       this.text = [];
 
-      // Loop lines
+      // Extract text and styles 
+      // from incomming lines
       //
       linesElements?.forEach((wrapper) => {
         // Extract text

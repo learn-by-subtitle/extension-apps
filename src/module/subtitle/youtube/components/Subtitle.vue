@@ -153,12 +153,13 @@ export default defineComponent({
           return;
         }
 
-        this.translateWords();
+        // this.translateWords();
       },
     },
 
     hoveredWord(value) {
       if (value.length) {
+        this.translateWord(value);
         analytic.track("Word hovered", { word: value });
       }
     },
@@ -199,6 +200,20 @@ export default defineComponent({
             else {
               this.translatedWords[result] = list[i];
             }
+          });
+        });
+    },
+
+    translateWord(word) {
+      let translatingList = [word];
+
+      TranslateService.instance
+        .translateByGoogle(translatingList)
+        .then(({ list, lang }) => {
+          this.sourceLanguage = lang;
+
+          translatingList.forEach((result, i) => {
+            this.translatedWords[result] = list[i];
           });
         });
     },
