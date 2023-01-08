@@ -153,7 +153,7 @@ export default defineComponent({
           return;
         }
 
-        // this.translateWords();
+        // this.translateWholeCaption();
       },
     },
 
@@ -178,7 +178,7 @@ export default defineComponent({
       return list;
     },
 
-    translateWords() {
+    translateWholeCaption() {
       let words = this.getWordList();
       let lines = this.textList as unknown as Array<string>;
       let translatingList = ["" /*lines.join("\n")*/, ...words];
