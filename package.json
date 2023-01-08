@@ -1,8 +1,9 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "scripts": {
     "serve": "webpack --watch",
-    "build": "webpack --mode=production"
+    "build": "webpack --mode=production",
+    "zip": "cd dist && zip -r subturtle.zip . && mv subturtle.zip ../subturtle.zip"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.193",

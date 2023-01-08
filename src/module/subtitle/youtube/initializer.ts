@@ -9,7 +9,7 @@ export const youtube: AppInitializer = {
     host: "youtube.com",
     path: "/watch",
   },
-  component: youtubeComponent,
+  component: youtubeComponent as any,
   start: async (app) => {
     await waitUntil(() => !!document.querySelector(SUBTILE_CONTAINER_CLASS));
 
