@@ -52,7 +52,7 @@ export class TranslateService {
   }
 
   async translateByGoogle(text: string | string[]) {
-    let key = "AIzaSyCzR9jH7EGCHgvfHXJxM0997UmuwiSRkH0";
+    let key = process.env.GOOGLE_TRANSLAE_KEY;
     let url = `https://translation.googleapis.com/language/translate/v2?key=${key}`;
 
     let body = {
