@@ -8,11 +8,12 @@ import { TinyEmitter } from "tiny-emitter";
 import { SUPPORTED_LANGUES } from "../static/langueges.static";
 import { analytic } from "../../plugins/mixpanel";
 import { log } from "../helper/log";
+import proxy from "./proxy.service";
 
 export class TranslateService {
   static instance = new TranslateService();
-
   _eventBus = new TinyEmitter();
+  targetLanguage = "fa";
 
   constructor() {
     // Load target language
@@ -43,7 +44,6 @@ export class TranslateService {
     });
   }
 
-  targetLanguage = "fa";
 
   get targetLanguageTitle() {
     return (
@@ -52,25 +52,22 @@ export class TranslateService {
   }
 
   async translateByGoogle(text: string | string[]) {
-    let key = process.env.GOOGLE_TRANSLAE_KEY;
-    let url = `https://translation.googleapis.com/language/translate/v2?key=${key}`;
+    let key = process.env.GOOGLE_TRANSLATE_KEY;
+    let url = {
+      url: `https://translation.googleapis.com/language/translate/v2?key=${key}`,
+      proxyUrl: process.env.GOOGLE_TRANSLATE_PROXY_URL,
+    }
 
     let body = {
       q: text,
       target: this.targetLanguage,
     };
 
-    return fetch(url, {
-      body: JSON.stringify(body),
-      method: "POST",
-    })
-      .then((res) => {
-        if (res.status == 200) return res.json() as Promise<Dictionary>;
-        else throw res;
-      })
+    return proxy.post(url, body)
       .then((body: Dictionary) => body.data.translations)
       .then((list) => {
         let lang = "en";
+
         let newList = list.map(
           (item: { translatedText: string; detectedSourceLanguage: string }) =>
             item.translatedText
@@ -84,11 +81,12 @@ export class TranslateService {
   }
 
   async translateByDictionaryapi(word: string) {
-    let url = "https://api.dictionaryapi.dev/api/v2/entries/en/";
-    url += encodeURI(word);
+    let url = {
+      url: "https://api.dictionaryapi.dev/api/v2/entries/en/" + encodeURI(word),
+      proxyUrl: null,
+    }
 
-    return fetch(url)
-      .then((res) => res.json())
+    return proxy.get(url)
       .then((body) => {
         if (body.title) throw body;
         else return body as WordFromDictionaryApi[];
