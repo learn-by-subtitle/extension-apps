@@ -1,12 +1,18 @@
 <template>
   <div :style="wrapperStyle">
     <!-- 
-    TRANSLATE CONTENT
+    TRANSLATED WORD OR CONTENT
     -->
-    <div class="translated-word" :style="translateStyle" :dir="dir">
-      <span class="p-2" :style="textStyle">{{
+    <div
+      class="translated-word flex justify-center"
+      :style="translateStyle"
+      :dir="dir"
+    >
+      <span v-if="activeTranslate.length" class="p-2" :style="textStyle">{{
         $filters.cleanText(activeTranslate)
       }}</span>
+
+      <SvgLoader v-else width="40px" asset="WORD_LOADING" />
     </div>
 
     <!-- SUBTITLE
@@ -115,7 +121,7 @@ export default defineComponent({
         width: "100%",
         textAlign: "center",
         opacity: this.hoveredWord.length ? 1 : 0,
-        transition: "all ease 200ms",
+        // transition: "all ease 200ms",
         bottom: bottom + "px",
       };
     },

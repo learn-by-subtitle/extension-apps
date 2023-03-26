@@ -10,7 +10,6 @@ import { netflix } from "./module/subtitle/netflix/initializer";
 import { youtube } from "./module/subtitle/youtube/initializer";
 import { AppInitializer } from "./common/types/general.type";
 import { cleanText } from "./common/helper/text";
-import "./plugins/mixpanel";
 import { analytic } from "./plugins/mixpanel";
 import { VERSION } from "./common/static/global";
 import { log } from "./common/helper/log";

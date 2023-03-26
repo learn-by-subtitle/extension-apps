@@ -8,6 +8,7 @@ import TranslateButton from './materials/TranslateButton.vue';
 // Specifics
 import Word from "./specific/Word.vue";
 import WordDetail from "./specific/WordDetail.vue";
+import SvgLoader from './specific/SvgLoader.vue'
 
 export default {
   // Layouts
@@ -20,4 +21,5 @@ export default {
   // Specifics
   Word,
   WordDetail,
+  SvgLoader,
 };
