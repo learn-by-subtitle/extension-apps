@@ -1,7 +1,7 @@
 {
 	"name": "Subturtle",
 	"description": "Learn English from any subtitle on Internet",
-	"version": "1.1",
+	"version": "1.5",
 	"manifest_version": 3,
 	"icons": {
 		"128": "/assets/logo-128.png",
@@ -9,13 +9,13 @@
 	},
 	"permissions": [
 		"activeTab",
-		"webRequest",
 		"storage"
 	],
 	"host_permissions": [
 		"https://translation.googleapis.com/",
+		"https://puew3irvoklukt3f4sxshvopla0rkxgr.lambda-url.eu-central-1.on.aws/",
 		"https://api.dictionaryapi.dev/",
-		"https://api-js.mixpanel.com/"
+		"https://uji52klwwaj74z2p4r5al6zgei0ospxe.lambda-url.eu-central-1.on.aws/"
 	],
 	"action": {
 		"default_popup": "popup.html"

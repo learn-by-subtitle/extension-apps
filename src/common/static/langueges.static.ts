@@ -50,6 +50,7 @@ export const SUPPORTED_LANGUES = [
   { title: "Kinyarwanda", code: "rw" },
   { title: "Korean", code: "ko" },
   { title: "Kurdish", code: "ku" },
+  { title: "Kurdish (Sorani)", code: "ckb" },
   { title: "Kyrgyz", code: "ky" },
   { title: "Lao", code: "lo" },
   { title: "Latin", code: "la" },

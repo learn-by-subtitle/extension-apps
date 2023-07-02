@@ -3,8 +3,12 @@
     <!-- 
     TRANSLATE CONTENT
     -->
-    <div class="translated-word" :style="translateStyle" :dir="dir">
-      <span :style="textStyle">{{ $filters.cleanText(activeTranslate) }}</span>
+    <div class="translated-word flex justify-center" :style="translateStyle" :dir="dir">
+      <span v-if="activeTranslate.length" :style="textStyle">{{
+        $filters.cleanText(activeTranslate)
+      }}</span>
+
+      <SvgLoader v-else width="60px" asset="WORD_LOADING" />
     </div>
 
     <!-- SUBTITLE
@@ -164,14 +168,20 @@ export default defineComponent({
 
         this.hoveredWord = "";
 
-        if (!value || !value.length) return;
+        if (!this.showTranslatedSentence || !value || !value.length) return;
 
-        this.translateWords();
+        this.translateWholeCaption();
       },
+    },
+
+    showTranslatedSentence(value) {
+      if (!value || this.translatedLines.length) return;
+      this.translateWholeCaption();
     },
 
     hoveredWord(value) {
       if (value.length) {
+        this.translateWord(value);
         analytic.track("Word hovered", { word: value });
       }
     },
@@ -190,13 +200,12 @@ export default defineComponent({
       return list;
     },
 
-    translateWords() {
-      let words = this.getWordList();
+    translateWholeCaption() {
+      // let words = this.getWordList();
       let lines = this.textList as unknown as Array<string>;
-      let translatingList = [lines.join("\n"), ...words];
+      let translatingList = [lines.join("\n")];
 
       this.translatedLines = [];
-      this.translatedWords = {};
 
       TranslateService.instance
         .translateByGoogle(translatingList)
@@ -204,14 +213,21 @@ export default defineComponent({
           this.sourceLanguage = lang;
 
           translatingList.forEach((result, i) => {
-            // Translated line
-            if (i == 0) {
-              this.translatedLines.push(list[i]);
-            }
-            // Translated Word
-            else {
-              this.translatedWords[result] = list[i];
-            }
+            this.translatedLines.push(list[i]);
+          });
+        });
+    },
+
+    translateWord(word) {
+      let translatingList = [word];
+
+      TranslateService.instance
+        .translateByGoogle(translatingList)
+        .then(({ list, lang }) => {
+          this.sourceLanguage = lang;
+
+          translatingList.forEach((result, i) => {
+            this.translatedWords[result] = list[i];
           });
         });
     },

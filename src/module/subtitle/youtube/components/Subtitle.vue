@@ -1,12 +1,18 @@
 <template>
   <div :style="wrapperStyle">
     <!-- 
-    TRANSLATE CONTENT
+    TRANSLATED WORD OR CONTENT
     -->
-    <div class="translated-word" :style="translateStyle" :dir="dir">
-      <span class="p-2" :style="textStyle">{{
+    <div
+      class="translated-word flex justify-center"
+      :style="translateStyle"
+      :dir="dir"
+    >
+      <span v-if="activeTranslate.length" class="p-2" :style="textStyle">{{
         $filters.cleanText(activeTranslate)
       }}</span>
+
+      <SvgLoader v-else width="40px" asset="WORD_LOADING" />
     </div>
 
     <!-- SUBTITLE
@@ -115,7 +121,7 @@ export default defineComponent({
         width: "100%",
         textAlign: "center",
         opacity: this.hoveredWord.length ? 1 : 0,
-        transition: "all ease 200ms",
+        // transition: "all ease 200ms",
         bottom: bottom + "px",
       };
     },
@@ -153,12 +159,13 @@ export default defineComponent({
           return;
         }
 
-        this.translateWords();
+        // this.translateWholeCaption();
       },
     },
 
     hoveredWord(value) {
       if (value.length) {
+        this.translateWord(value);
         analytic.track("Word hovered", { word: value });
       }
     },
@@ -177,7 +184,7 @@ export default defineComponent({
       return list;
     },
 
-    translateWords() {
+    translateWholeCaption() {
       let words = this.getWordList();
       let lines = this.textList as unknown as Array<string>;
       let translatingList = ["" /*lines.join("\n")*/, ...words];
@@ -199,6 +206,20 @@ export default defineComponent({
             else {
               this.translatedWords[result] = list[i];
             }
+          });
+        });
+    },
+
+    translateWord(word) {
+      let translatingList = [word];
+
+      TranslateService.instance
+        .translateByGoogle(translatingList)
+        .then(({ list, lang }) => {
+          this.sourceLanguage = lang;
+
+          translatingList.forEach((result, i) => {
+            this.translatedWords[result] = list[i];
           });
         });
     },

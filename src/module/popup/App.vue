@@ -11,8 +11,8 @@
     </form>
 
     <div class="text-gray-300 mt-12 w-64">
-      <h3 class="text-lg">How it works?</h3>
-      <p>Try to open a video on one of the suported websites, then activate subtitle and try to hover or click a word.</p>
+      <h3 class="text-lg">How does it work?</h3>
+      <p>Try to open a video on one of the supported websites, then activate subtitle on a video and try to hover or click a word.</p>
     </div>
 
     <div class="mt-12 flex flex-col items-center">

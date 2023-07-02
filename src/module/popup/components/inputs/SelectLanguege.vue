@@ -6,7 +6,7 @@
   >
   <select
     v-model="lang"
-    @update:modelValue="commit"
+    @change="commit"
     class="
       bg-gray-50
       border border-gray-300
