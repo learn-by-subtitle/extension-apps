@@ -17,11 +17,7 @@
       <div v-if="textList?.length" class="container" :style="subtitleWrapper">
         <!-- ICON 
         -->
-        <translate-button
-          class="-left-10 absolute"
-          :style="iconContainerStyle"
-          v-model="showTranslatedSentence"
-        />
+        <translate-button class="-left-10 absolute" :style="iconContainerStyle" v-model="showTranslatedSentence" />
 
         <!-- TRANSLATED LINES 
         -->
@@ -38,17 +34,11 @@
         <template v-else :dir="sourceDir">
           <div v-for="(line, i) in textList" :key="i">
             <p class="inline whitespace-nowrap" :style="textStyle">
-              <word
-                v-for="(word, i2) in line.split(' ')"
-                :key="i2"
-                :modelValue="word + ' '"
-                @mouseenter="hoveredWord = word"
-                @mouseleave="hoveredWord = ''"
-                @click="
+              <word v-for="(word, i2) in line.split(' ')" :key="i2" :id="i + i2" :modelValue="word + ' '"
+                @mouseenter="hoveredWord = word" @mouseleave="hoveredWord = ''" @click="
                   showWordDetail = true;
-                  activeWord = word;
-                "
-              />
+                activeWord = word;
+                " />
             </p>
           </div>
         </template>
@@ -56,10 +46,7 @@
     </transition>
 
     <modal v-model="showWordDetail">
-      <word-detail
-        :word="activeWord"
-        :translatedWord="translatedWords[activeWord]"
-      />
+      <word-detail :word="activeWord" :translatedWord="translatedWords[activeWord]" />
     </modal>
   </div>
 </template>

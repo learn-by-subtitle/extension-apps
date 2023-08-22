@@ -44,6 +44,7 @@
               <word
                 v-for="(word, i2) in line.split(' ')"
                 :key="i2"
+                :id="i + i2"
                 :modelValue="word + ' '"
                 @mouseenter="hoveredWord = word"
                 @mouseleave="hoveredWord = ''"
