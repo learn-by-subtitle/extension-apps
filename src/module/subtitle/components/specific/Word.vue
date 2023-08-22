@@ -1,7 +1,12 @@
 <template>
-  <span @mouseenter="onMouseenter" @mouseout="onMouseout">{{
-    modelValue
-  }}</span>
+  <span
+    @mouseenter="onMouseenter"
+    @mouseout="onMouseout"
+    :class="{
+      selected: checkSelectedWord(id),
+    }"
+    >{{ modelValue }}</span
+  >
 </template>
 
 <script lang="ts">
@@ -16,12 +21,22 @@ export default defineComponent({
     modelValue: { type: String, required: true },
   },
 
+  mounted() {
+    log(this.id, this.modelValue);
+  },
+
   computed: {
     ...mapState(useMarkerStore, ["isMarking"]),
   },
 
   methods: {
-    ...mapActions(useMarkerStore, ["markWord", "toggleMarking", "clear"]),
+    ...mapActions(useMarkerStore, [
+      "markWord",
+      "toggleMarking",
+      "checkSelectedWord",
+      "clear",
+    ]),
+
     onMouseenter() {
       this.markWord(this.id, this.modelValue);
     },
@@ -40,7 +55,7 @@ span {
   transition: all ease 200ms;
 }
 
-span:hover {
+.selected {
   color: yellow !important;
   cursor: pointer;
 }

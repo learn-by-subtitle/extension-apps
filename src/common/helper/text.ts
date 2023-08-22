@@ -5,12 +5,14 @@ export function firstUpper(word: string) {
 
   try {
     parts[0] = parts[0].toUpperCase();
-  } catch (error) {}
+  } catch (error) { }
 
   return parts.join("");
 }
 
 export function cleanText(text: string) {
+  if (!text) return '';
+
   [
     "\\",
     ".",

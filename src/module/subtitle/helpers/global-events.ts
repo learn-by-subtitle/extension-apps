@@ -6,6 +6,6 @@ export function registerGlobalEvents() {
 }
 
 export function unregisterGlobalEvents() {
-	document.removeEventListener('keydown', startMarking);
-	document.removeEventListener('keyup', stopMarking);
+	// document.removeEventListener('keydown', startMarking);
+	// document.removeEventListener('keyup', stopMarking);
 }

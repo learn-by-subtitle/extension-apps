@@ -14,6 +14,11 @@ export const useMarkerStore = defineStore('marker', {
 
 	getters: {
 		isMarking: (state) => state.marking,
+		selectedPhrase: (state) => {
+			// sort base id and join words
+			const sorted = state.markedWords.sort((a, b) => a.id - b.id);
+			return sorted.map((item) => item.word).join(' ');
+		},
 	},
 
 	actions: {
@@ -27,6 +32,10 @@ export const useMarkerStore = defineStore('marker', {
 
 		clear() {
 			this.markedWords = [];
+		},
+
+		checkSelectedWord(id: number) {
+			return !!this.markedWords.find((item) => item.id === id);
 		}
 	}
 })
@@ -35,12 +44,14 @@ export const startMarking = (e: KeyboardEvent) => {
 	if (e.key !== 'Control' && e.key !== 'Meta') return;
 
 	useMarkerStore().toggleMarking(true);
-	log('startMarking', e.key);
+
+	// @ TODO: Clear for production
+	log('Start Marking', useMarkerStore().isMarking);
 }
 
 export const stopMarking = (e: KeyboardEvent) => {
 	if (e.key !== 'Control' && e.key !== 'Meta') return;
 
 	useMarkerStore().toggleMarking(false);
-	log('startMarking', e.key);
+	log('Stop Marking', useMarkerStore().isMarking);
 }

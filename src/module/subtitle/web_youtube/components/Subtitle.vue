@@ -19,23 +19,6 @@
     -->
     <transition name="fade">
       <div v-if="textList?.length" class="w-full">
-        <!-- ICON 
-        -->
-        <!-- <translate-button
-          :style="iconContainerStyle"
-          v-model="showTranslatedSentence"
-        /> -->
-
-        <!-- TRANSLATED LINES 
-        -->
-        <!-- <template v-if="showTranslatedSentence">
-          <div :dir="dir">
-            <p class="pl-2 pr-2 pb-0" :style="textStyle" v-for="(line, i) in translatedLines" :key="i">
-              {{ line }}
-            </p>
-          </div>
-        </template> -->
-
         <!-- SUBTITLE
         -->
         <div ref="subturtleSubtitle" :dir="sourceDir" class="text-left">
@@ -44,10 +27,8 @@
               <word
                 v-for="(word, i2) in line.split(' ')"
                 :key="i2"
-                :id="i + i2"
+                :id="parseInt(i + '' + i2)"
                 :modelValue="word + ' '"
-                @mouseenter="hoveredWord = word"
-                @mouseleave="hoveredWord = ''"
                 @click="
                   showWordDetail = true;
                   activeWord = word;
@@ -72,15 +53,17 @@
 
 <script lang="ts">
 import { defineComponent, PropType, StyleValue } from "vue";
+import { mapState, mapActions } from "pinia";
+import { useMarkerStore } from "../../../../stores/marker";
 import { getDir, rtls } from "../../../../common/helper/text";
 import { TranslateService } from "../../../../common/services/translate.service";
 import { Dictionary } from "../../../../common/types/general.type";
 import { analytic } from "../../../../plugins/mixpanel";
+import { log } from "../../../../common/helper/log";
 
 interface DataModel {
   translatedWords: Dictionary;
   translatedLines: String[];
-  hoveredWord: string;
   activeWord: string;
   sourceLanguage: string;
   showTranslatedSentence: boolean;
@@ -99,7 +82,6 @@ export default defineComponent({
     return {
       translatedWords: {},
       translatedLines: [],
-      hoveredWord: "",
       activeWord: "",
       sourceLanguage: "en",
       showTranslatedSentence: false,
@@ -108,6 +90,8 @@ export default defineComponent({
   },
 
   computed: {
+    ...mapState(useMarkerStore, ["selectedPhrase"]),
+
     translateStyle(): StyleValue {
       let bottom = 20;
 
@@ -121,14 +105,14 @@ export default defineComponent({
         fontSize: this.textStyle?.fontSize || "22px",
         width: "100%",
         textAlign: "center",
-        opacity: this.hoveredWord.length ? 1 : 0,
+        opacity: this.selectedPhrase.length ? 1 : 0,
         // transition: "all ease 200ms",
         bottom: bottom + "px",
       };
     },
 
     activeTranslate() {
-      return this.translatedWords[this.hoveredWord] || "";
+      return this.translatedWords[this.selectedPhrase] || "";
     },
 
     iconContainerStyle() {
@@ -153,7 +137,7 @@ export default defineComponent({
       handler(value: Array<string>, old: Array<string>) {
         if (JSON.stringify(value) == JSON.stringify(old)) return;
 
-        this.hoveredWord = "";
+        this.clear();
 
         if (!value || !value.length) {
           this.translatedLines = [];
@@ -164,7 +148,8 @@ export default defineComponent({
       },
     },
 
-    hoveredWord(value) {
+    selectedPhrase(value) {
+      log("selectedPhrase", value);
       if (value.length) {
         this.translateWord(value);
         analytic.track("Word hovered", { word: value });
@@ -173,6 +158,8 @@ export default defineComponent({
   },
 
   methods: {
+    ...mapActions(useMarkerStore, ["clear"]),
+
     getWordList() {
       let list: string[] = [];
       let lines = this.textList as unknown as Array<string>;
@@ -187,7 +174,6 @@ export default defineComponent({
 
     translateWholeCaption() {
       let words = this.getWordList();
-      let lines = this.textList as unknown as Array<string>;
       let translatingList = ["" /*lines.join("\n")*/, ...words];
 
       TranslateService.instance
