@@ -4,10 +4,7 @@
       <div class="ytp-caption-window-container">
         <SubtitleComponent
           id="subturtle-caption"
-          class="
-            caption-window
-            ytp-caption-window-bottom ytp-caption-window-rollup
-          "
+          class="caption-window ytp-caption-window-bottom ytp-caption-window-rollup"
           :wrapperStyle="wrapperStyle"
           :textList="text"
           :textStyle="style"
@@ -83,7 +80,7 @@ export default defineComponent({
 
       this.text = [];
 
-      // Extract text and styles 
+      // Extract text and styles
       // from incomming lines
       //
       linesElements?.forEach((wrapper) => {
@@ -150,5 +147,9 @@ export default defineComponent({
   width: 100%;
   position: absolute;
   z-index: 40;
+}
+
+.caption-window {
+  cursor: unset !important;
 }
 </style>

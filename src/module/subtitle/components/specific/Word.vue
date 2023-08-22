@@ -3,7 +3,8 @@
     @mouseenter="onMouseenter"
     @mouseout="onMouseout"
     :class="{
-      selected: checkSelectedWord(id),
+      selected: checkedSelected(id),
+      pointer: !isMarkingMode && checkedSelected(id),
     }"
     >{{ modelValue }}</span
   >
@@ -26,14 +27,14 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapState(useMarkerStore, ["isMarking"]),
+    ...mapState(useMarkerStore, ["isMarkingMode"]),
   },
 
   methods: {
     ...mapActions(useMarkerStore, [
       "markWord",
       "toggleMarking",
-      "checkSelectedWord",
+      "checkedSelected",
       "clear",
     ]),
 
@@ -42,7 +43,7 @@ export default defineComponent({
     },
 
     onMouseout() {
-      if (!this.isMarking) {
+      if (!this.isMarkingMode) {
         this.clear();
       }
     },
@@ -57,6 +58,9 @@ span {
 
 .selected {
   color: yellow !important;
+}
+
+.pointer {
   cursor: pointer;
 }
 </style>

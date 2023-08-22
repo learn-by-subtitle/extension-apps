@@ -2,18 +2,20 @@ import { defineStore } from "pinia";
 import { log } from "../common/helper/log";
 
 interface State {
+	mode: 'mark' | 'select';
 	marking: boolean;
 	markedWords: { id: number, word: string }[];
 }
 
 export const useMarkerStore = defineStore('marker', {
 	state: (): State => ({
+		mode: 'select',
 		marking: false,
 		markedWords: [],
 	}),
 
 	getters: {
-		isMarking: (state) => state.marking,
+		isMarkingMode: (state) => state.mode === 'mark',
 		selectedPhrase: (state) => {
 			// sort base id and join words
 			const sorted = state.markedWords.sort((a, b) => a.id - b.id);
@@ -22,8 +24,8 @@ export const useMarkerStore = defineStore('marker', {
 	},
 
 	actions: {
-		toggleMarking(value?: boolean) {
-			this.marking = value || !this.isMarking;
+		toggleMarking(value: boolean) {
+			this.mode = value ? 'mark' : 'select';
 		},
 
 		markWord(id: number, word: string) {
@@ -34,7 +36,7 @@ export const useMarkerStore = defineStore('marker', {
 			this.markedWords = [];
 		},
 
-		checkSelectedWord(id: number) {
+		checkedSelected(id: number) {
 			return !!this.markedWords.find((item) => item.id === id);
 		}
 	}
@@ -44,14 +46,21 @@ export const startMarking = (e: KeyboardEvent) => {
 	if (e.key !== 'Control' && e.key !== 'Meta') return;
 
 	useMarkerStore().toggleMarking(true);
+	document.body.style.cursor = 'text';
+
+	document.addEventListener('keyup', stopMarking);
 
 	// @ TODO: Clear for production
-	log('Start Marking', useMarkerStore().isMarking);
+	log('Start Marking', useMarkerStore().isMarkingMode);
 }
 
 export const stopMarking = (e: KeyboardEvent) => {
 	if (e.key !== 'Control' && e.key !== 'Meta') return;
 
 	useMarkerStore().toggleMarking(false);
-	log('Stop Marking', useMarkerStore().isMarking);
+	document.body.style.cursor = 'default';
+
+	document.removeEventListener('keyup', stopMarking);
+
+	log('Stop Marking', useMarkerStore().isMarkingMode);
 }
