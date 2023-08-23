@@ -16,6 +16,7 @@ export const useMarkerStore = defineStore('marker', {
 
 	getters: {
 		isMarkingMode: (state) => state.mode === 'mark',
+		isMarking: (state) => state.marking,
 		selectedPhrase: (state) => {
 			// sort base id and join words
 			const sorted = state.markedWords.sort((a, b) => a.id - b.id);
@@ -24,8 +25,12 @@ export const useMarkerStore = defineStore('marker', {
 	},
 
 	actions: {
-		toggleMarking(value: boolean) {
+		toggleMarkingMode(value: boolean) {
 			this.mode = value ? 'mark' : 'select';
+		},
+
+		toggleMarking(value: boolean) {
+			this.marking = value;
 		},
 
 		markWord(id: number, word: string) {
@@ -45,7 +50,7 @@ export const useMarkerStore = defineStore('marker', {
 export const startMarking = (e: KeyboardEvent) => {
 	if (e.key !== 'Control' && e.key !== 'Meta') return;
 
-	useMarkerStore().toggleMarking(true);
+	useMarkerStore().toggleMarkingMode(true);
 	document.body.style.cursor = 'text';
 
 	document.addEventListener('keyup', stopMarking);
@@ -57,7 +62,7 @@ export const startMarking = (e: KeyboardEvent) => {
 export const stopMarking = (e: KeyboardEvent) => {
 	if (e.key !== 'Control' && e.key !== 'Meta') return;
 
-	useMarkerStore().toggleMarking(false);
+	useMarkerStore().toggleMarkingMode(false);
 	document.body.style.cursor = 'default';
 
 	document.removeEventListener('keyup', stopMarking);

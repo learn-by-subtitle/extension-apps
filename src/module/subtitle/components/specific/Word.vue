@@ -1,5 +1,7 @@
 <template>
   <span
+    @mousedown="toggleMarking(true)"
+    @mouseup="toggleMarking(false)"
     @mouseenter="onMouseenter"
     @mouseout="onMouseout"
     :class="{
@@ -27,19 +29,24 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapState(useMarkerStore, ["isMarkingMode"]),
+    ...mapState(useMarkerStore, ["isMarkingMode", "isMarking"]),
   },
 
   methods: {
     ...mapActions(useMarkerStore, [
       "markWord",
+      "toggleMarkingMode",
       "toggleMarking",
       "checkedSelected",
       "clear",
     ]),
 
     onMouseenter() {
-      this.markWord(this.id, this.modelValue);
+      if (!this.isMarkingMode) {
+        this.markWord(this.id, this.modelValue);
+      } else if (this.isMarkingMode && this.isMarking) {
+        this.markWord(this.id, this.modelValue);
+      }
     },
 
     onMouseout() {
