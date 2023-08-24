@@ -1,8 +1,7 @@
 <template>
   <span
     @mousedown="toggleMarking(true)"
-    @mouseup="toggleMarking(false)"
-    @mouseenter="onMouseenter"
+    @mousemove="onMouseenter"
     @mouseout="onMouseout"
     :class="{
       selected: checkedSelected(id),
@@ -42,10 +41,23 @@ export default defineComponent({
     ]),
 
     onMouseenter() {
+      // Mark single word
       if (!this.isMarkingMode) {
-        this.markWord(this.id, this.modelValue);
-      } else if (this.isMarkingMode && this.isMarking) {
-        this.markWord(this.id, this.modelValue);
+        this.clear();
+        this.markWord(
+          this.id,
+          this.modelValue,
+          this.$el.getBoundingClientRect()
+        );
+      }
+
+      // Mark multiple words
+      if (this.isMarkingMode && this.isMarking) {
+        this.markWord(
+          this.id,
+          this.modelValue,
+          this.$el.getBoundingClientRect()
+        );
       }
     },
 

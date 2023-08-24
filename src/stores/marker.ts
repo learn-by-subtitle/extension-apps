@@ -1,10 +1,16 @@
 import { defineStore } from "pinia";
 import { log } from "../common/helper/log";
 
+export interface MarkedWord {
+	id: number,
+	word: string,
+	domeRect: DOMRect
+}
+
 interface State {
 	mode: 'mark' | 'select';
 	marking: boolean;
-	markedWords: { id: number, word: string }[];
+	markedWords: MarkedWord[];
 }
 
 export const useMarkerStore = defineStore('marker', {
@@ -17,10 +23,9 @@ export const useMarkerStore = defineStore('marker', {
 	getters: {
 		isMarkingMode: (state) => state.mode === 'mark',
 		isMarking: (state) => state.marking,
+		words: (state) => state.markedWords,
 		selectedPhrase: (state) => {
-			// sort base id and join words
-			const sorted = state.markedWords.sort((a, b) => a.id - b.id);
-			return sorted.map((item) => item.word).join(' ');
+			return state.markedWords.map((item) => item.word).join(' ');
 		},
 	},
 
@@ -30,11 +35,24 @@ export const useMarkerStore = defineStore('marker', {
 		},
 
 		toggleMarking(value: boolean) {
+			log('toggleMarking', value);
 			this.marking = value;
+
+			if (value == true) {
+				const _this = this;
+				document.addEventListener('mouseup', () => {
+					_this.toggleMarking(false);
+				}, { once: true });
+			}
 		},
 
-		markWord(id: number, word: string) {
-			this.markedWords.push({ id, word });
+		markWord(id: number, word: string, domeRect: DOMRect) {
+			const isExist = this.markedWords.find((item) => item.id === id);
+			if (isExist) return
+
+			this.markedWords.push({ id, word, domeRect });
+			// Sort base id
+			this.markedWords = this.markedWords.sort((a, b) => a.id - b.id);
 		},
 
 		clear() {
