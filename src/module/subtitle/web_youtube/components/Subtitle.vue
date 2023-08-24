@@ -59,7 +59,6 @@ import { getDir, rtls } from "../../../../common/helper/text";
 import { TranslateService } from "../../../../common/services/translate.service";
 import { Dictionary } from "../../../../common/types/general.type";
 import { analytic } from "../../../../plugins/mixpanel";
-import { log } from "../../../../common/helper/log";
 
 interface DataModel {
   translatedWords: Dictionary;
@@ -149,7 +148,6 @@ export default defineComponent({
     },
 
     selectedPhrase(value) {
-      log("selectedPhrase", value);
       if (value.length) {
         this.translateWord(value);
         analytic.track("Word hovered", { word: value });

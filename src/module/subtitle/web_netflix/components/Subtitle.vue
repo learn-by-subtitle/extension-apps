@@ -3,7 +3,11 @@
     <!-- 
     TRANSLATE CONTENT
     -->
-    <div class="translated-word flex justify-center" :style="translateStyle" :dir="dir">
+    <div
+      class="translated-word flex justify-center"
+      :style="translateStyle"
+      :dir="dir"
+    >
       <span v-if="activeTranslate.length" :style="textStyle">{{
         $filters.cleanText(activeTranslate)
       }}</span>
@@ -17,7 +21,11 @@
       <div v-if="textList?.length" class="container" :style="subtitleWrapper">
         <!-- ICON 
         -->
-        <translate-button class="-left-10 absolute" :style="iconContainerStyle" v-model="showTranslatedSentence" />
+        <translate-button
+          class="-left-10 absolute"
+          :style="iconContainerStyle"
+          v-model="showTranslatedSentence"
+        />
 
         <!-- TRANSLATED LINES 
         -->
@@ -34,11 +42,16 @@
         <template v-else :dir="sourceDir">
           <div v-for="(line, i) in textList" :key="i">
             <p class="inline whitespace-nowrap" :style="textStyle">
-              <word v-for="(word, i2) in line.split(' ')" :key="i2" :id="i + i2" :modelValue="word + ' '"
-                @mouseenter="hoveredWord = word" @mouseleave="hoveredWord = ''" @click="
+              <word
+                v-for="(word, i2) in line.split(' ')"
+                :key="i2"
+                :id="parseInt(i + '' + i2)"
+                :modelValue="word + ' '"
+                @click="
                   showWordDetail = true;
-                activeWord = word;
-                " />
+                  activeWord = word;
+                "
+              />
             </p>
           </div>
         </template>
@@ -46,13 +59,18 @@
     </transition>
 
     <modal v-model="showWordDetail">
-      <word-detail :word="activeWord" :translatedWord="translatedWords[activeWord]" />
+      <word-detail
+        :word="activeWord"
+        :translatedWord="translatedWords[activeWord]"
+      />
     </modal>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType, StyleValue } from "vue";
+import { mapState, mapActions } from "pinia";
+import { useMarkerStore } from "../../../../stores/marker";
 import { clamp } from "../../../../common/helper/math";
 import { getDir, rtls } from "../../../../common/helper/text";
 import { TranslateService } from "../../../../common/services/translate.service";
@@ -62,7 +80,6 @@ import { analytic } from "../../../../plugins/mixpanel";
 interface DataModel {
   translatedWords: Dictionary;
   translatedLines: String[];
-  hoveredWord: string;
   activeWord: string;
   sourceLanguage: string;
   showTranslatedSentence: boolean;
@@ -80,7 +97,6 @@ export default defineComponent({
     return {
       translatedWords: {},
       translatedLines: [],
-      hoveredWord: "",
       activeWord: "",
       sourceLanguage: "en",
       showTranslatedSentence: false,
@@ -89,6 +105,8 @@ export default defineComponent({
   },
 
   computed: {
+    ...mapState(useMarkerStore, ["selectedPhrase"]),
+
     lines() {
       let lines = this.translatedLines.length
         ? this.translatedLines
@@ -121,13 +139,13 @@ export default defineComponent({
         top: top + "px",
         width: this.positionRect.width + "px",
         textAlign: "center",
-        opacity: this.hoveredWord.length ? 1 : 0,
+        opacity: this.selectedPhrase.length ? 1 : 0,
         transition: "all ease 200ms",
       };
     },
 
     activeTranslate() {
-      return this.translatedWords[this.hoveredWord] || "";
+      return this.translatedWords[this.selectedPhrase] || "";
     },
 
     iconContainerStyle() {
@@ -153,7 +171,7 @@ export default defineComponent({
       handler(value: Array<string>, old: Array<string>) {
         if (JSON.stringify(value) == JSON.stringify(old)) return;
 
-        this.hoveredWord = "";
+        this.clear();
 
         if (!this.showTranslatedSentence || !value || !value.length) return;
 
@@ -166,7 +184,7 @@ export default defineComponent({
       this.translateWholeCaption();
     },
 
-    hoveredWord(value) {
+    selectedPhrase(value) {
       if (value.length) {
         this.translateWord(value);
         analytic.track("Word hovered", { word: value });
@@ -175,6 +193,8 @@ export default defineComponent({
   },
 
   methods: {
+    ...mapActions(useMarkerStore, ["clear"]),
+
     getWordList() {
       let list: string[] = [];
       let lines = this.textList as unknown as Array<string>;
