@@ -2,13 +2,7 @@
   <div class="flex items-center select-none scale-50">
     <div class="relative flex items-center justify-center w-[96px] h-[96px]">
       <img
-        ref="keyArrowEl"
-        width="64"
-        height="64"
-        class="z-[1]"
-        src="https://img.icons8.com/nolan/64/double-down.png"
-      />
-      <img
+        ref="keyBtnEl"
         width="96"
         height="96"
         class="absolute top-0 left-0"
@@ -45,7 +39,7 @@ const props = defineProps({
 
 const animateBeats = ref<anime.AnimeInstance[]>([]);
 const phraseEl = ref<HTMLElement>();
-const keyArrowEl = ref<HTMLElement>();
+const keyBtnEl = ref<HTMLElement>();
 const iconCursorEl = ref<HTMLElement>();
 const markerlineEl = ref<HTMLElement>();
 
@@ -62,16 +56,16 @@ onMounted(() => {
   const iconCursorElWidth = iconCursorEl.value?.clientWidth || 0;
 
   animateBeats.value = [
-    // Key Arrow
+    // Key Button
+    // Add pingpong effect to the key button, in y-axis
     //
     anime({
-      targets: keyArrowEl.value,
-      translateY: ["-75px", "-40px"],
-      easing: "easeInOutQuad",
-      direction: "alternate",
-      loop: 5,
+      targets: keyBtnEl.value,
+      translateY: 3,
+      scale: 0.85,
+      easing: "easeInOutSine",
       autoplay: false,
-      duration: 200,
+      duration: 150,
     }),
 
     // Cursor Icon
@@ -81,6 +75,7 @@ onMounted(() => {
       opacity: [0, 1],
       easing: "easeInOutQuad",
       duration: 100,
+      delay: 400,
       autoplay: false,
     }),
     anime({
@@ -90,6 +85,7 @@ onMounted(() => {
         phraseElWidth + iconCursorElWidth / 2 + "px",
       ],
       easing: "easeInOutQuad",
+      delay: 400,
       autoplay: false,
     }),
 
@@ -99,6 +95,7 @@ onMounted(() => {
       targets: markerlineEl.value,
       width: ["0px", phraseElWidth + iconCursorElWidth + "px"],
       easing: "easeInOutQuad",
+      delay: 400,
       autoplay: false,
     }),
   ];
