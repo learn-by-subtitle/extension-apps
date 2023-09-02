@@ -142,8 +142,6 @@ export default defineComponent({
           this.translatedLines = [];
           return;
         }
-
-        // this.translateWholeCaption();
       },
     },
 
@@ -151,6 +149,15 @@ export default defineComponent({
       if (value.length) {
         this.translateWord(value);
         analytic.track("Word hovered", { word: value });
+      }
+    },
+
+    clickedWord(value) {
+      if (value.length) {
+        this.translateWord(value);
+
+        // Tracking will be done on word modal
+        // analytic.track("Word clicked", { word: value });
       }
     },
   },
