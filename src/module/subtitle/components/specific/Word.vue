@@ -42,7 +42,7 @@ export default defineComponent({
         this.clear();
         this.markWord(
           this.id,
-          this.modelValue,
+          this.modelValue?.trim(),
           this.$el.getBoundingClientRect()
         );
       }

@@ -31,7 +31,7 @@
                 :modelValue="word + ' '"
                 @click="
                   showWordDetail = true;
-                  activeWord = word;
+                  clickedWord = word;
                 "
               />
             </p>
@@ -43,8 +43,8 @@
     <teleport to="body">
       <modal v-model="showWordDetail">
         <word-detail
-          :word="activeWord"
-          :translatedWord="translatedWords[activeWord]"
+          :word="clickedWord"
+          :translatedWord="translatedWords[clickedWord]"
         />
       </modal>
     </teleport>
@@ -59,14 +59,15 @@ import { getDir, rtls } from "../../../../common/helper/text";
 import { TranslateService } from "../../../../common/services/translate.service";
 import { Dictionary } from "../../../../common/types/general.type";
 import { analytic } from "../../../../plugins/mixpanel";
+import { log } from "../../../../common/helper/log";
 
 interface DataModel {
   translatedWords: Dictionary;
   translatedLines: String[];
-  activeWord: string;
   sourceLanguage: string;
   showTranslatedSentence: boolean;
   showWordDetail: boolean;
+  clickedWord: string;
 }
 
 export default defineComponent({
@@ -80,10 +81,10 @@ export default defineComponent({
     return {
       translatedWords: {},
       translatedLines: [],
-      activeWord: "",
       sourceLanguage: "en",
       showTranslatedSentence: false,
       showWordDetail: false,
+      clickedWord: "",
     };
   },
 
@@ -205,6 +206,8 @@ export default defineComponent({
           translatingList.forEach((result, i) => {
             this.translatedWords[result] = list[i];
           });
+
+          log("translatedWords", word, this.translatedWords);
         });
     },
   },
