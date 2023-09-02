@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import { log } from "../common/helper/log";
 
 export interface MarkedWord {
 	id: number,
@@ -35,7 +34,6 @@ export const useMarkerStore = defineStore('marker', {
 		},
 
 		toggleMarking(value: boolean) {
-			log('toggleMarking', value);
 			this.marking = value;
 
 			if (value == true) {
@@ -72,9 +70,6 @@ export const startMarking = (e: KeyboardEvent) => {
 	document.body.style.cursor = 'text';
 
 	document.addEventListener('keyup', stopMarking);
-
-	// @ TODO: Clear for production
-	log('Start Marking', useMarkerStore().isMarkingMode);
 }
 
 export const stopMarking = (e: KeyboardEvent) => {
@@ -84,6 +79,4 @@ export const stopMarking = (e: KeyboardEvent) => {
 	document.body.style.cursor = 'default';
 
 	document.removeEventListener('keyup', stopMarking);
-
-	log('Stop Marking', useMarkerStore().isMarkingMode);
 }

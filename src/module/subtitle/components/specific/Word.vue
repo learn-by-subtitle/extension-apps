@@ -23,10 +23,6 @@ export default defineComponent({
     modelValue: { type: String, required: true },
   },
 
-  mounted() {
-    log(this.id, this.modelValue);
-  },
-
   computed: {
     ...mapState(useMarkerStore, ["isMarkingMode", "isMarking"]),
   },

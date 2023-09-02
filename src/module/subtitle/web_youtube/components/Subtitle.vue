@@ -71,7 +71,6 @@ interface DataModel {
 
 export default defineComponent({
   props: {
-    positionRect: Object,
     textList: { type: Object as PropType<string[]> },
     textStyle: Object,
     wrapperStyle: Object,
