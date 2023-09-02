@@ -1,6 +1,6 @@
 log("Using version", VERSION);
 
-import "./style.scss";
+import "./animation.scss";
 import "./tailwind.css";
 
 import { App, createApp } from "vue";

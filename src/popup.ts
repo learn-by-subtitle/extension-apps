@@ -1,3 +1,4 @@
+import "./animation.scss";
 import "./tailwind.css";
 
 import { createApp } from "vue";
