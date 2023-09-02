@@ -206,8 +206,6 @@ export default defineComponent({
           translatingList.forEach((result, i) => {
             this.translatedWords[result] = list[i];
           });
-
-          log("translatedWords", word, this.translatedWords);
         });
     },
   },

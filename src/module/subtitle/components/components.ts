@@ -8,8 +8,12 @@ import TranslateButton from './materials/TranslateButton.vue';
 // Specifics
 import Word from "./specific/Word.vue";
 import WordDetail from "./specific/WordDetail.vue";
+<<<<<<< HEAD
 import SvgLoader from './specific/SvgLoader.vue';
 import MarkerBorder from "./specific/MarkerBorder.vue";
+=======
+import SvgLoader from './specific/SvgLoader.vue'
+>>>>>>> main
 
 export default {
   // Layouts
@@ -23,5 +27,8 @@ export default {
   Word,
   WordDetail,
   SvgLoader,
+<<<<<<< HEAD
   MarkerBorder,
+=======
+>>>>>>> main
 };
