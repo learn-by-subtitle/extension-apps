@@ -1,8 +1,13 @@
 # Subturtle 
-### would help you for learning English while you are watching a video on the internet. 
+Learn English from any subtitle on the Internet.
+
+This is a Google Chrome extension that makes learning English a breeze while watching online videos!
+
+With Subturtle, you can do so much more than just watch videos. You can easily translate words by simply hovering over them with your mouse, making it easy to understand unfamiliar vocabulary. You can also translate the entire subtitle into any language you desire. Plus, you can view detailed word definitions and learn about their part of speech.
 
 ### You can do a lot with it:
-- Translate words through hovering (moving the mouse pointer on them)
+- Translate a word by hovering it (moving the mouse pointer on them).
+- Translate multiple words by marking them.
 - Translate the whole subtitle to any language you want.
 - See word detail containing definitions and part of speech.
 
@@ -21,9 +26,8 @@ Supported websites:
 - Netflix
 - More websites will be supported soon.
 
-Updates on v1.1:
-- Added analytics.
-- Added Guide description on extension popup.
+Updates on v1.6:
+- Support multiple-word selection on subtitles, you can mark multiple words and see the translation.
 
 ---
 
