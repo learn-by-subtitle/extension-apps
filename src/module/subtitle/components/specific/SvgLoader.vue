@@ -11,7 +11,7 @@ export default {
   props: {
     asset: String,
     width: String,
-    Height: String,
+    height: String,
     scale: Number,
   },
 
@@ -35,6 +35,3 @@ export default {
   },
 };
 </script>
-
-<style>
-</style>

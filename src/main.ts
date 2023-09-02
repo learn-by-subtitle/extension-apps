@@ -1,18 +1,20 @@
 log("Using version", VERSION);
 
-import "./style.scss";
+import "./animation.scss";
 import "./tailwind.css";
 
 import { App, createApp } from "vue";
 import components from "./module/subtitle/components/components";
 
-import { netflix } from "./module/subtitle/netflix/initializer";
-import { youtube } from "./module/subtitle/youtube/initializer";
+import { netflix } from "./module/subtitle/web_netflix/initializer";
+import { youtube } from "./module/subtitle/web_youtube/initializer";
 import { AppInitializer } from "./common/types/general.type";
 import { cleanText } from "./common/helper/text";
 import { analytic } from "./plugins/mixpanel";
 import { VERSION } from "./common/static/global";
 import { log } from "./common/helper/log";
+import { addPlugins } from "./plugins/install";
+import { registerGlobalEvents, unregisterGlobalEvents } from "./module/subtitle/helpers/global-events";
 
 let vueApp!: App;
 let appInitializer!: AppInitializer;
@@ -41,7 +43,7 @@ function start() {
     ) {
       initialized = true;
 
-      vueApp = createApp(appInitializer.component as any);
+      vueApp = addPlugins(createApp(appInitializer.component as any));
 
       Object.keys(components).forEach((name) => {
         let component = (components as any)[name];
@@ -54,7 +56,10 @@ function start() {
 
       appInitializer
         .start(vueApp)
-        .then((_) => analytic.track("Used In"))
+        .then((_) => {
+          analytic.track("Used In")
+          registerGlobalEvents()
+        })
         .catch((_) => analytic.track("Error on initiating"));
     }
 
@@ -66,6 +71,7 @@ function start() {
       !location.pathname.includes(appInitializer.website.path)
     ) {
       initialized = false;
+      unregisterGlobalEvents();
       vueApp.unmount();
     }
   }, 100);

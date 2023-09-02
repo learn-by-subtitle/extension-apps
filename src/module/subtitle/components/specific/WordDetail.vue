@@ -17,16 +17,7 @@
 
         <div class="mt-6 scale-75">
           <span
-            class="
-              text-xl
-              rounded-md
-              shadow-sm
-              bg-gray-500
-              text-white
-              justify-end
-              px-3
-              py-2
-            "
+            class="text-xl rounded-md shadow-sm bg-gray-500 text-white justify-end px-3 py-2"
             >{{ targetLanguageTitle }}</span
           >
         </div>
@@ -133,10 +124,10 @@ export default defineComponent({
     },
 
     activeTab(value, old) {
-      if(old.length) {
-        analytic.track('Part of speech switched')
+      if (old.length) {
+        analytic.track("Part of speech switched");
       }
-    }
+    },
   },
 
   methods: {
