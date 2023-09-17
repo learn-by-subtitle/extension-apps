@@ -7,6 +7,9 @@ import rootComponent from "./module/popup/App.vue";
 import components from "./module/popup/components/components";
 import { getAsset } from "./module/popup/helper/assets";
 
+// Set uninstall url
+chrome.runtime.setUninstallURL(process.env.UNINSTALL_FORM_URL || "")
+
 const vueApp = createApp(rootComponent as any);
 vueApp.use(createPinia());
 
