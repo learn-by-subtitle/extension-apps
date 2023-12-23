@@ -4,6 +4,9 @@
       "path": "extension"
     },
     {
+      "path": "server"
+    },
+    {
       "path": "."
     }
   ],
