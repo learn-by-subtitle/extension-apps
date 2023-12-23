@@ -4,14 +4,15 @@ const { reply, getCollection, userManager } = require("@modular-rest/server");
 const { google } = require("googleapis");
 
 let name = "auth";
-let backup = new Router();
+let auth = new Router();
 
 const CLIENT_ID = process.env.GOOGLE_OAUTH_CLIENT_ID;
 const CLIENT_SECRET = process.env.GOOGLE_OAUTH_CLIENT_SECRET;
-const REDIRECT_URI = "http://localhost:8080/auth/google/oauth2callback";
+const CLIENT_ID_EXTENSION = process.env.GOOGLE_OAUTH_CLIENT_ID_EXTENSION;
+const REDIRECT_URI = "http://localhost:8080/auth/google/code-login";
 const SCOPE = "https://www.googleapis.com/auth/userinfo.email";
 
-backup.get("/google", async (ctx) => {
+auth.get("/google", async (ctx) => {
   const oauth2Client = new google.auth.OAuth2(
     CLIENT_ID,
     CLIENT_SECRET,
@@ -26,7 +27,7 @@ backup.get("/google", async (ctx) => {
   ctx.response.redirect(url);
 });
 
-backup.get("/google/oauth2callback", async (ctx) => {
+auth.get("/google/code-login", async (ctx) => {
   const oauth2Client = new google.auth.OAuth2(
     CLIENT_ID,
     CLIENT_SECRET,
@@ -62,5 +63,29 @@ backup.get("/google/oauth2callback", async (ctx) => {
   ctx.body = reply.create("s", { token });
 });
 
+auth.get("/google/token-login", async (ctx) => {
+  const extensionUserToken = ctx.query.token;
+  const oauth2Client = new google.auth.OAuth2(CLIENT_ID_EXTENSION);
+  const payload = await oauth2Client.getTokenInfo(extensionUserToken);
+  const googleEmail = payload.email;
+
+  const registeredUser = await userManager
+    .getUserByIdentity(googleEmail, "email")
+    .catch((e) => null);
+
+  if (!registeredUser) {
+    try {
+      await userManager.registerUser({ email: googleEmail });
+    } catch (error) {
+      ctx.throw(500, error);
+      return;
+    }
+  }
+
+  const token = await userManager.issueTokenForUser(googleEmail);
+
+  ctx.body = reply.create("s", { token });
+});
+
 module.exports.name = name;
-module.exports.main = backup;
+module.exports.main = auth;
