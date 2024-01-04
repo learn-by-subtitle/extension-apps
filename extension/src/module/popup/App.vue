@@ -15,8 +15,8 @@
         <div class="mt-12 flex flex-col items-center">
           <h3 class="font-bold text-gray-400">Supported websites</h3>
           <div class="flex justify-center items-center -mt-3">
-            <img class="w-32" :src="$getAsset('/svg/netflix_logo.svg')" />
-            <img class="w-32" :src="$getAsset('/svg/youtube_logo.svg')" />
+            <img class="w-32" :src="getAsset('/svg/netflix_logo.svg')" />
+            <img class="w-32" :src="getAsset('/svg/youtube_logo.svg')" />
           </div>
         </div>
       </section>
@@ -44,14 +44,8 @@
   </transition>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      lang: "fa",
-    };
-  },
-};
+<script lang="ts" setup>
+import { getAsset } from "./helper/assets";
 </script>
 
 <style>
