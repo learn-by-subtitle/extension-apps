@@ -11,7 +11,7 @@
 import { defineComponent } from "vue";
 import { SUBTILE_CONTAINER_CLASS, SUBTITLE_CLASS } from "./static";
 import { waitUntil } from "../../../common/helper/promise";
-import { SubtitleBundingBox } from "../../../common/types/general.type";
+import { SubtitleBondingBox } from "../../../common/types/general.type";
 
 import SubtitleComponent from "./components/Subtitle.vue";
 
@@ -22,7 +22,7 @@ export default defineComponent({
 
   data(): {
     active: boolean;
-    position: SubtitleBundingBox;
+    position: SubtitleBondingBox;
     text: string[];
     style: CSSStyleDeclaration | {};
     observer: null | MutationObserver;

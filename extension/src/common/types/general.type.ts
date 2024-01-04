@@ -4,12 +4,12 @@ export type Dictionary = {
   [key: string]: any;
 };
 
-export interface SubtitleBundingBox {
+export interface SubtitleBondingBox {
   top: number;
   left: number;
   width: number;
   height: number;
-};
+}
 
 export interface AppInitializer {
   website: {

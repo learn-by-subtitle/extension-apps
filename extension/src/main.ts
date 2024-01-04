@@ -14,7 +14,11 @@ import { analytic } from "./plugins/mixpanel";
 import { VERSION } from "./common/static/global";
 import { log } from "./common/helper/log";
 import { addPlugins } from "./plugins/install";
-import { registerGlobalEvents, unregisterGlobalEvents } from "./module/subtitle/helpers/global-events";
+import {
+  registerGlobalEvents,
+  unregisterGlobalEvents,
+} from "./module/subtitle/helpers/global-events";
+import { GetLoginStatusMessage } from "./common/types/messaging";
 
 let vueApp!: App;
 let appInitializer!: AppInitializer;
@@ -28,7 +32,7 @@ let initialized = false;
   }
 });
 
-// Create an interval to intializing the app
+// Create an interval to initializing the app
 // In each interval cycle Initializer seeks for a subtitle container,
 // Then the app being initiated if container exists
 //
@@ -57,8 +61,8 @@ function start() {
       appInitializer
         .start(vueApp)
         .then((_) => {
-          analytic.track("Used In")
-          registerGlobalEvents()
+          analytic.track("Used In");
+          registerGlobalEvents();
         })
         .catch((_) => analytic.track("Error on initiating"));
     }
@@ -78,3 +82,9 @@ function start() {
 }
 
 start();
+
+setTimeout(() => {
+  chrome.runtime.sendMessage(new GetLoginStatusMessage(), function (response) {
+    console.log("LoginStatusMessage Res", response);
+  });
+}, 1000);
