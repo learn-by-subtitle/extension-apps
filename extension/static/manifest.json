@@ -9,6 +9,7 @@
 	},
 	"permissions": [
 		"activeTab",
+		"tabs",
 		"storage",
 		"identity"
 	],

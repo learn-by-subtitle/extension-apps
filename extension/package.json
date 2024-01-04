@@ -35,6 +35,7 @@
     "pinia": "^2.1.6",
     "text-cleaner": "^1.2.1",
     "tiny-emitter": "^2.1.0",
-    "vue": "^3.2.37"
+    "vue": "^3.2.37",
+    "vue-router": "4"
   }
 }

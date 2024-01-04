@@ -1,5 +1,6 @@
 export const MESSAGE_TYPE = {
   GET_LOGIN_STATUS: "GET_LOGIN_STATUS",
+  OPEN_LOGIN_WINDOW: "OPEN_LOGIN_WINDOW",
 };
 
 export type LoginStatusResponse = {
@@ -27,5 +28,17 @@ export class GetLoginStatusMessage implements BaseMessage {
 
   static checkResponse(response: any): response is LoginStatusResponse {
     return response.status !== undefined && response.token !== undefined;
+  }
+}
+
+export class OpenLoginWindowMessage implements BaseMessage {
+  type: string;
+
+  constructor() {
+    this.type = MESSAGE_TYPE.OPEN_LOGIN_WINDOW;
+  }
+
+  static is(message: any): message is OpenLoginWindowMessage {
+    return message.type === MESSAGE_TYPE.OPEN_LOGIN_WINDOW;
   }
 }
