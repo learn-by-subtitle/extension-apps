@@ -1,8 +1,8 @@
 <template>
-  <select-languege
+  <select-language
     v-model="lang"
     @update:modelValue="onChanged"
-    label="Select target languege"
+    label="Select target language"
   />
 </template>
 
@@ -36,5 +36,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>
