@@ -70,7 +70,10 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { GetCurrentChromeUserToken } from "../../../common/types/messaging";
+import {
+  GetCurrentChromeUserToken,
+  StoreUserTokenMessage,
+} from "../../../common/types/messaging";
 import { sendMessage } from "../helper/massage";
 import { get } from "../helper/http";
 
@@ -95,15 +98,16 @@ async function loginWithChrome() {
     });
 
     if (status == "success") {
-      isLoggedIn.value = true;
-      chrome.storage.local.set({ token });
+      await sendMessage(new StoreUserTokenMessage(token)).then((res) => {
+        isLoggedIn.value = true;
+      });
     }
   }
 
   pending.value = false;
 }
 
-async function loginWithGoogle() {}
+// async function loginWithGoogle() {}
 
 function closeWindow() {
   window.close();

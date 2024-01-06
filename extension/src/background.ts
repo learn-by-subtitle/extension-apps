@@ -2,6 +2,7 @@ import {
   GetLoginStatusMessage,
   GetCurrentChromeUserToken,
   OpenLoginWindowMessage,
+  StoreUserTokenMessage,
 } from "./common/types/messaging";
 
 export {};
@@ -35,9 +36,22 @@ function getScreenSize() {
 chrome.runtime.onMessage.addListener(function (request, _sender, sendResponse) {
   // Get login status
   if (GetLoginStatusMessage.is(request)) {
-    chrome.storage.local.get("token").then((token) => {
+    chrome.storage.sync.get("token").then(({ token }) => {
       sendResponse({ status: !!token, token: token || null });
     });
+  }
+
+  // Store user token
+  else if (StoreUserTokenMessage.is(request)) {
+    if (request.token === null) {
+      chrome.storage.sync.remove("token").then(() => {
+        sendResponse({ status: true });
+      });
+    } else {
+      chrome.storage.sync.set({ token: request.token }).then(() => {
+        sendResponse({ status: true });
+      });
+    }
   }
 
   // Get current chrome user token

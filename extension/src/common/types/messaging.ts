@@ -2,6 +2,7 @@ export const MESSAGE_TYPE = {
   GET_LOGIN_STATUS: "GET_LOGIN_STATUS",
   GET_CURRENT_CHROME_USER_TOKEN: "GET_CURRENT_CHROME_USER_TOKEN",
   OPEN_LOGIN_WINDOW: "OPEN_LOGIN_WINDOW",
+  STORE_USER_TOKEN: "STORE_USER_TOKEN",
 };
 
 export type LoginStatusResponse = {
@@ -45,6 +46,20 @@ export class GetCurrentChromeUserToken implements BaseMessage {
 
   static checkResponse(response: any): response is LoginStatusResponse {
     return response.status !== undefined && response.token !== undefined;
+  }
+}
+
+export class StoreUserTokenMessage implements BaseMessage {
+  type: string;
+  token: string | null;
+
+  constructor(token: string | null) {
+    this.type = MESSAGE_TYPE.STORE_USER_TOKEN;
+    this.token = token;
+  }
+
+  static is(message: any): message is StoreUserTokenMessage {
+    return message.type === MESSAGE_TYPE.STORE_USER_TOKEN;
   }
 }
 
