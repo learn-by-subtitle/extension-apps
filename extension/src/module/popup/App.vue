@@ -9,7 +9,5 @@ import { RouterView } from "vue-router";
 <style>
 body {
   background-color: #001a35;
-  width: 800px;
-  height: 450px;
 }
 </style>

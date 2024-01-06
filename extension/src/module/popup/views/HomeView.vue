@@ -57,3 +57,10 @@ function openLogin() {
   chrome.runtime.sendMessage(new OpenLoginWindowMessage());
 }
 </script>
+
+<style>
+body {
+  width: 800px;
+  height: 450px;
+}
+</style>

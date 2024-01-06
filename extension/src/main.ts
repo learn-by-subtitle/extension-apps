@@ -18,7 +18,6 @@ import {
   registerGlobalEvents,
   unregisterGlobalEvents,
 } from "./module/subtitle/helpers/global-events";
-import { GetLoginStatusMessage } from "./common/types/messaging";
 
 let vueApp!: App;
 let appInitializer!: AppInitializer;
@@ -82,9 +81,3 @@ function start() {
 }
 
 start();
-
-setTimeout(() => {
-  chrome.runtime.sendMessage(new GetLoginStatusMessage(), function (response) {
-    console.log("LoginStatusMessage Res", response);
-  });
-}, 1000);

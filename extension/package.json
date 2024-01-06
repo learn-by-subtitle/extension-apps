@@ -7,6 +7,8 @@
     "zip": "cd dist && zip -r subturtle.zip . && mv subturtle.zip ../subturtle.zip"
   },
   "devDependencies": {
+    "@egoist/tailwindcss-icons": "^1.7.1",
+    "@iconify/json": "^2.2.165",
     "@types/chrome": "^0.0.193",
     "@types/mixpanel-browser": "^2.38.0",
     "copy-webpack-plugin": "^11.0.0",

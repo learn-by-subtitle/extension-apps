@@ -1,5 +1,6 @@
 import {
   GetLoginStatusMessage,
+  GetCurrentChromeUserToken,
   OpenLoginWindowMessage,
 } from "./common/types/messaging";
 
@@ -31,37 +32,45 @@ function getScreenSize() {
   });
 }
 
-chrome.runtime.onMessage.addListener(async function (
-  request,
-  _sender,
-  sendResponse
-) {
+chrome.runtime.onMessage.addListener(function (request, _sender, sendResponse) {
   // Get login status
   if (GetLoginStatusMessage.is(request)) {
-    getOAuthToken().then((token) => {
+    chrome.storage.local.get("token").then((token) => {
       sendResponse({ status: !!token, token: token || null });
     });
   }
 
+  // Get current chrome user token
+  if (GetCurrentChromeUserToken.is(request)) {
+    getOAuthToken()
+      .then((token) => {
+        sendResponse({ status: !!token, token: token || null });
+      })
+      .catch((err) => {
+        sendResponse({ status: false, token: null });
+      });
+  }
+
   // Open Login popup
   else if (OpenLoginWindowMessage.is(request)) {
-    const screen = await getScreenSize();
-    const width = 400;
-    const height = 600;
+    getScreenSize().then((screen) => {
+      const width = 500;
+      const height = 600;
 
-    const left = screen.width / 2 - width / 2;
-    const top = screen.height / 2 - height / 2;
+      const left = screen.width / 2 - width / 2;
+      const top = screen.height / 2 - height / 2;
 
-    chrome.windows.create({
-      url: chrome.runtime.getURL("popup.html") + "#/login",
-      type: "popup",
-      width: width,
-      height: height,
-      focused: true,
-      left: Math.round(left),
-      top: Math.round(top),
+      chrome.windows.create({
+        url: chrome.runtime.getURL("popup.html") + "#/login",
+        type: "popup",
+        width: width,
+        height: height,
+        focused: true,
+        left: Math.round(left),
+        top: Math.round(top),
+      });
     });
   }
-  // keep it
+
   return true;
 });
