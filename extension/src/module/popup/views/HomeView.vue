@@ -42,7 +42,7 @@
         </ul>
 
         <div class="mt-12">
-          <button v-if="!isLoggedIn" @click="openLogin">Login/Register</button>
+          <button v-if="!isLogin" @click="openLogin">Login/Register</button>
           <button v-else @click="logout">Logout</button>
         </div>
       </div>
@@ -51,36 +51,13 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
-import {
-  GetLoginStatusMessage,
-  OpenLoginWindowMessage,
-  StoreUserTokenMessage,
-} from "../../../common/types/messaging";
+import { OpenLoginWindowMessage } from "../../../common/types/messaging";
 import { getAsset } from "../helper/assets";
-import { sendMessage } from "../helper/massage";
-
-const isLoggedIn = ref(false);
+import { isLogin, logout } from "../../../plugins/modular-rest";
 
 function openLogin() {
   chrome.runtime.sendMessage(new OpenLoginWindowMessage());
 }
-
-async function getLoginStatus() {
-  const statusResponse = await sendMessage(new GetLoginStatusMessage());
-  if (GetLoginStatusMessage.checkResponse(statusResponse)) {
-    isLoggedIn.value = statusResponse.status;
-  }
-}
-
-function logout() {
-  sendMessage(new StoreUserTokenMessage(null));
-  isLoggedIn.value = false;
-}
-
-onMounted(() => {
-  getLoginStatus();
-});
 </script>
 
 <style>
