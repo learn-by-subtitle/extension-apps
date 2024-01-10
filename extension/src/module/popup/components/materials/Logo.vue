@@ -1,6 +1,9 @@
 <template>
   <div class="select-none" :style="style">
-    <img class="w-full" :src="$getAsset('logotype.png')" />
+    <img
+      class="w-full"
+      :src="$getAsset(onlyLogo ? 'logo-240.png' : 'logotype.png')"
+    />
   </div>
 </template>
 
@@ -8,6 +11,7 @@
 export default {
   props: {
     size: { type: Number, default: 100 },
+    onlyLogo: { type: Boolean, default: false },
   },
 
   computed: {

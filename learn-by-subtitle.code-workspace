@@ -4,8 +4,13 @@
       "path": "extension"
     },
     {
+      "path": "server"
+    },
+    {
       "path": "."
     }
   ],
-  "settings": {}
+  "settings": {
+    "cSpell.words": ["Pinia", "subturtle"]
+  }
 }

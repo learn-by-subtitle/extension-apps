@@ -2,7 +2,7 @@
 import Logo from "./materials/Logo.vue";
 
 // Inputs
-import SelectLanguege from "./inputs/SelectLanguege.vue";
+import SelectLanguage from "./inputs/SelectLanguage.vue";
 import SelectTarget from "./inputs/SelectTarget.vue";
 
 export default {
@@ -10,6 +10,6 @@ export default {
   Logo,
 
   // Inputs
-  SelectLanguege,
+  SelectLanguage,
   SelectTarget,
 };
