@@ -1,3 +1,5 @@
+@import url('./plugins/vue-prime/styles.css');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

@@ -2,6 +2,14 @@
   <transition name="fade">
     <div class="flex items-center justify-center mx-2 h-screen space-x-16">
       <section>
+        <Button label="Submit" severity="info" />
+        <Dropdown
+          severity="info"
+          optionLabel="name"
+          placeholder="Select a City"
+          class="w-full md:w-[14rem]"
+        />
+
         <!-- LOGO -->
         <div class="my-10 flex flex-col justify-center items-center">
           <logo></logo>
@@ -42,8 +50,8 @@
         </ul>
 
         <div class="mt-12">
-          <button v-if="!isLogin" @click="openLogin">Login/Register</button>
-          <button v-else @click="logout">Logout</button>
+          <Button v-if="!isLogin" @click="openLogin">Login/Register</Button>
+          <Button v-else @click="logout">Logout</Button>
         </div>
       </div>
     </div>
@@ -51,6 +59,9 @@
 </template>
 
 <script lang="ts" setup>
+import Button from "primevue/button";
+import Dropdown from "primevue/dropdown";
+
 import { OpenLoginWindowMessage } from "../../../common/types/messaging";
 import { getAsset } from "../helper/assets";
 import { isLogin, logout } from "../../../plugins/modular-rest";
@@ -59,10 +70,3 @@ function openLogin() {
   chrome.runtime.sendMessage(new OpenLoginWindowMessage());
 }
 </script>
-
-<style>
-body {
-  width: 800px;
-  height: 450px;
-}
-</style>
