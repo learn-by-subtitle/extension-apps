@@ -16,7 +16,7 @@
     </section>
 
     <section class="flex justify-center">
-      <Button label="Login">
+      <Button :disabled="isLogin" label="Login" @click="openLogin">
         <template #icon> <span class="i-solar-login-3-bold" /> </template>
       </Button>
     </section>
@@ -34,7 +34,12 @@
 <script lang="ts" setup>
 import Carousel from "primevue/carousel";
 import Button from "primevue/button";
-import { getAsset } from "../helper/assets";
+import { OpenLoginWindowMessage } from "../../../common/types/messaging";
+import { isLogin } from "../../../plugins/modular-rest";
+
+function openLogin() {
+  chrome.runtime.sendMessage(new OpenLoginWindowMessage());
+}
 
 const slides = [
   {

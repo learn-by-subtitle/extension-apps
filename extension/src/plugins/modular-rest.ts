@@ -26,12 +26,11 @@ export function loginWithLastSession() {
   sendMessage(new GetLoginStatusMessage())
     .then((res) => {
       if (!GetLoginStatusMessage.checkResponse(res)) return;
-      if (!res.status) return;
 
       return authentication.loginWithLastSession(res.token);
     })
     .then(() => {
-      console.log("login success", authentication.isLogin);
+      console.log("login success ", authentication.isLogin);
       isLogin.value = authentication.isLogin;
     })
     // if the login failed, it means token is invalid or expired.

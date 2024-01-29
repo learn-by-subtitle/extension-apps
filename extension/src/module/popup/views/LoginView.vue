@@ -1,19 +1,19 @@
 <template>
-  <section class="flex flex-col items-center w-screen">
+  <section class="flex flex-col justify-between items-center h-screen w-screen">
     <logo class="my-10" only-logo />
 
-    <template v-if="!isLoggedIn">
+    <template v-if="!isLogin">
       <div class="text-center w-80">
         <p class="text-white text-3xl">Welcome to Subturtle!</p>
-        <p class="text-gray-200 text-xs mt-2">
-          Select one of the following way to login/register.
+        <p class="text-gray-300 font-thin text-xs mt-2">
+          Choose your preferred method to log in or register.
         </p>
       </div>
 
-      <div class="mt-10 flex flex-col space-y-2">
+      <div class="mb-20 flex flex-col space-y-2">
         <!-- Login with Chrome -->
         <button
-          :disabled="pending"
+          :disabled="!chromeUserRes || !chromeUserRes.token || pending"
           class="flex items-center justify-center text-white bg-gray-800 rounded-md hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
           @click="loginWithChrome"
         >
@@ -27,7 +27,8 @@
 
         <!-- Login with Google -->
         <button
-          disabled
+          :disabled="pending"
+          @click="loginWithGoogle"
           class="flex items-center justify-center text-white bg-gray-800 rounded-md hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <div
@@ -55,13 +56,13 @@
 
     <template v-else>
       <div class="text-center w-80">
-        <p class="text-white text-3xl">Congrats! you are in.</p>
-        <p class="text-gray-200 text-base mt-4">
-          now you can close this window.
+        <p class="text-white text-3xl">Logged In Successfully!</p>
+        <p class="text-gray-300 font-thin text-base mt-4">
+          Go ahead and close this window, your adventure starts now!
         </p>
       </div>
 
-      <button class="text-gray-200 mt-10 text-lg" @click="closeWindow">
+      <button class="mb-20 text-gray-200 mt-10 text-lg" @click="closeWindow">
         Close
       </button>
     </template>
@@ -69,26 +70,34 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import {
   GetCurrentChromeUserToken,
+  LoginStatusResponse,
   StoreUserTokenMessage,
 } from "../../../common/types/messaging";
 import { sendMessage } from "../helper/massage";
 import { get } from "../helper/http";
+import { joinToBaseUrl } from "../../../common/helper/url";
+import { loginWithLastSession, isLogin } from "../../../plugins/modular-rest";
 
 const pending = ref(false);
-const isLoggedIn = ref(false);
+
+const chromeUserRes = ref<LoginStatusResponse | null>();
+
+onMounted(async () => {
+  chromeUserRes.value = await sendMessage<LoginStatusResponse>(
+    new GetCurrentChromeUserToken()
+  ).catch((err) => null);
+});
 
 async function loginWithChrome() {
   pending.value = true;
 
-  const chromeUserRes = await sendMessage(
-    new GetCurrentChromeUserToken()
-  ).catch((err) => null);
-
-  if (chromeUserRes && GetCurrentChromeUserToken.checkResponse(chromeUserRes)) {
-    const url = `${process.env.SUBTURTLE_WEBSITE}/auth/google/token-login?token=${chromeUserRes.token}`;
+  if (GetCurrentChromeUserToken.checkResponse(chromeUserRes)) {
+    const url = joinToBaseUrl(
+      `/auth/google/token-login?token=${chromeUserRes.token}`
+    );
 
     const { status, token } = await get(url, {
       token: chromeUserRes.token,
@@ -98,7 +107,7 @@ async function loginWithChrome() {
     });
 
     if (status == "success") {
-      await sendMessage(new StoreUserTokenMessage(token)).then((res) => {
+      await handleTokenLogin(token).then((res) => {
         isLoggedIn.value = true;
       });
     }
@@ -107,7 +116,81 @@ async function loginWithChrome() {
   pending.value = false;
 }
 
-// async function loginWithGoogle() {}
+async function loginWithGoogle() {
+  pending.value = true;
+
+  await authorizeFromGoogleOAuthThroughAuthFlowAPI()
+    .then((accessToken) => {
+      return get(
+        joinToBaseUrl(
+          `/auth/google/access-token-login?access_token=${accessToken}`
+        )
+      );
+    })
+    .then(({ token }) => handleTokenLogin(token))
+    .catch((err) => {
+      console.log("err", err);
+    })
+    .finally(() => {
+      pending.value = false;
+    });
+}
+
+function authorizeFromGoogleOAuthThroughAuthFlowAPI() {
+  const redirectURL = chrome.identity.getRedirectURL();
+  // const redirectURL = joinToBaseUrl("/auth/google/code-login");
+
+  console.log("redirectURL", redirectURL);
+
+  // Client ID of web application (from Google Developer Console), not google extension.
+  const clientID = process.env.GOOGLE_OAUTH_CLIENT_ID;
+
+  const scopes = ["openid", "email", "profile"];
+  let authURL = "https://accounts.google.com/o/oauth2/auth";
+  authURL += `?client_id=${clientID}`;
+  authURL += `&response_type=token`;
+  authURL += `&redirect_uri=${encodeURIComponent(redirectURL)}`;
+  authURL += `&scope=${encodeURIComponent(scopes.join(" "))}`;
+
+  return launchWebAuthFlow(authURL);
+}
+
+async function handleTokenLogin(token: string) {
+  await sendMessage(new StoreUserTokenMessage(token));
+  await loginWithLastSession();
+}
+
+function launchWebAuthFlow(authURL) {
+  return new Promise<string>((resolve, reject) => {
+    chrome.identity.launchWebAuthFlow(
+      {
+        interactive: true,
+        url: authURL,
+      },
+      (responseUrl) => {
+        console.log("responseUrl", responseUrl);
+
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError);
+        } else {
+          resolve(responseUrl as string);
+        }
+      }
+    );
+  }).then((responseUrl: string) => {
+    const url = new URL(responseUrl);
+    const hash = url.hash.substr(1);
+    const params = new URLSearchParams(hash);
+
+    const access_token = params.get("access_token");
+
+    if (access_token) {
+      return access_token;
+    } else {
+      throw new Error("No access_token found");
+    }
+  });
+}
 
 function closeWindow() {
   window.close();

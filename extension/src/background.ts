@@ -7,8 +7,6 @@ import {
 
 export {};
 
-console.log("background.ts");
-
 function getOAuthToken() {
   return new Promise((resolve, reject) => {
     chrome.identity.getAuthToken({ interactive: true }, function (token) {
