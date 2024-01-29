@@ -107,9 +107,7 @@ async function loginWithChrome() {
     });
 
     if (status == "success") {
-      await handleTokenLogin(token).then((res) => {
-        isLoggedIn.value = true;
-      });
+      await handleTokenLogin(token);
     }
   }
 

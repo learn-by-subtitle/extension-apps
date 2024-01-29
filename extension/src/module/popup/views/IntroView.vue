@@ -9,7 +9,7 @@
     </Carousel>
 
     <section class="px-14 text-lg text-center">
-      <p class="text-gray-300">
+      <p class="text-gray-300 font-thin">
         This is a new way to improve your language skills over your daily
         activities. Login to get started.
       </p>
