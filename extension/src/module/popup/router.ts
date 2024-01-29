@@ -1,11 +1,11 @@
 import { RouteRecordRaw, createRouter, createWebHashHistory } from "vue-router";
+import { isLogin, loginWithLastSession } from "../../plugins/modular-rest";
 
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
     name: "home",
-    redirect: "/intro",
-    // component: () => import("./views/HomeView.vue"),
+    component: () => import("./views/HomeView.vue"),
   },
   {
     path: "/login",
@@ -22,4 +22,14 @@ const routes: RouteRecordRaw[] = [
 export const router = createRouter({
   history: createWebHashHistory(),
   routes: routes,
+});
+
+router.beforeEach(async (to, from, next) => {
+  if (!isLogin.value) {
+    await loginWithLastSession();
+  }
+
+  if (to.name === "login") next();
+  else if (to.name !== "intro" && !isLogin.value) next({ name: "intro" });
+  else next();
 });
