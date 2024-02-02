@@ -8,7 +8,7 @@
   >
     <!-- WORD -->
     <section
-      class="my-20 flex justify-center items-center border-solid border-2 border-[#ffffff1a] rounded-2xl overflow-hidden"
+      class="my-16 flex justify-center items-center border-solid border-2 border-[#ffffff1a] rounded-2xl overflow-hidden"
       @click.stop=""
     >
       <div
@@ -19,7 +19,7 @@
       </div>
 
       <div class="h-full" :dir="dir">
-        <div class="w-full shadow-sm bg-[#898999] py-2 text-center">
+        <div class="w-full bg-[#ffffff1a] py-2 text-center">
           <span class="text-white px-3 py-2">{{ targetLanguageTitle }}</span>
         </div>
 
@@ -32,7 +32,7 @@
     </section>
 
     <template v-if="store">
-      <tabs class="my-4" :list="store.partsOfSpeech" v-model="activeTab" />
+      <tabs class="mb-5" :list="store.partsOfSpeech" v-model="activeTab" />
 
       <!-- 
         Definition cards

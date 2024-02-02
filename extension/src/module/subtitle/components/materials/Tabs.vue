@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-center space-x-5 p-4 text-2xl">
+  <div class="flex justify-center space-x-5 text-2xl">
     <button
       v-for="tab of list"
       :key="tab"
@@ -55,5 +55,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

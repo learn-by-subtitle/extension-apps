@@ -2,7 +2,7 @@
   <transition>
     <div
       class="fixed bg-[#000000cc] z-[9999] w-screen h-screen"
-      @click="close"
+      @click.self="close"
       v-show="modelValue"
     >
       <section
