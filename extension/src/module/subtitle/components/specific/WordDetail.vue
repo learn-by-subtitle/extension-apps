@@ -1,5 +1,11 @@
 <template>
-  <div class="select-text w-3/4 xl:w-3/5 2xl:w-1/2 text-gray-900">
+  <div
+    class="select-text text-gray-900 flex flex-col overflow-hidden px-8 justify-center items-center"
+    :style="{
+      height: `${height}px`,
+      width: `${width}px`,
+    }"
+  >
     <!-- WORD -->
     <section
       class="mt-40 mb-36 flex flex-col justify-center items-center"
@@ -30,16 +36,19 @@
       <!-- 
         Definition cards
       -->
-      <template v-for="(part, i) in store.partsOfSpeech" :key="i">
-        <div @click.stop="" v-if="activeTab == part" class="flex flex-col">
-          <Definition
-            class="my-3 shadow-md last:mb-3"
-            v-for="(definition, i2) in store.getPartOfSpeech(part).definitions"
-            :key="i2"
-            :data="definition"
-          />
-        </div>
-      </template>
+      <section class="flex-1 overflow-y-auto w-1/2">
+        <template v-for="(part, i) in store.partsOfSpeech" :key="i">
+          <div @click.stop="" v-if="activeTab == part" class="flex flex-col">
+            <Definition
+              class="my-3 shadow-md last:mb-3"
+              v-for="(definition, i2) in store.getPartOfSpeech(part)
+                .definitions"
+              :key="i2"
+              :data="definition"
+            />
+          </div>
+        </template>
+      </section>
     </template>
 
     <template v-else-if="pending">
@@ -71,6 +80,8 @@ export default defineComponent({
     word: String,
     translatedWord: String,
     language: String,
+    height: Number,
+    width: Number,
   },
 
   data(): {

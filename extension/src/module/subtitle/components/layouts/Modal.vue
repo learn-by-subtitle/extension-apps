@@ -1,59 +1,93 @@
 <template>
   <transition>
     <div
-      class="modal-container overflow-y-auto"
+      class="fixed bg-[#000000cc] z-[9999] w-screen h-screen"
       @click="close"
-      v-if="modelValue"
+      v-show="modelValue"
     >
-      <slot />
+      <section
+        class="absolute rounded-md m-20 top-0 left-0 right-0 bottom-0 gradient-background"
+        ref="modalContentContainer"
+      >
+        <!-- Close button -->
+        <Button
+          rounded
+          severity="secondary"
+          @click="close"
+          size="small"
+          class="absolute right-[32px] left-[calc(100%-16px)] top-[-16px]"
+        >
+          <template #icon>
+            <span class="i-mdi-close text-white scale-[2]" />
+          </template>
+        </Button>
+
+        <!-- Content -->
+        <div
+          class="overflow-hidden"
+          v-if="contentSize.width"
+          :style="{
+            width: `${contentSize.width}px`,
+            height: `${contentSize.height}px`,
+          }"
+        >
+          <slot :width="contentSize.width" :height="contentSize.height" />
+        </div>
+      </section>
     </div>
   </transition>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "@vue/runtime-core";
+<script setup lang="ts">
+import Button from "primevue/button";
+import { ref, watch, onMounted, computed, nextTick } from "vue";
 import { wait } from "../../../../common/helper/promise";
 
-export default defineComponent({
-  props: {
-    modelValue: Boolean,
-  },
-
-  data() {
-    return {
-      defaultBodyOverflowY: document.body.style.overflowY,
-    };
-  },
-
-  watch: {
-    modelValue(key) {
-      if (key) {
-        document.body.style.overflowY = "hidden";
-      } else {
-        wait(0.1).then((_) => {
-          document.body.style.overflowY = this.defaultBodyOverflowY;
-        });
-      }
-    },
-  },
-
-  methods: {
-    close(event: MouseEvent) {
-      this.$emit("update:modelValue", false);
-    },
-  },
+const emit = defineEmits(["update:modelValue"]);
+const props = defineProps({
+  modelValue: Boolean,
 });
+
+const modalContentContainer = ref<HTMLElement | null>(null);
+const contentSize = ref({ width: 0, height: 0 });
+
+function getContentSize() {
+  if (!modalContentContainer.value) return;
+
+  contentSize.value = {
+    width: modalContentContainer.value.clientWidth,
+    height: modalContentContainer.value.clientHeight,
+  };
+}
+
+const defaultBodyOverflowY = ref("");
+
+onMounted(() => {
+  defaultBodyOverflowY.value = document.body.style.overflowY;
+});
+
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    if (newValue) {
+      document.body.style.overflowY = "hidden";
+    } else {
+      wait(0.1).then(() => {
+        document.body.style.overflowY = defaultBodyOverflowY.value;
+      });
+    }
+
+    nextTick(getContentSize);
+  }
+);
+
+const close = (event: MouseEvent) => {
+  emit("update:modelValue", false);
+};
 </script>
 
 <style lang="scss" scoped>
-.modal-container {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  z-index: 99999;
-
+.gradient-background {
   background-image: linear-gradient(
     to right top,
     #d16ba5,
@@ -69,8 +103,5 @@ export default defineComponent({
     #46eefa,
     #5ffbf1
   );
-
-  display: flex;
-  justify-content: center;
 }
 </style>

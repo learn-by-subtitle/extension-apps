@@ -1,27 +1,31 @@
 <template>
-  <div class="bg-white rounded-md px-6 py-7 text-gray-600 relative">
+  <div
+    class="bg-white rounded-md px-6 py-7 text-gray-600 relative flex items-center space-x-8"
+  >
     <!-- ICON 
     -->
-    <div class="-left-12 top-0 h-full flex flex-col justify-center absolute">
+    <div class="">
       <translate-button class="" v-model="showTranslate" />
     </div>
 
-    <p class="font-medium text-4xl" :dir="dir">{{ definition }}</p>
-    <p class="italic text-gray-400 text-3xl mt-3" :dir="dir">{{ example }}</p>
+    <section class="flex-1">
+      <p class="font-medium text-4xl" :dir="dir">{{ definition }}</p>
+      <p class="italic text-gray-400 text-3xl mt-3" :dir="dir">{{ example }}</p>
 
-    <div class="my-10" v-if="antonyms.length || synonyms.length" />
+      <div class="my-10" v-if="antonyms.length || synonyms.length" />
 
-    <div v-if="antonyms.length">
-      <p class="text-2xl">
-        <span class="font-bold">Antonyms: </span><span>{{ antonyms }}</span>
-      </p>
-    </div>
+      <div v-if="antonyms.length">
+        <p class="text-2xl">
+          <span class="font-bold">Antonyms: </span><span>{{ antonyms }}</span>
+        </p>
+      </div>
 
-    <div v-if="synonyms.length">
-      <p class="text-2xl">
-        <span class="font-bold">Synonyms: </span><span>{{ synonyms }}</span>
-      </p>
-    </div>
+      <div v-if="synonyms.length">
+        <p class="text-2xl">
+          <span class="font-bold">Synonyms: </span><span>{{ synonyms }}</span>
+        </p>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -124,16 +128,15 @@ export default defineComponent({
             }
             // Translated Word
             else {
-              this.translatedExample = list[i] || '';
+              this.translatedExample = list[i] || "";
             }
           });
         });
 
-      analytic.track('Definition translated');
+      analytic.track("Definition translated");
     },
   },
 });
 </script>
 
-<style>
-</style>
+<style></style>

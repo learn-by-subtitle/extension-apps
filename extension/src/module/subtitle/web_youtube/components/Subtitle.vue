@@ -41,8 +41,10 @@
     </transition>
 
     <teleport to="body">
-      <modal v-model="showWordDetail">
+      <modal v-model="showWordDetail" v-slot="{ height, width }">
         <word-detail
+          :height="height"
+          :width="width"
           :word="clickedWord"
           :translatedWord="translatedWords[clickedWord]"
         />
@@ -59,7 +61,6 @@ import { getDir, rtls } from "../../../../common/helper/text";
 import { TranslateService } from "../../../../common/services/translate.service";
 import { Dictionary } from "../../../../common/types/general.type";
 import { analytic } from "../../../../plugins/mixpanel";
-import { log } from "../../../../common/helper/log";
 
 interface DataModel {
   translatedWords: Dictionary;
