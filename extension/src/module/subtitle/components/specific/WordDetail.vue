@@ -8,24 +8,25 @@
   >
     <!-- WORD -->
     <section
-      class="mt-40 mb-36 flex flex-col justify-center items-center"
+      class="my-20 flex justify-center items-center border-solid border-2 border-[#ffffff1a] rounded-2xl overflow-hidden"
       @click.stop=""
     >
-      <div class="flex items-center space-x-5">
+      <div
+        class="flex-1 flex items-center space-x-5 border-solid border-r-2 border-[#ffffff1a] p-5"
+      >
         <h1 class="text-9xl white-shadow">{{ title }}</h1>
         <h3 class="text-5xl white-shadow mt-8">{{ phonetic }}</h3>
       </div>
 
-      <div class="mt-20 flex items-center" :dir="dir">
-        <span class="text-7xl white-shadow">{{
-          $filters.cleanText(translatedWord)
-        }}</span>
+      <div class="h-full" :dir="dir">
+        <div class="w-full shadow-sm bg-[#898999] py-2 text-center">
+          <span class="text-white px-3 py-2">{{ targetLanguageTitle }}</span>
+        </div>
 
-        <div class="mt-6 scale-75">
-          <span
-            class="text-xl rounded-md shadow-sm bg-gray-500 text-white justify-end px-3 py-2"
-            >{{ targetLanguageTitle }}</span
-          >
+        <div class="p-5 px-10">
+          <span class="text-7xl white-shadow">{{
+            $filters.cleanText(translatedWord)
+          }}</span>
         </div>
       </div>
     </section>
