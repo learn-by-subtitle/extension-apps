@@ -1,6 +1,6 @@
 <template>
   <div
-    class="select-text text-gray-900 flex flex-col overflow-hidden px-8 justify-center items-center"
+    class="select-text text-gray-900 flex flex-col overflow-hidden px-8 justify-start items-center"
     :style="{
       height: `${height}px`,
       width: `${width}px`,
