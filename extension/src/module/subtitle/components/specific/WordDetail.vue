@@ -25,7 +25,7 @@
 
         <div class="p-5 px-10">
           <span class="text-7xl white-shadow">{{
-            $filters.cleanText(translatedWord)
+            cleanText(translatedWord!)
           }}</span>
         </div>
       </div>
@@ -60,103 +60,74 @@
 
     <template v-else>
       <div class="my-32 text-3xl text-center text-yellow-200">
-        <span
-          >There is not any definition for {{ $filters.cleanText(word) }}</span
-        >
+        <span>There is not any definition for {{ cleanText(word!) }}</span>
       </div>
     </template>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "@vue/runtime-core";
+<script setup lang="ts">
+import { ref, computed, watch } from "vue";
 import { cleanText, firstUpper, getDir } from "../../../../common/helper/text";
 import { TranslateService } from "../../../../common/services/translate.service";
 import { DefinitionStore } from "../../../../common/types/dictionaryapi.type";
 import { analytic } from "../../../../plugins/mixpanel";
 import Definition from "./Definition.vue";
 
-export default defineComponent({
-  props: {
-    word: String,
-    translatedWord: String,
-    language: String,
-    height: Number,
-    width: Number,
-  },
-
-  data(): {
-    store: DefinitionStore | null;
-    pending: Boolean;
-    activeTab: string;
-  } {
-    return {
-      store: null,
-      pending: false,
-      activeTab: "",
-    };
-  },
-
-  computed: {
-    targetLanguageTitle() {
-      return TranslateService.instance.targetLanguageTitle;
-    },
-
-    dir() {
-      return getDir();
-    },
-
-    title() {
-      let word = this.word;
-
-      if (this.store) word = this.store.word;
-
-      return firstUpper(word || "");
-    },
-
-    phonetic() {
-      let phonetic = "";
-
-      if (this.store) phonetic = this.store.phonetic;
-
-      return phonetic;
-    },
-  },
-
-  watch: {
-    word: {
-      immediate: true,
-      handler(value) {
-        if (!value) return;
-
-        analytic.track("Word clicked", { word: value });
-
-        this.fetchWordDetail();
-      },
-    },
-
-    activeTab(value, old) {
-      if (old.length) {
-        analytic.track("Part of speech switched");
-      }
-    },
-  },
-
-  methods: {
-    fetchWordDetail() {
-      this.pending = true;
-
-      let cleaned = cleanText(this.word as string);
-
-      TranslateService.instance
-        .translateByDictionaryapi(cleaned)
-        .then((res) => (this.store = res))
-        .finally(() => (this.pending = false));
-    },
-  },
-
-  components: { Definition: Definition as any },
+const props = defineProps({
+  word: String,
+  translatedWord: String,
+  language: String,
+  height: Number,
+  width: Number,
 });
+
+const store = ref<DefinitionStore | null>(null);
+const pending = ref(false);
+const activeTab = ref("");
+
+const targetLanguageTitle = computed(
+  () => TranslateService.instance.targetLanguageTitle
+);
+
+const dir = computed(() => getDir());
+
+const title = computed(() => {
+  let word = props.word;
+  if (store.value) word = store.value.word;
+  return firstUpper(word || "");
+});
+
+const phonetic = computed(() => {
+  let phonetic = "";
+  if (store.value) phonetic = store.value.phonetic;
+  return phonetic;
+});
+
+watch(
+  () => props.word,
+  (value) => {
+    if (!value) return;
+    analytic.track("Word clicked", { word: value });
+    fetchWordDetail();
+  },
+  { immediate: true }
+);
+
+watch(activeTab, (value, old) => {
+  if (old.length) {
+    analytic.track("Part of speech switched");
+  }
+});
+
+function fetchWordDetail() {
+  pending.value = true;
+  let cleaned = cleanText(props.word as string);
+  TranslateService.instance
+    .translateByDictionaryapi(cleaned)
+    .then((res) => (store.value = res))
+    .finally(() => (pending.value = false));
+}
 </script>
 
 <style lang="scss" scoped>
