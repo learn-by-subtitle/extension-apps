@@ -32,12 +32,29 @@
     </section>
 
     <template v-if="store">
-      <tabs class="mb-5" :list="store.partsOfSpeech" v-model="activeTab" />
+      <section class="flex justify-between w-2/3">
+        <tabs
+          class="mb-5 justify-start flex-1"
+          :list="store.partsOfSpeech"
+          v-model="activeTab"
+        />
+
+        <div>
+          <span class="p-buttonset">
+            <Button
+              label="Cancel"
+              icon="pi pi-times"
+              @click="toggleCollectionPanel"
+            />
+            <Button label="Save" icon="pi pi-check" />
+          </span>
+        </div>
+      </section>
 
       <!-- 
         Definition cards
       -->
-      <section class="flex-1 overflow-y-auto w-1/2">
+      <section class="flex-1 overflow-y-auto w-2/3">
         <template v-for="(part, i) in store.partsOfSpeech" :key="i">
           <div @click.stop="" v-if="activeTab == part" class="flex flex-col">
             <Definition
@@ -63,6 +80,12 @@
         <span>There is not any definition for {{ cleanText(word!) }}</span>
       </div>
     </template>
+
+    <OverlayPanel ref="collectionToggle">
+      <h1>
+        <span class="text-3xl">Collection</span>
+      </h1>
+    </OverlayPanel>
   </div>
 </template>
 
@@ -73,6 +96,9 @@ import { TranslateService } from "../../../../common/services/translate.service"
 import { DefinitionStore } from "../../../../common/types/dictionaryapi.type";
 import { analytic } from "../../../../plugins/mixpanel";
 import Definition from "./Definition.vue";
+
+import Button from "primevue/button";
+import OverlayPanel from "primevue/overlaypanel";
 
 const props = defineProps({
   word: String,
@@ -127,6 +153,11 @@ function fetchWordDetail() {
     .translateByDictionaryapi(cleaned)
     .then((res) => (store.value = res))
     .finally(() => (pending.value = false));
+}
+
+const collectionToggle = ref<OverlayPanel>();
+function toggleCollectionPanel(event) {
+  collectionToggle.value?.toggle(event);
 }
 </script>
 
