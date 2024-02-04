@@ -20,18 +20,17 @@ export {
 
 export const isLogin = ref(authentication.isLogin);
 
-export function loginWithLastSession() {
+export async function loginWithLastSession() {
   // Check if the user is logged in
   // If the user is logged in, try to login with the token as last session.
-  sendMessage(new GetLoginStatusMessage())
+  await sendMessage(new GetLoginStatusMessage())
     .then((res) => {
       if (!GetLoginStatusMessage.checkResponse(res)) return;
-      if (!res.status) return;
 
       return authentication.loginWithLastSession(res.token);
     })
     .then(() => {
-      console.log("login success", authentication.isLogin);
+      console.log("login success ", authentication.isLogin);
       isLogin.value = authentication.isLogin;
     })
     // if the login failed, it means token is invalid or expired.

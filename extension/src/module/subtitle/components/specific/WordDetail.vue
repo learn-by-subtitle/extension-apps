@@ -1,45 +1,72 @@
 <template>
-  <div class="select-text w-3/4 xl:w-3/5 2xl:w-1/2 text-gray-900">
+  <div
+    class="select-text text-gray-900 flex flex-col overflow-hidden px-8 justify-start items-center"
+    :style="{
+      height: `${height}px`,
+      width: `${width}px`,
+    }"
+  >
     <!-- WORD -->
     <section
-      class="mt-40 mb-36 flex flex-col justify-center items-center"
+      class="my-16 flex justify-center items-center border-solid border-2 border-[#ffffff1a] rounded-2xl overflow-hidden"
       @click.stop=""
     >
-      <div class="flex items-center space-x-5">
+      <div
+        class="flex-1 flex items-center space-x-5 border-solid border-r-2 border-[#ffffff1a] p-5"
+      >
         <h1 class="text-9xl white-shadow">{{ title }}</h1>
         <h3 class="text-5xl white-shadow mt-8">{{ phonetic }}</h3>
       </div>
 
-      <div class="mt-20 flex items-center" :dir="dir">
-        <span class="text-7xl white-shadow">{{
-          $filters.cleanText(translatedWord)
-        }}</span>
+      <div class="h-full" :dir="dir">
+        <div class="w-full bg-[#ffffff1a] py-2 text-center">
+          <span class="text-white px-3 py-2">{{ targetLanguageTitle }}</span>
+        </div>
 
-        <div class="mt-6 scale-75">
-          <span
-            class="text-xl rounded-md shadow-sm bg-gray-500 text-white justify-end px-3 py-2"
-            >{{ targetLanguageTitle }}</span
-          >
+        <div class="p-5 px-10">
+          <span class="text-7xl white-shadow">{{
+            cleanText(translatedWord!)
+          }}</span>
         </div>
       </div>
     </section>
 
     <template v-if="store">
-      <tabs class="my-4" :list="store.partsOfSpeech" v-model="activeTab" />
+      <section class="flex justify-between w-2/3">
+        <tabs
+          class="mb-5 justify-start flex-1"
+          :list="store.partsOfSpeech"
+          v-model="activeTab"
+        />
+
+        <div>
+          <span class="p-buttonset">
+            <Button
+              label="Cancel"
+              icon="pi pi-times"
+              @click="toggleCollectionPanel"
+            />
+            <Button label="Save" icon="pi pi-check" />
+          </span>
+        </div>
+      </section>
 
       <!-- 
         Definition cards
       -->
-      <template v-for="(part, i) in store.partsOfSpeech" :key="i">
-        <div @click.stop="" v-if="activeTab == part" class="flex flex-col">
-          <Definition
-            class="my-3 shadow-md last:mb-3"
-            v-for="(definition, i2) in store.getPartOfSpeech(part).definitions"
-            :key="i2"
-            :data="definition"
-          />
-        </div>
-      </template>
+      <section class="flex-1 overflow-y-auto w-2/3">
+        <template v-for="(part, i) in store.partsOfSpeech" :key="i">
+          <div @click.stop="" v-if="activeTab == part" class="flex flex-col">
+            <Definition
+              class="my-3 shadow-md last:mb-3"
+              v-for="(definition, i2) in store.getPartOfSpeech(part)
+                .definitions"
+              :key="i2"
+              :data="definition"
+            />
+          </div>
+        </template>
+      </section>
     </template>
 
     <template v-else-if="pending">
@@ -50,101 +77,88 @@
 
     <template v-else>
       <div class="my-32 text-3xl text-center text-yellow-200">
-        <span
-          >There is not any definition for {{ $filters.cleanText(word) }}</span
-        >
+        <span>There is not any definition for {{ cleanText(word!) }}</span>
       </div>
     </template>
+
+    <OverlayPanel ref="collectionToggle">
+      <h1>
+        <span class="text-3xl">Collection</span>
+      </h1>
+    </OverlayPanel>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "@vue/runtime-core";
+<script setup lang="ts">
+import { ref, computed, watch } from "vue";
 import { cleanText, firstUpper, getDir } from "../../../../common/helper/text";
 import { TranslateService } from "../../../../common/services/translate.service";
 import { DefinitionStore } from "../../../../common/types/dictionaryapi.type";
 import { analytic } from "../../../../plugins/mixpanel";
 import Definition from "./Definition.vue";
 
-export default defineComponent({
-  props: {
-    word: String,
-    translatedWord: String,
-    language: String,
-  },
+import Button from "primevue/button";
+import OverlayPanel from "primevue/overlaypanel";
 
-  data(): {
-    store: DefinitionStore | null;
-    pending: Boolean;
-    activeTab: string;
-  } {
-    return {
-      store: null,
-      pending: false,
-      activeTab: "",
-    };
-  },
-
-  computed: {
-    targetLanguageTitle() {
-      return TranslateService.instance.targetLanguageTitle;
-    },
-
-    dir() {
-      return getDir();
-    },
-
-    title() {
-      let word = this.word;
-
-      if (this.store) word = this.store.word;
-
-      return firstUpper(word || "");
-    },
-
-    phonetic() {
-      let phonetic = "";
-
-      if (this.store) phonetic = this.store.phonetic;
-
-      return phonetic;
-    },
-  },
-
-  watch: {
-    word: {
-      immediate: true,
-      handler(value) {
-        if (!value) return;
-
-        analytic.track("Word clicked", { word: value });
-
-        this.fetchWordDetail();
-      },
-    },
-
-    activeTab(value, old) {
-      if (old.length) {
-        analytic.track("Part of speech switched");
-      }
-    },
-  },
-
-  methods: {
-    fetchWordDetail() {
-      this.pending = true;
-
-      let cleaned = cleanText(this.word as string);
-
-      TranslateService.instance
-        .translateByDictionaryapi(cleaned)
-        .then((res) => (this.store = res))
-        .finally(() => (this.pending = false));
-    },
-  },
-
-  components: { Definition: Definition as any },
+const props = defineProps({
+  word: String,
+  translatedWord: String,
+  language: String,
+  height: Number,
+  width: Number,
 });
+
+const store = ref<DefinitionStore | null>(null);
+const pending = ref(false);
+const activeTab = ref("");
+
+const targetLanguageTitle = computed(
+  () => TranslateService.instance.targetLanguageTitle
+);
+
+const dir = computed(() => getDir());
+
+const title = computed(() => {
+  let word = props.word;
+  if (store.value) word = store.value.word;
+  return firstUpper(word || "");
+});
+
+const phonetic = computed(() => {
+  let phonetic = "";
+  if (store.value) phonetic = store.value.phonetic;
+  return phonetic;
+});
+
+watch(
+  () => props.word,
+  (value) => {
+    if (!value) return;
+    analytic.track("Word clicked", { word: value });
+    fetchWordDetail();
+  },
+  { immediate: true }
+);
+
+watch(activeTab, (value, old) => {
+  if (old.length) {
+    analytic.track("Part of speech switched");
+  }
+});
+
+function fetchWordDetail() {
+  pending.value = true;
+  let cleaned = cleanText(props.word as string);
+  TranslateService.instance
+    .translateByDictionaryapi(cleaned)
+    .then((res) => (store.value = res))
+    .finally(() => (pending.value = false));
+}
+
+const collectionToggle = ref<OverlayPanel>();
+function toggleCollectionPanel(event) {
+  collectionToggle.value?.toggle(event);
+}
 </script>
 
 <style lang="scss" scoped>

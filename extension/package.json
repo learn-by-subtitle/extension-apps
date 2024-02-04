@@ -36,6 +36,7 @@
     "axios": "^1.3.4",
     "mixpanel-browser": "^2.45.0",
     "pinia": "^2.1.6",
+    "primevue": "^3.46.0",
     "text-cleaner": "^1.2.1",
     "tiny-emitter": "^2.1.0",
     "vue": "^3.2.37",

@@ -29,7 +29,7 @@ export class GetLoginStatusMessage implements BaseMessage {
   }
 
   static checkResponse(response: any): response is LoginStatusResponse {
-    return response.status !== undefined && response.token !== undefined;
+    return response && response.status && response.token;
   }
 }
 
@@ -45,7 +45,7 @@ export class GetCurrentChromeUserToken implements BaseMessage {
   }
 
   static checkResponse(response: any): response is LoginStatusResponse {
-    return response.status !== undefined && response.token !== undefined;
+    return response && response.status !== undefined && response.token;
   }
 }
 
