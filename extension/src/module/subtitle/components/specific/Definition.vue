@@ -4,7 +4,7 @@
   >
     <!-- ICON 
     -->
-    <div class="">
+    <div>
       <translate-button class="" v-model="showTranslate" />
     </div>
 

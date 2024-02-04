@@ -28,3 +28,23 @@
 		color: white !important;
 	}
 }
+
+.p-carousel {
+	.p-carousel-next,
+	.p-carousel-prev {
+		color: var(--surface-border-color) !important;
+		scale: 1.5;
+
+		&:hover {
+			color: #6b7280 !important;
+		}
+	}
+
+	.p-carousel-next {
+		margin-left: 1rem !important;
+	}
+
+	.p-carousel-prev {
+		margin-right: 1rem !important;
+	}
+}

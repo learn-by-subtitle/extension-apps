@@ -1,5 +1,5 @@
 <template>
-  <div class="flex space-x-5 text-2xl">
+  <div class="flex space-x-5 text-2xl select-none">
     <button
       v-for="tab of list"
       :key="tab"
