@@ -40,14 +40,14 @@
         />
 
         <div>
-          <span class="p-buttonset">
+          <!-- <span class="p-buttonset">
             <Button
               label="Cancel"
               icon="pi pi-times"
               @click="toggleCollectionPanel"
             />
             <Button label="Save" icon="pi pi-check" />
-          </span>
+          </span> -->
         </div>
       </section>
 
