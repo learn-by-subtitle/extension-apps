@@ -1,0 +1,30 @@
+:root {
+	--surface-border-color: white;
+}
+
+// Override the default style of the primevue
+.p-fieldset {
+	background: transparent !important;
+	border-color: var(--surface-border-color) !important;
+
+	legend {
+		padding: 0.5rem !important;
+		margin-left: 1rem !important;
+		background: transparent !important;
+		border: none !important;
+		color: var(--surface-border-color) !important;
+	}
+}
+
+.p-multiselect {
+	background: transparent !important;
+	border-color: var(--surface-border-color) !important;
+
+	.p-inputgroup-addon {
+		background: transparent !important;
+	}
+
+	.p-multiselect-trigger {
+		color: white !important;
+	}
+}

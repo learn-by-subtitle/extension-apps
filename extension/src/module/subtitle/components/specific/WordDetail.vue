@@ -1,60 +1,42 @@
 <template>
   <div
-    class="select-text text-gray-900 flex flex-col overflow-hidden px-8 justify-start items-center"
+    class="select-text text-gray-900 flex flex-col overflow-hidden px-20 justify-start items-center"
     :style="{
       height: `${height}px`,
       width: `${width}px`,
     }"
   >
     <!-- WORD -->
-    <section
-      class="my-16 flex justify-center items-center border-solid border-2 border-[#ffffff1a] rounded-2xl overflow-hidden"
-      @click.stop=""
-    >
-      <div
-        class="flex-1 flex items-center space-x-5 border-solid border-r-2 border-[#ffffff1a] p-5"
-      >
+    <section class="my-16 border-solid overflow-hidden" @click.stop="">
+      <div class="flex-1 flex items-center space-x-5 p-5">
         <h1 class="text-9xl white-shadow">{{ title }}</h1>
         <h3 class="text-5xl white-shadow mt-8">{{ phonetic }}</h3>
       </div>
 
-      <div class="h-full" :dir="dir">
-        <div class="w-full bg-[#ffffff1a] py-2 text-center">
-          <span class="text-white px-3 py-2">{{ targetLanguageTitle }}</span>
-        </div>
-
-        <div class="p-5 px-10">
+      <Fieldset :legend="targetLanguageTitle">
+        <div class="text-center">
           <span class="text-7xl white-shadow">{{
             cleanText(translatedWord!)
           }}</span>
         </div>
-      </div>
+      </Fieldset>
+
+      <SaveWord class="my-2" />
     </section>
 
     <template v-if="store">
-      <section class="flex justify-between w-2/3">
+      <section class="flex justify-between">
         <tabs
           class="mb-5 justify-start flex-1"
           :list="store.partsOfSpeech"
           v-model="activeTab"
         />
-
-        <div>
-          <!-- <span class="p-buttonset">
-            <Button
-              label="Cancel"
-              icon="pi pi-times"
-              @click="toggleCollectionPanel"
-            />
-            <Button label="Save" icon="pi pi-check" />
-          </span> -->
-        </div>
       </section>
 
       <!-- 
         Definition cards
       -->
-      <section class="flex-1 overflow-y-auto w-2/3">
+      <section class="flex-1 overflow-y-auto">
         <template v-for="(part, i) in store.partsOfSpeech" :key="i">
           <div @click.stop="" v-if="activeTab == part" class="flex flex-col">
             <Definition
@@ -99,6 +81,8 @@ import Definition from "./Definition.vue";
 
 import Button from "primevue/button";
 import OverlayPanel from "primevue/overlaypanel";
+import Fieldset from "primevue/fieldset";
+import SaveWord from "./SaveWord.vue";
 
 const props = defineProps({
   word: String,
