@@ -36,6 +36,7 @@ const props = defineProps<{
 }>();
 
 const selectedBundles = ref<string[]>([]);
+const existedPhrase = ref<PhraseType | null>(null);
 
 const isSaving = ref(false);
 const isExisting = ref(true);
@@ -53,7 +54,7 @@ async function checkExisting() {
   }
 
   try {
-    const phraseDoc = await dataProvider
+    existedPhrase.value = await dataProvider
       .findOne({
         database: DATABASE.USER_CONTENT,
         collection: COLLECTIONS.PHRASE,
@@ -63,13 +64,18 @@ async function checkExisting() {
           translation: props.translation.trim(),
         },
       })
-      .then((doc) => doc as PhraseType);
+      .then((doc) => doc as PhraseType | null);
+
+    if (!existedPhrase.value) {
+      isExisting.value = false;
+      return;
+    }
 
     const countQuery = {
       refId: authentication.user?.id,
       _id: selectedBundles.value[0],
       phrases: {
-        $in: [phraseDoc?._id],
+        $in: [existedPhrase.value?._id],
       },
     };
 
@@ -124,6 +130,12 @@ async function savePhrase() {
   };
 
   try {
+    if (existedPhrase.value) {
+      await updateBundles(selectedBundles.value, existedPhrase.value._id);
+      isExisting.value = true;
+      return;
+    }
+
     const newPhrase = await dataProvider
       .insertOne({
         ...dataBase,
