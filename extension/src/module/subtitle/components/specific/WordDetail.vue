@@ -25,7 +25,12 @@
           </div>
         </Fieldset>
 
-        <SaveWord class="my-2" />
+        <SaveWordSection
+          v-if="isLogin && translatedWord"
+          class="my-2"
+          :phrase="cleanText(word!)"
+          :translation="cleanText(translatedWord!)"
+        />
       </section>
 
       <template v-if="store">
@@ -80,8 +85,9 @@ import { analytic } from "../../../../plugins/mixpanel";
 import Definition from "./Definition.vue";
 
 import Fieldset from "primevue/fieldset";
-import SaveWord from "./SaveWord.vue";
+import SaveWordSection from "./SaveWordSection.vue";
 import Carousel from "primevue/carousel";
+import { isLogin } from "../../../../plugins/modular-rest";
 
 const props = defineProps({
   word: String,
