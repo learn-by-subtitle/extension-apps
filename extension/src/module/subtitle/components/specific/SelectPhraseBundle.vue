@@ -2,7 +2,7 @@
   <MultiSelect
     option-label="title"
     option-value="_id"
-    placeholder="Select a Phrase Bundle"
+    placeholder="Select a Phrase Bundle to save..."
     :selection-limit="1"
     :options="options"
     :loading="isFetching"
@@ -133,3 +133,9 @@ onMounted(() => {
   fetchOptions();
 });
 </script>
+
+<style scoped>
+:deep(.p-multiselect-label) {
+  font-size: 14px !important;
+}
+</style>

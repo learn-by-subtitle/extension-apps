@@ -18,7 +18,11 @@
 
 .p-multiselect {
 	background: transparent !important;
-	// border-color: var(--surface-border-color) !important;
+
+	&:not(:hover),
+	&:not(.p-focus) {
+		border-color: var(--surface-border-color) !important;
+	}
 
 	.p-inputgroup-addon {
 		background: transparent !important;
