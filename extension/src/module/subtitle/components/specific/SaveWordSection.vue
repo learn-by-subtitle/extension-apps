@@ -7,10 +7,11 @@
     <SelectPhraseBundle v-model:selected-bundles="selectedBundles" />
 
     <Button
-      label="Save"
+      :label="!isExisting ? 'Save' : 'Saved'"
       size="large"
       @click="savePhrase"
       :disabled="!selectedBundles.length || isExisting"
+      :outlined="isExisting"
       :loading="isSaving"
     >
       <template #icon>
@@ -153,3 +154,9 @@ async function savePhrase() {
   }
 }
 </script>
+
+<style scoped>
+:deep(.p-button.p-button-outlined) {
+  color: var(--surface-border-color) !important;
+}
+</style>

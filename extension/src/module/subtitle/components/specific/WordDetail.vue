@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center justify-start">
+  <div class="flex flex-col items-center justify-start" :key="key">
     <div
       class="select-text text-gray-900 flex flex-col px-20 justify-start items-center"
       :style="{
@@ -107,6 +107,7 @@ const store = ref<DefinitionStore | null>(null);
 const pending = ref(false);
 const activeTab = ref("");
 const meaning = ref<Meaning>();
+const key = ref(new Date().getTime());
 
 const targetLanguageTitle = computed(
   () => TranslateService.instance.targetLanguageTitle
@@ -116,8 +117,6 @@ function getWidth() {
   // maximum with is 780
   return Math.min(780, props.width!);
 }
-
-const dir = computed(() => getDir());
 
 const title = computed(() => {
   let word = props.word;
@@ -134,7 +133,11 @@ const phonetic = computed(() => {
 watch(
   () => props.word,
   (value) => {
+    key.value = new Date().getTime();
+    store.value = null;
+
     if (!value) return;
+
     analytic.track("Word clicked", { word: value });
     fetchWordDetail();
   },
@@ -160,7 +163,9 @@ watch(
 
 function fetchWordDetail() {
   pending.value = true;
-  let cleaned = cleanText(props.word as string);
+
+  const cleaned = cleanText(props.word as string);
+
   TranslateService.instance
     .translateByDictionaryapi(cleaned)
     .then((res) => (store.value = res))
