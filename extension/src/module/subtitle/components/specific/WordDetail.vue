@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col items-center justify-start">
     <div
-      class="select-text text-gray-900 flex flex-col overflow-hidden px-20 justify-start items-center"
+      class="select-text text-gray-900 flex flex-col px-20 justify-start items-center"
       :style="{
         height: `${props.height}px`,
         width: `${getWidth()}px`,
@@ -48,11 +48,17 @@
             class="w-full"
             :value="meaning?.definitions"
             :page="0"
-            :key="activeTab"
+            :key="
+              activeTab +
+              store.partsOfSpeech.length +
+              meaning?.definitions.length
+            "
             v-if="meaning?.definitions.length"
           >
             <template #item="{ data, index }">
-              <Definition class="shadow-md h-full min-h-[100px]" :data="data" />
+              <Fieldset class="h-full" :legend="'Definition ' + (index + 1)">
+                <Definition class="h-full min-h-[100px]" :data="data" />
+              </Fieldset>
             </template>
           </Carousel>
         </section>

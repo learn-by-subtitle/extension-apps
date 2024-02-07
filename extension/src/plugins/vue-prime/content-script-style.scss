@@ -18,13 +18,17 @@
 
 .p-multiselect {
 	background: transparent !important;
-	border-color: var(--surface-border-color) !important;
+	// border-color: var(--surface-border-color) !important;
 
 	.p-inputgroup-addon {
 		background: transparent !important;
 	}
 
 	.p-multiselect-trigger {
+		color: white !important;
+	}
+
+	.p-placeholder {
 		color: white !important;
 	}
 }

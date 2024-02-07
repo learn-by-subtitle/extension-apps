@@ -21,7 +21,7 @@
             @update:model-value="fetchOptions"
           />
           <Button
-            label="create"
+            label="Create"
             severity="secondary"
             :disabled="!isCreateNewAllowed"
             :loading="isCreating"
