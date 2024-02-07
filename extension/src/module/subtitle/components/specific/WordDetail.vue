@@ -48,12 +48,8 @@
             class="w-full"
             :value="meaning?.definitions"
             :page="0"
-            :key="
-              activeTab +
-              store.partsOfSpeech.length +
-              meaning?.definitions.length
-            "
             v-if="meaning?.definitions.length"
+            key="props.word"
           >
             <template #item="{ data, index }">
               <Fieldset class="h-full" :legend="'Definition ' + (index + 1)">
@@ -81,7 +77,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
-import { cleanText, firstUpper, getDir } from "../../../../common/helper/text";
+import { cleanText, firstUpper } from "../../../../common/helper/text";
 import { TranslateService } from "../../../../common/services/translate.service";
 import {
   DefinitionStore,
@@ -141,7 +137,7 @@ watch(
     analytic.track("Word clicked", { word: value });
     fetchWordDetail();
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 );
 
 watch(
@@ -165,6 +161,8 @@ function fetchWordDetail() {
   pending.value = true;
 
   const cleaned = cleanText(props.word as string);
+
+  store.value = null;
 
   TranslateService.instance
     .translateByDictionaryapi(cleaned)
