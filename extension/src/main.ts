@@ -18,6 +18,7 @@ import {
   registerGlobalEvents,
   unregisterGlobalEvents,
 } from "./module/subtitle/helpers/global-events";
+import { loginWithLastSession } from "./plugins/modular-rest";
 
 let vueApp!: App;
 let appInitializer!: AppInitializer;
@@ -46,8 +47,13 @@ function start() {
     ) {
       initialized = true;
 
+      // Create a vue app and add plugins
       vueApp = addPlugins(createApp(appInitializer.component as any));
 
+      // Login with last session
+      loginWithLastSession();
+
+      // Register components
       Object.keys(components).forEach((name) => {
         let component = (components as any)[name];
         vueApp.component(name, component);

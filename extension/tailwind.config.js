@@ -51,6 +51,7 @@ module.exports = {
         "logos",
         "flat-color-icons",
         "solar",
+        "ep",
       ]),
     }),
   ],

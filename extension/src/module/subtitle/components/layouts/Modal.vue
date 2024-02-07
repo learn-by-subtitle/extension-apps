@@ -1,7 +1,7 @@
 <template>
   <transition>
     <div
-      class="fixed bg-[#000000cc] z-[9999] w-screen h-screen"
+      class="fixed bg-[#000000cc] z-[1000] w-screen h-screen"
       @click.self="close"
       v-show="modelValue"
     >

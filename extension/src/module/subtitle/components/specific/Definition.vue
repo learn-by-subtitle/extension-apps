@@ -1,18 +1,19 @@
 <template>
   <div
-    class="bg-white rounded-md px-6 py-7 text-gray-600 relative flex items-start space-x-8"
+    class="rounded-md px-6 py-7 text-gray-600 relative flex items-start space-x-8"
   >
     <!-- ICON 
     -->
-    <div class="">
+    <div>
       <translate-button class="" v-model="showTranslate" />
     </div>
 
-    <section class="flex-1">
+    <section class="flex-1 text-white">
       <p class="font-medium text-4xl" :dir="dir">{{ definition }}</p>
-      <p class="italic text-gray-400 text-3xl mt-3" :dir="dir">{{ example }}</p>
+      <Divider class="my-5" />
+      <p class="italic text-2xl mt-3" :dir="dir">{{ example }}</p>
 
-      <div class="my-10" v-if="antonyms.length || synonyms.length" />
+      <Divider class="my-10" v-if="antonyms.length || synonyms.length" />
 
       <div v-if="antonyms.length">
         <p class="text-2xl">
@@ -36,8 +37,13 @@ import { CLOSE_ICON, TRANSLATE_ICON } from "../../../../common/icons/icons";
 import { TranslateService } from "../../../../common/services/translate.service";
 import { Definition } from "../../../../common/types/dictionaryapi.type";
 import { analytic } from "../../../../plugins/mixpanel";
+import Divider from "primevue/divider";
 
 export default defineComponent({
+  components: {
+    Divider,
+  },
+
   props: {
     data: { type: Object as PropType<Definition>, required: true },
   },

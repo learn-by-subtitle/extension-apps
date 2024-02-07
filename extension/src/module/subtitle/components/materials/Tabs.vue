@@ -1,21 +1,27 @@
 <template>
-  <div class="flex space-x-5 text-2xl">
-    <button
+  <InputGroup>
+    <Button
       v-for="tab of list"
       :key="tab"
-      :class="[
-        'rounded-md shadow-sm text-gray-700 px-4 py-3',
-        active == tab ? 'bg-pink-500 text-white' : 'bg-white',
-      ]"
+      :outlined="active != tab"
       @click.stop="activateTab(tab)"
     >
       {{ title(tab) }}
-    </button>
-  </div>
+    </Button>
+  </InputGroup>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Button from "primevue/button";
+import InputGroup from "primevue/inputgroup";
+import { defineComponent } from "vue";
+
+export default defineComponent({
+  components: {
+    Button,
+    InputGroup,
+  },
+
   props: {
     list: {},
     modelValue: String,
@@ -52,7 +58,14 @@ export default {
       return parts.join("");
     },
   },
-};
+});
 </script>
 
-<style></style>
+<style scoped>
+:deep(.p-button.p-button-outlined) {
+  color: var(--surface-border-color);
+}
+:deep(.p-button:focus) {
+  box-shadow: unset;
+}
+</style>
