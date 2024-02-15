@@ -31,7 +31,7 @@
     "webpack-cli": "^4.10.0"
   },
   "dependencies": {
-    "@modular-rest/client": "^1.3.0",
+    "@modular-rest/client": "/Users/navid-shad/Projects/Personal/modular-rest/packages/client",
     "animejs": "^3.2.1",
     "axios": "^1.3.4",
     "mixpanel-browser": "^2.45.0",

@@ -21,6 +21,7 @@ export {
 export const isLogin = ref(authentication.isLogin);
 
 export async function loginWithLastSession() {
+  debugger;
   // Check if the user is logged in
   // If the user is logged in, try to login with the token as last session.
   await sendMessage(new GetLoginStatusMessage())
@@ -35,7 +36,10 @@ export async function loginWithLastSession() {
     })
     // if the login failed, it means token is invalid or expired.
     // so the token should be removed from the storage.
-    .catch((err) => sendMessage(new StoreUserTokenMessage(null)));
+    .catch((err) => {
+      console.error("login failed ", err);
+      sendMessage(new StoreUserTokenMessage(null));
+    });
 }
 
 export function logout() {
