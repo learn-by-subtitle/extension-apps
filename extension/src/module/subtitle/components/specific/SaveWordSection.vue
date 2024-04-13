@@ -25,11 +25,12 @@
 import Button from "primevue/button";
 import Inputgroup from "primevue/inputgroup";
 import SelectPhraseBundle from "./SelectPhraseBundle.vue";
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { authentication, dataProvider } from "@modular-rest/client";
 import { COLLECTIONS, DATABASE } from "../../../../common/static/global";
 import { TranslateService } from "../../../../common/services/translate.service";
 import { PhraseType } from "../../../../common/types/phrase.type";
+import { useDefaultBundleStore } from "../../../../stores/default-bundle";
 
 const props = defineProps<{
   phrase: string;
@@ -42,11 +43,17 @@ const existedPhrase = ref<PhraseType | null>(null);
 const isSaving = ref(false);
 const isExisting = ref(true);
 
+const defaultBundleStore = useDefaultBundleStore();
+
 watch(
   () => selectedBundles,
   () => checkExisting(),
   { immediate: true, deep: true }
 );
+
+onMounted(() => {
+  selectedBundles.value = defaultBundleStore.getDefaultBundles();
+});
 
 async function checkExisting() {
   if (!selectedBundles.value.length) {
@@ -112,7 +119,9 @@ function updateBundles(bundleIds: string[], phraseId: string) {
     }),
   ];
 
-  return Promise.all(promiseList);
+  return Promise.all(promiseList).then(() => {
+    defaultBundleStore.setDefaultBundles(bundleIds);
+  });
 }
 
 async function savePhrase() {
