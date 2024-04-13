@@ -37,13 +37,14 @@ export function mapStyleString(style: string) {
 export function getComputedStyles(styleList: string[], element: Element) {
   let data = {};
 
-  if(!element) return data;
+  if (!element) return data;
 
   styleList.forEach((key) => {
     // @ts-ignore
     let styleMap = element.computedStyleMap().get(key);
 
     if (styleMap) {
+      // @ts-ignore
       let value = styleMap.value + styleMap.unit;
       data[key] = value;
     }

@@ -40,7 +40,7 @@
 
 <script setup lang="ts">
 import Button from "primevue/button";
-import { ref, watch, onMounted, computed, nextTick } from "vue";
+import { ref, watch, onMounted, nextTick } from "vue";
 import { wait } from "../../../../common/helper/promise";
 
 const emit = defineEmits(["update:modelValue"]);
@@ -81,9 +81,9 @@ watch(
   }
 );
 
-const close = (event: MouseEvent) => {
+function close() {
   emit("update:modelValue", false);
-};
+}
 </script>
 
 <style lang="scss" scoped>

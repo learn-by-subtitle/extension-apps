@@ -9,7 +9,7 @@
       :dir="dir"
     >
       <span v-if="activeTranslate.length" class="p-2" :style="textStyle">{{
-        $filters.cleanText(activeTranslate)
+        cleanText(activeTranslate)
       }}</span>
 
       <SvgLoader v-else width="40px" asset="WORD_LOADING" />
@@ -57,7 +57,7 @@
 import { defineComponent, PropType, StyleValue } from "vue";
 import { mapState, mapActions } from "pinia";
 import { useMarkerStore } from "../../../../stores/marker";
-import { getDir, rtls } from "../../../../common/helper/text";
+import { getDir, rtls, cleanText } from "../../../../common/helper/text";
 import { TranslateService } from "../../../../common/services/translate.service";
 import { Dictionary } from "../../../../common/types/general.type";
 import { analytic } from "../../../../plugins/mixpanel";
@@ -215,6 +215,10 @@ export default defineComponent({
             this.translatedWords[result] = list[i];
           });
         });
+    },
+
+    cleanText(text: string) {
+      return cleanText(text);
     },
   },
 });

@@ -43,7 +43,7 @@
 
         <div class="mt-12">
           <button v-if="!isLogin" @click="openLogin">Login/Register</button>
-          <button v-else @click="logout">Logout</button>
+          <button v-else @click="logout()">Logout</button>
         </div>
       </div>
     </div>

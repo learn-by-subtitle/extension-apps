@@ -39,7 +39,7 @@ let initialized = false;
 function start() {
   setInterval(() => {
     //
-    // Mount vue app of location matchs
+    // Mount vue app of location match
     //
     if (
       !initialized &&
@@ -73,7 +73,7 @@ function start() {
     }
 
     //
-    // Unmount vue app if location dosent match anymore
+    // Unmount vue app if location doesn't match anymore
     //
     else if (
       initialized &&

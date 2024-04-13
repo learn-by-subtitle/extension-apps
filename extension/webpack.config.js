@@ -26,6 +26,7 @@ module.exports = {
         exclude: /node_modules/,
         options: {
           appendTsSuffixTo: [/\.vue$/],
+          transpileOnly: true,
         },
       },
       // this will apply to both plain `.css` files

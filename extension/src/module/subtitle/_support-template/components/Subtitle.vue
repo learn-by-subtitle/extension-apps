@@ -3,9 +3,13 @@
     <!-- 
     TRANSLATE CONTENT
     -->
-    <div class="translated-word flex justify-center" :style="translateStyle" :dir="dir">
+    <div
+      class="translated-word flex justify-center"
+      :style="translateStyle"
+      :dir="dir"
+    >
       <span v-if="activeTranslate.length" :style="textStyle">{{
-        $filters.cleanText(activeTranslate)
+        // $filters.cleanText(activeTranslate)
       }}</span>
 
       <SvgLoader v-else width="60px" asset="WORD_LOADING" />
