@@ -16,3 +16,13 @@ export async function sendMessage<T extends BaseMessage | LoginStatusResponse>(
     });
   });
 }
+
+export function sendMessageToTabs<T extends BaseMessage | LoginStatusResponse>(
+  message: T | any
+) {
+  chrome.tabs.query({}, (tabs) => {
+    for (const tab of tabs) {
+      tab?.id && chrome.tabs.sendMessage(tab.id, message);
+    }
+  });
+}

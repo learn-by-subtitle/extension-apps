@@ -76,7 +76,7 @@ import {
   LoginStatusResponse,
   StoreUserTokenMessage,
 } from "../../../common/types/messaging";
-import { sendMessage } from "../helper/massage";
+import { sendMessage, sendMessageToTabs } from "../helper/massage";
 import { get } from "../helper/http";
 import { joinToBaseUrl } from "../../../common/helper/url";
 import { loginWithLastSession, isLogin } from "../../../plugins/modular-rest";
@@ -154,7 +154,10 @@ function authorizeFromGoogleOAuthThroughAuthFlowAPI() {
 }
 
 async function handleTokenLogin(token: string) {
-  await sendMessage(new StoreUserTokenMessage(token));
+  const message = new StoreUserTokenMessage(token);
+
+  await sendMessage(message);
+  sendMessageToTabs(message);
   await loginWithLastSession();
 }
 
