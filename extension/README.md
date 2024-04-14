@@ -21,7 +21,16 @@ Supported websites:
 - Netflix
 - More websites will be supported soon.
 
-Updates on v1.1:
+Latest updates 
+
+[ v1.6.2 ]:
+- Added word bundles, users can save words in different categories to review later. 
+
+[ v1.6.1 ]:
+- Support multiple-word selection on subtitles, you can mark multiple words and see the translation.
+- Added uninstall feedback form.
+
+[ v1.1 ]:
 - Added analytics.
 - Added Guide description on extension popup.
 
