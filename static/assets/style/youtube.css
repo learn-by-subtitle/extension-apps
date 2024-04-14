@@ -1,9 +1,0 @@
-#logo-icon {
-	box-sizing: unset;
-}
-
-[id^="caption-window"] {
-    z-index: 0 !important;
-    pointer-events: none !important;
-	visibility: hidden;
-}

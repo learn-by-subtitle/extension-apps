@@ -1,8 +1,16 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
-	],
-	"settings": {}
+  "folders": [
+    {
+      "path": "extension"
+    },
+    {
+      "path": "server"
+    },
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "cSpell.words": ["Pinia", "subturtle"]
+  }
 }
