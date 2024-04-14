@@ -37,7 +37,7 @@ Latest updates
 ---
 
 <p align="center">
-<img src="https://github.com/navidshad/learn-by-subtitle/blob/main/misc/media-kit/Word%20detail%201.png" width="30%" />
-<img src="https://github.com/navidshad/learn-by-subtitle/blob/main/misc/media-kit/Word%20detail%202.png" width="30%" />
-<img src="https://github.com/navidshad/learn-by-subtitle/blob/main/misc/media-kit/Word%20detail%203.png" width="30%" />
+<img src="https://github.com/learn-by-subtitle/extension-apps/blob/main/extension/misc/media-kit/Word%20detail%201.png" width="30%" />
+<img src="https://github.com/learn-by-subtitle/extension-apps/blob/main/extension/misc/media-kit/Word%20detail%202.png" width="30%" />
+<img src="https://github.com/learn-by-subtitle/extension-apps/blob/main/extension/misc/media-kit/Word%20detail%203.png" width="30%" />
 </p>
