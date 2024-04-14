@@ -14,6 +14,7 @@
 		"identity"
 	],
 	"host_permissions": [
+		"https://www.subturtle.app/",
 		"https://translation.googleapis.com/",
 		"https://puew3irvoklukt3f4sxshvopla0rkxgr.lambda-url.eu-central-1.on.aws/",
 		"https://api.dictionaryapi.dev/",
