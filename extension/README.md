@@ -11,7 +11,7 @@
 ---
 
 <p align="center">
-<img src="https://github.com/navidshad/learn-by-subtitle/blob/main/misc/media-kit/Frame%202.png" width="70%"/>
+<img src="https://github.com/learn-by-subtitle/extension-apps/blob/main/extension/misc/media-kit/Frame%202.png" width="70%"/>
 </p>
 
 ---
