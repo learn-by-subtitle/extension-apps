@@ -1,82 +1,103 @@
 import { defineStore } from "pinia";
 
 export interface MarkedWord {
-	id: number,
-	word: string,
-	domeRect: DOMRect
+  id: string;
+  word: string;
+  domeRect: DOMRect;
 }
 
 interface State {
-	mode: 'mark' | 'select';
-	marking: boolean;
-	markedWords: MarkedWord[];
+  mode: "mark" | "select";
+  marking: boolean;
+  markedWords: MarkedWord[];
 }
 
-export const useMarkerStore = defineStore('marker', {
-	state: (): State => ({
-		mode: 'select',
-		marking: false,
-		markedWords: [],
-	}),
+export const useMarkerStore = defineStore("marker", {
+  state: (): State => ({
+    mode: "select",
+    marking: false,
+    markedWords: [],
+  }),
 
-	getters: {
-		isMarkingMode: (state) => state.mode === 'mark',
-		isMarking: (state) => state.marking,
-		words: (state) => state.markedWords,
-		selectedPhrase: (state) => {
-			return state.markedWords.map((item) => item.word).join(' ');
-		},
-	},
+  getters: {
+    // To distinguish between marking mode and selecting mode
+    isMarkingMode: (state) => state.mode === "mark",
+    // For handling mouse events to mark words
+    isMarking: (state) => state.marking,
+    words: (state) => state.markedWords,
+    selectedPhrase: (state) => {
+      return state.markedWords.map((item) => item.word).join(" ");
+    },
+  },
 
-	actions: {
-		toggleMarkingMode(value: boolean) {
-			this.mode = value ? 'mark' : 'select';
-		},
+  actions: {
+    toggleMarkingMode(value: boolean) {
+      this.mode = value ? "mark" : "select";
+    },
 
-		toggleMarking(value: boolean) {
-			this.marking = value;
+    toggleMarking(value: boolean) {
+      this.marking = value;
 
-			if (value == true) {
-				const _this = this;
-				document.addEventListener('mouseup', () => {
-					_this.toggleMarking(false);
-				}, { once: true });
-			}
-		},
+      if (value == true) {
+        const _this = this;
+        document.addEventListener(
+          "mouseup",
+          () => {
+            _this.toggleMarking(false);
+          },
+          { once: true }
+        );
+      }
+    },
 
-		markWord(id: number, word: string, domeRect: DOMRect) {
-			const isExist = this.markedWords.find((item) => item.id === id);
-			if (isExist) return
+    markWord(id: string, word: string, domeRect: DOMRect) {
+      const isExist = this.markedWords.find((item) => item.id === id);
+      if (isExist) return;
 
-			this.markedWords.push({ id, word, domeRect });
-			// Sort base id
-			this.markedWords = this.markedWords.sort((a, b) => a.id - b.id);
-		},
+      this.markedWords.push({ id, word, domeRect });
+      // Sort base id
+      this.markedWords = this.markedWords.sort((a, b) => {
+        // id format is [line]-[wordIndex]-[line * wordIndex]
+        // So, we can split the id by "-" and get the last element
+        const aid = a.id.split("-").map(Number)[2];
+        const bid = b.id.split("-").map(Number)[2];
 
-		clear() {
-			this.markedWords = [];
-		},
+        return aid - bid;
+      });
+    },
 
-		checkedSelected(id: number) {
-			return !!this.markedWords.find((item) => item.id === id);
-		}
-	}
-})
+    clear() {
+      this.markedWords = [];
+    },
+
+    checkedSelected(id: string) {
+      return !!this.markedWords.find((item) => item.id === id);
+    },
+
+    getWordId(line: number, wordIndex: number) {
+      return line + "-" + wordIndex + "-" + line * wordIndex;
+    },
+
+    getSequentialId(id: string) {
+      return id.split("-").map(Number)[2];
+    },
+  },
+});
 
 export const startMarking = (e: KeyboardEvent) => {
-	if (e.key !== 'Control' && e.key !== 'Meta') return;
+  if (e.key !== "Control" && e.key !== "Meta") return;
 
-	useMarkerStore().toggleMarkingMode(true);
-	document.body.style.cursor = 'text';
+  useMarkerStore().toggleMarkingMode(true);
+  document.body.style.cursor = "text";
 
-	document.addEventListener('keyup', stopMarking);
-}
+  document.addEventListener("keyup", stopMarking);
+};
 
 export const stopMarking = (e: KeyboardEvent) => {
-	if (e.key !== 'Control' && e.key !== 'Meta') return;
+  if (e.key !== "Control" && e.key !== "Meta") return;
 
-	useMarkerStore().toggleMarkingMode(false);
-	document.body.style.cursor = 'default';
+  useMarkerStore().toggleMarkingMode(false);
+  document.body.style.cursor = "default";
 
-	document.removeEventListener('keyup', stopMarking);
-}
+  document.removeEventListener("keyup", stopMarking);
+};

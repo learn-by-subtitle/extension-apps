@@ -8,9 +8,15 @@
       :style="translateStyle"
       :dir="dir"
     >
-      <span v-if="activeTranslate.length" class="p-2" :style="textStyle">{{
+      <TranslatedPhrase
+        v-if="activeTranslate.length"
+        :value="activeTranslate"
+        :textStyle="textStyle"
+      />
+
+      <!-- <span v-if="activeTranslate.length" class="p-2" :style="textStyle">{{
         cleanText(activeTranslate)
-      }}</span>
+      }}</span> -->
 
       <SvgLoader v-else width="40px" asset="WORD_LOADING" />
     </div>
@@ -19,20 +25,15 @@
     -->
     <transition name="fade">
       <div v-if="textList?.length" class="w-full">
-        <!-- SUBTITLE
-        -->
         <div ref="subturtleSubtitle" :dir="sourceDir" class="text-left">
           <div v-for="(line, i) in textList" :key="i">
             <p class="pl-2 pr-2 pb-0" :style="textStyle">
               <word
                 v-for="(word, i2) in line.split(' ')"
                 :key="i2"
-                :id="parseInt(i + '' + i2)"
+                :id="getWordId(i, i2)"
                 :modelValue="word + ' '"
-                @click="
-                  showWordDetail = true;
-                  clickedWord = word;
-                "
+                @click="onWordClicked(word)"
               />
             </p>
           </div>
@@ -61,6 +62,8 @@ import { getDir, rtls, cleanText } from "../../../../common/helper/text";
 import { TranslateService } from "../../../../common/services/translate.service";
 import { Dictionary } from "../../../../common/types/general.type";
 import { analytic } from "../../../../plugins/mixpanel";
+import { log } from "../../../../common/helper/log";
+import TranslatedPhrase from "../../components/specific/TranslatedPhrase.vue";
 
 interface DataModel {
   translatedWords: Dictionary;
@@ -90,7 +93,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapState(useMarkerStore, ["selectedPhrase"]),
+    ...mapState(useMarkerStore, ["selectedPhrase", "isMarkingMode"]),
 
     translateStyle(): StyleValue {
       let bottom = 20;
@@ -164,7 +167,15 @@ export default defineComponent({
   },
 
   methods: {
-    ...mapActions(useMarkerStore, ["clear"]),
+    ...mapActions(useMarkerStore, ["clear", "getWordId"]),
+
+    onWordClicked(word) {
+      log("onWordClicked: isMarkingMode:", this.isMarkingMode, word);
+      if (this.isMarkingMode) return;
+
+      this.clickedWord = word;
+      this.showWordDetail = true;
+    },
 
     getWordList() {
       let list: string[] = [];

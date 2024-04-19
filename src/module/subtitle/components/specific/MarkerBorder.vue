@@ -1,17 +1,22 @@
 <template>
   <section>
     <div
-      class="border-2 border-dotted z-[999] border-red-500 fixed"
+      :class="['border-2 border-dotted', 'z-[999] border-red-500 fixed']"
       v-for="(marker, index) in markers"
       :key="index"
       :style="getBorderRectFromMarkerArray(marker)"
-    />
+    >
+      <!-- <div
+        v-if="index == 0"
+        class="absolute -top-[100px] bg-red-600 flex"
+      ></div> -->
+    </div>
   </section>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { mapState } from "pinia";
+import { mapState, mapActions } from "pinia";
 import { useMarkerStore, MarkedWord } from "../../../../stores/marker";
 
 export default defineComponent({
@@ -26,7 +31,7 @@ export default defineComponent({
 
       // categorise words in a sequence based their id, start a new category if squential id has a gap
       for (let i = 0; i < this.words.length; i++) {
-        const { id } = this.words[i];
+        const id = this.getSequentialId(this.words[i].id);
 
         // Add the first word to the first category
         if (i == 0) {
@@ -35,7 +40,9 @@ export default defineComponent({
         }
 
         // Add to previous category if sequential with previous
-        let isSequentialWithPrevious = id - 1 === this.words[i - 1].id;
+        let isSequentialWithPrevious =
+          id - 1 === this.getSequentialId(this.words[i - 1].id);
+
         if (isSequentialWithPrevious) {
           markers[counter].push(this.words[i]);
           continue;
@@ -51,6 +58,8 @@ export default defineComponent({
   },
 
   methods: {
+    ...mapActions(useMarkerStore, ["getSequentialId"]),
+
     getBorderRectFromMarkerArray(marker: MarkedWord[]) {
       if (marker.length == 0) return {};
 

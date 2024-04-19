@@ -9,7 +9,7 @@
       :dir="dir"
     >
       <span v-if="activeTranslate.length" :style="textStyle">{{
-        $filters.cleanText(activeTranslate)
+        cleanText(activeTranslate)
       }}</span>
 
       <SvgLoader v-else width="60px" asset="WORD_LOADING" />
@@ -45,7 +45,7 @@
               <word
                 v-for="(word, i2) in line.split(' ')"
                 :key="i2"
-                :id="parseInt(i + '' + i2)"
+                :id="getWordId(i, i2)"
                 :modelValue="word + ' '"
                 @click="
                   showWordDetail = true;
@@ -72,7 +72,7 @@ import { defineComponent, PropType, StyleValue } from "vue";
 import { mapState, mapActions } from "pinia";
 import { useMarkerStore } from "../../../../stores/marker";
 import { clamp } from "../../../../common/helper/math";
-import { getDir, rtls } from "../../../../common/helper/text";
+import { getDir, rtls, cleanText } from "../../../../common/helper/text";
 import { TranslateService } from "../../../../common/services/translate.service";
 import { Dictionary } from "../../../../common/types/general.type";
 import { analytic } from "../../../../plugins/mixpanel";
@@ -193,7 +193,7 @@ export default defineComponent({
   },
 
   methods: {
-    ...mapActions(useMarkerStore, ["clear"]),
+    ...mapActions(useMarkerStore, ["clear", "getWordId"]),
 
     getWordList() {
       let list: string[] = [];
@@ -237,6 +237,10 @@ export default defineComponent({
             this.translatedWords[result] = list[i];
           });
         });
+    },
+
+    cleanText(text: string) {
+      return cleanText(text);
     },
   },
 });

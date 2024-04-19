@@ -1,5 +1,6 @@
 <template>
   <span
+    :id="id"
     @mousedown="toggleMarking(true)"
     @mousemove="onMouseenter"
     @mouseout="onMouseout"
@@ -19,7 +20,7 @@ import { log } from "../../../../common/helper/log";
 
 export default defineComponent({
   props: {
-    id: { type: Number, required: true },
+    id: { type: String, required: true },
     modelValue: { type: String, required: true },
   },
 
@@ -30,7 +31,6 @@ export default defineComponent({
   methods: {
     ...mapActions(useMarkerStore, [
       "markWord",
-      "toggleMarkingMode",
       "toggleMarking",
       "checkedSelected",
       "clear",
@@ -58,6 +58,7 @@ export default defineComponent({
     },
 
     onMouseout() {
+      return;
       if (!this.isMarkingMode) {
         this.clear();
       }

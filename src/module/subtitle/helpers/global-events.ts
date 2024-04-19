@@ -1,11 +1,7 @@
-import { startMarking, stopMarking } from "../../../stores/marker";
+import { startMarking } from "../../../stores/marker";
 
 export function registerGlobalEvents() {
-	document.addEventListener('keydown', startMarking);
-	// document.addEventListener('keyup', stopMarking);
+  document.addEventListener("keydown", startMarking);
 }
 
-export function unregisterGlobalEvents() {
-	// document.removeEventListener('keydown', startMarking);
-	// document.removeEventListener('keyup', stopMarking);
-}
+export function unregisterGlobalEvents() {}
