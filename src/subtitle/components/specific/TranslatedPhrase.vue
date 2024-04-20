@@ -26,10 +26,12 @@
 import { cleanText } from "../../../common/helper/text";
 import { computed, defineProps, ref } from "vue";
 import { useMarkerStore } from "../../../stores/marker";
+import { useConsoleCraneStore } from "../../../console-crane/stores/console-crane";
 
 import Button from "primevue/button";
 
 const markerStore = useMarkerStore();
+const consoleCraneStore = useConsoleCraneStore();
 
 const props = defineProps<{
   textStyle: any;
@@ -40,16 +42,18 @@ const items = ref([
     label: "Info",
     icon: "i-solar-info-square-linear text-2xl",
     command: () => {
-      // toast.add({ severity: 'info', summary: 'Add', detail: 'Data Added' });
+      consoleCraneStore.toggleConsoleCrane("word-detail", {
+        word: markerStore.selectedPhrase,
+      });
     },
   },
-  {
-    label: "Save",
-    icon: "i-solar-bookmark-line-duotone text-2xl",
-    command: () => {
-      // toast.add({ severity: 'success', summary: 'Update', detail: 'Data Updated' });
-    },
-  },
+  // {
+  //   label: "Save",
+  //   icon: "i-solar-bookmark-line-duotone text-2xl",
+  //   command: () => {
+  //     // toast.add({ severity: 'success', summary: 'Update', detail: 'Data Updated' });
+  //   },
+  // },
 ]);
 
 const activeTranslate = computed(() => {
