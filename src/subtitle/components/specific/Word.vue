@@ -1,73 +1,71 @@
 <template>
   <span
     :id="id"
-    @mousedown="toggleMarking(true)"
+    @mousedown="markerStore.toggleMarking(true)"
     @mousemove="onMouseenter"
     @mouseout="onMouseout"
+    @click="OpenWordDetail"
     :class="{
-      selected: checkedSelected(id),
-      pointer: !isMarkingMode && checkedSelected(id),
+      selected: markerStore.checkedSelected(id),
+      pointer: !markerStore.isMarkingMode && markerStore.checkedSelected(id),
     }"
     >{{ modelValue }}</span
   >
 </template>
 
-<script lang="ts">
-import { mapActions, mapState } from "pinia";
+<script lang="ts" setup>
+import { useConsoleCraneStore } from "../../../console-crane/stores/console-crane";
 import { useMarkerStore } from "../../../stores/marker";
-import { defineComponent } from "vue";
+import { ref, getCurrentInstance, onMounted } from "vue";
 
-export default defineComponent({
-  props: {
-    id: { type: String, required: true },
-    modelValue: { type: String, required: true },
-  },
+const consoleCrane = useConsoleCraneStore();
+const markerStore = useMarkerStore();
+const props = defineProps<{
+  id: string;
+  modelValue: string;
+}>();
 
-  computed: {
-    ...mapState(useMarkerStore, ["isMarkingMode", "isMarking"]),
-  },
+const elRef = ref<HTMLElement | null>(null);
 
-  methods: {
-    ...mapActions(useMarkerStore, [
-      "markWord",
-      "toggleMarking",
-      "checkedSelected",
-      "clear",
-    ]),
-
-    onMouseenter() {
-      // Mark single word
-      if (
-        !this.isMarkingMode &&
-        // refuse to mark if the word is already marked
-        !this.checkedSelected(this.id)
-      ) {
-        this.clear();
-        this.markWord(
-          this.id,
-          this.modelValue?.trim(),
-          this.$el.getBoundingClientRect()
-        );
-      }
-
-      // Mark multiple words
-      if (this.isMarkingMode && this.isMarking) {
-        this.markWord(
-          this.id,
-          this.modelValue,
-          this.$el.getBoundingClientRect()
-        );
-      }
-    },
-
-    onMouseout() {
-      return;
-      if (!this.isMarkingMode) {
-        this.clear();
-      }
-    },
-  },
+onMounted(() => {
+  elRef.value = getCurrentInstance()?.proxy?.$el;
 });
+
+function onMouseenter() {
+  const boundingRect = elRef.value?.getBoundingClientRect();
+
+  if (!boundingRect) {
+    return;
+  }
+
+  // Mark single word
+  if (
+    !markerStore.isMarkingMode &&
+    // refuse to mark if the word is already marked
+    !markerStore.checkedSelected(props.id)
+  ) {
+    markerStore.clear();
+
+    markerStore.markWord(props.id, props.modelValue?.trim(), boundingRect);
+  }
+
+  // Mark multiple words
+  if (markerStore.isMarkingMode && markerStore.isMarking) {
+    markerStore.markWord(props.id, props.modelValue, boundingRect);
+  }
+}
+
+function onMouseout() {
+  return;
+
+  if (!markerStore.isMarkingMode) {
+    markerStore.clear();
+  }
+}
+
+function OpenWordDetail() {
+  consoleCrane.toggleConsoleCrane("word-detail", { word: props.modelValue });
+}
 </script>
 
 <style scoped>

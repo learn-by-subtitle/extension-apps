@@ -3,8 +3,8 @@
     <div
       class="select-text text-gray-900 flex flex-col px-20 justify-start items-center"
       :style="{
-        height: `${props.height}px`,
-        width: `${getWidth()}px`,
+        height: `${frameSize?.height}px`,
+        width: `${Math.min(780, frameSize?.width!)}px`,
       }"
     >
       <!-- WORD -->
@@ -20,16 +20,16 @@
         <Fieldset class="w-full" :legend="targetLanguageTitle">
           <div class="text-center">
             <span class="text-7xl white-shadow">{{
-              cleanText(translatedWord!)
+              cleanText(props.translatedWord!)
             }}</span>
           </div>
         </Fieldset>
 
         <SaveWordSection
-          v-if="isLogin && translatedWord"
+          v-if="isLogin && props.translatedWord"
           class="my-2"
-          :phrase="cleanText(word!)"
-          :translation="cleanText(translatedWord!)"
+          :phrase="cleanText(props.word!)"
+          :translation="cleanText(props.translatedWord!)"
         />
       </section>
 
@@ -49,11 +49,15 @@
             :value="meaning?.definitions"
             :page="0"
             v-if="meaning?.definitions.length"
-            key="props.word"
+            :key="props.word"
           >
             <template #item="{ data, index }">
               <Fieldset class="h-full" :legend="'Definition ' + (index + 1)">
-                <Definition class="h-full min-h-[100px]" :data="data" />
+                <Definition
+                  class="h-full min-h-[100px]"
+                  :data="data"
+                  :key="activeTab + index"
+                />
               </Fieldset>
             </template>
           </Carousel>
@@ -68,7 +72,9 @@
 
       <template v-else>
         <div class="my-32 text-3xl text-center text-yellow-200">
-          <span>There is not any definition for {{ cleanText(word!) }}</span>
+          <span
+            >There is not any definition for {{ cleanText(props.word!) }}</span
+          >
         </div>
       </template>
     </div>
@@ -76,7 +82,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from "vue";
+import { ref, computed, watch, onMounted, inject } from "vue";
 import { cleanText, firstUpper } from "../../common/helper/text";
 import { TranslateService } from "../../common/services/translate.service";
 import {
@@ -92,13 +98,27 @@ import SaveWordSection from "../components/SaveWordSection.vue";
 import Fieldset from "primevue/fieldset";
 import Carousel from "primevue/carousel";
 
-const props = defineProps({
-  word: String,
-  translatedWord: String,
-  language: String,
-  height: Number,
-  width: Number,
+import { useRoute } from "vue-router";
+
+const route = useRoute();
+
+const props = computed(() => {
+  const data = JSON.parse(window.atob(route.params.data as string));
+
+  return data as unknown as {
+    word: string;
+    translatedWord: string;
+    language: string;
+  };
 });
+
+const frameSize = inject<{ width: number; height: number }>("frameSize");
+
+// const props = defineProps({
+//   word: String,
+//   translatedWord: String,
+//   language: String,
+// });
 
 const store = ref<DefinitionStore | null>(null);
 const pending = ref(false);
@@ -110,13 +130,8 @@ const targetLanguageTitle = computed(
   () => TranslateService.instance.targetLanguageTitle
 );
 
-function getWidth() {
-  // maximum with is 780
-  return Math.min(780, props.width!);
-}
-
 const title = computed(() => {
-  let word = props.word;
+  let word = props.value.word;
   if (store.value) word = store.value.word;
   return firstUpper(word || "");
 });
@@ -128,7 +143,7 @@ const phonetic = computed(() => {
 });
 
 watch(
-  () => props.word,
+  () => props.value.word,
   (value) => {
     key.value = new Date().getTime();
     store.value = null;
@@ -161,7 +176,7 @@ watch(
 function fetchWordDetail() {
   pending.value = true;
 
-  const cleaned = cleanText(props.word as string);
+  const cleaned = cleanText(props.value.word as string);
 
   store.value = null;
 

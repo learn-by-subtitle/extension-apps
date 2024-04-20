@@ -40,7 +40,7 @@
 
 <script setup lang="ts">
 import Button from "primevue/button";
-import { ref, watch, onMounted, nextTick } from "vue";
+import { ref, watch, onMounted, nextTick, provide } from "vue";
 import { wait } from "../../common/helper/promise";
 
 const emit = defineEmits(["update:modelValue"]);
@@ -51,7 +51,9 @@ const props = defineProps({
 const modalContentContainer = ref<HTMLElement | null>(null);
 const contentSize = ref({ width: 0, height: 0 });
 
-function getContentSize() {
+provide("frameSize", contentSize);
+
+function updateContentSize() {
   if (!modalContentContainer.value) return;
 
   contentSize.value = {
@@ -77,7 +79,7 @@ watch(
       });
     }
 
-    nextTick(getContentSize);
+    nextTick(updateContentSize);
   }
 );
 
