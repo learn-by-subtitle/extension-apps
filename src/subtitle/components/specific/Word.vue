@@ -67,7 +67,13 @@ function onMouseout() {
 }
 
 function OpenWordDetail() {
-  consoleCrane.toggleConsoleCrane("word-detail", { word: props.modelValue });
+  if (markerStore.words.length > 1) {
+    consoleCrane.toggleConsoleCrane("word-detail", {
+      word: markerStore.selectedPhrase,
+    });
+  } else {
+    consoleCrane.toggleConsoleCrane("word-detail", { word: props.modelValue });
+  }
 }
 </script>
 
