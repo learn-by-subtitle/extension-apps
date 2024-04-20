@@ -17,6 +17,7 @@
 import { useConsoleCraneStore } from "../../../console-crane/stores/console-crane";
 import { useMarkerStore } from "../../../stores/marker";
 import { ref, getCurrentInstance, onMounted } from "vue";
+import { analytic } from "../../../plugins/mixpanel";
 
 const consoleCrane = useConsoleCraneStore();
 const markerStore = useMarkerStore();
@@ -37,6 +38,8 @@ function onMouseenter() {
   if (!boundingRect) {
     return;
   }
+
+  analytic.track("Word hovered", { word: props.modelValue });
 
   // Mark single word
   if (

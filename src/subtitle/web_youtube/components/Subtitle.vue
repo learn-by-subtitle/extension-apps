@@ -8,17 +8,7 @@
       :style="translateStyle"
       :dir="dir"
     >
-      <TranslatedPhrase
-        v-if="activeTranslate.length"
-        :value="activeTranslate"
-        :textStyle="textStyle"
-      />
-
-      <!-- <span v-if="activeTranslate.length" class="p-2" :style="textStyle">{{
-        cleanText(activeTranslate)
-      }}</span> -->
-
-      <SvgLoader v-else width="40px" asset="WORD_LOADING" />
+      <TranslatedPhrase :textStyle="textStyle" />
     </div>
 
     <!-- SUBTITLE
@@ -33,24 +23,12 @@
                 :key="i2"
                 :id="getWordId(i, i2)"
                 :modelValue="word + ' '"
-                @click="toggleConsoleCrane"
               />
             </p>
           </div>
         </div>
       </div>
     </transition>
-
-    <!-- <teleport to="body">
-      <modal v-model="showWordDetail" v-slot="{ height, width }">
-        <word-detail
-          :height="height"
-          :width="width"
-          :word="clickedWord"
-          :translatedWord="translatedWords[clickedWord]"
-        />
-      </modal>
-    </teleport> -->
   </div>
 </template>
 
@@ -59,20 +37,12 @@ import { defineComponent, PropType, StyleValue } from "vue";
 import { mapState, mapActions } from "pinia";
 import { useMarkerStore } from "../../../stores/marker";
 import { getDir, rtls, cleanText } from "../../../common/helper/text";
-import { TranslateService } from "../../../common/services/translate.service";
-import { Dictionary } from "../../../common/types/general.type";
-import { analytic } from "../../../plugins/mixpanel";
-import { log } from "../../../common/helper/log";
 import TranslatedPhrase from "../../components/specific/TranslatedPhrase.vue";
-import { useConsoleCraneStore } from "../../../console-crane/stores/console-crane";
 
 interface DataModel {
-  translatedWords: Dictionary;
   translatedLines: String[];
-  sourceLanguage: string;
   showTranslatedSentence: boolean;
   showWordDetail: boolean;
-  clickedWord: string;
 }
 
 export default defineComponent({
@@ -84,17 +54,18 @@ export default defineComponent({
 
   data(): DataModel {
     return {
-      translatedWords: {},
       translatedLines: [],
-      sourceLanguage: "en",
       showTranslatedSentence: false,
       showWordDetail: false,
-      clickedWord: "",
     };
   },
 
   computed: {
-    ...mapState(useMarkerStore, ["selectedPhrase", "isMarkingMode"]),
+    ...mapState(useMarkerStore, [
+      "selectedPhrase",
+      "isMarkingMode",
+      "sourceLanguage",
+    ]),
 
     translateStyle(): StyleValue {
       let bottom = 20;
@@ -110,13 +81,8 @@ export default defineComponent({
         width: "100%",
         textAlign: "center",
         opacity: this.selectedPhrase.length ? 1 : 0,
-        // transition: "all ease 200ms",
         bottom: bottom + "px",
       };
-    },
-
-    activeTranslate() {
-      return this.translatedWords[this.selectedPhrase] || "";
     },
 
     iconContainerStyle() {
@@ -149,85 +115,10 @@ export default defineComponent({
         }
       },
     },
-
-    selectedPhrase(value) {
-      if (value.length) {
-        this.translateWord(value);
-        analytic.track("Word hovered", { word: value });
-      }
-    },
-
-    clickedWord(value) {
-      if (value.length) {
-        this.translateWord(value);
-
-        // Tracking will be done on word modal
-        // analytic.track("Word clicked", { word: value });
-      }
-    },
   },
 
   methods: {
     ...mapActions(useMarkerStore, ["clear", "getWordId"]),
-    ...mapActions(useConsoleCraneStore, ["toggleConsoleCrane"]),
-
-    onWordClicked(word) {
-      if (this.isMarkingMode) return;
-
-      this.clickedWord = word;
-      this.showWordDetail = true;
-    },
-
-    getWordList() {
-      let list: string[] = [];
-      let lines = this.textList as unknown as Array<string>;
-
-      for (let i = 0; i < lines.length; i++) {
-        const line = lines[i];
-        list = [...list, ...line.split(" ")];
-      }
-
-      return list;
-    },
-
-    translateWholeCaption() {
-      let words = this.getWordList();
-      let translatingList = ["" /*lines.join("\n")*/, ...words];
-
-      TranslateService.instance
-        .translateByGoogle(translatingList)
-        .then(({ list, lang }) => {
-          this.sourceLanguage = lang;
-
-          this.translatedLines = [];
-          this.translatedWords = {};
-
-          translatingList.forEach((result, i) => {
-            // Translated line
-            if (i == 0) {
-              this.translatedLines.push(list[i]);
-            }
-            // Translated Word
-            else {
-              this.translatedWords[result] = list[i];
-            }
-          });
-        });
-    },
-
-    translateWord(word) {
-      let translatingList = [word];
-
-      TranslateService.instance
-        .translateByGoogle(translatingList)
-        .then(({ list, lang }) => {
-          this.sourceLanguage = lang;
-
-          translatingList.forEach((result, i) => {
-            this.translatedWords[result] = list[i];
-          });
-        });
-    },
 
     cleanText(text: string) {
       return cleanText(text);

@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="activeTranslate"
     class="relative flex-row-reverse flex items-center justify-center space-x-2"
   >
     <div class="flex">
@@ -14,19 +15,23 @@
     </div>
 
     <div class="p-2 rounded-md" :style="props.textStyle">
-      <span>{{ cleanText(props.value) }}</span>
+      <span>{{ cleanText(activeTranslate) }}</span>
     </div>
   </div>
+
+  <SvgLoader v-else width="40px" asset="WORD_LOADING" />
 </template>
 
 <script lang="ts" setup>
 import { cleanText } from "../../../common/helper/text";
-import { defineProps, ref } from "vue";
+import { computed, defineProps, ref } from "vue";
+import { useMarkerStore } from "../../../stores/marker";
 
 import Button from "primevue/button";
 
+const markerStore = useMarkerStore();
+
 const props = defineProps<{
-  value: string;
   textStyle: any;
 }>();
 
@@ -46,6 +51,10 @@ const items = ref([
     },
   },
 ]);
+
+const activeTranslate = computed(() => {
+  return markerStore.translatedWords[markerStore.selectedPhrase];
+});
 </script>
 
 <style lang="scss">
