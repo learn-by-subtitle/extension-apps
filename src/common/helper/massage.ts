@@ -1,4 +1,4 @@
-import { BaseMessage, LoginStatusResponse } from "../../common/types/messaging";
+import { BaseMessage, LoginStatusResponse } from "../types/messaging";
 
 export async function sendMessage<T extends BaseMessage | LoginStatusResponse>(
   message: T | any

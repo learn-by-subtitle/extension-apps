@@ -31,6 +31,18 @@
           :phrase="cleanText(props.word!)"
           :translation="cleanText(activeTranslate!)"
         />
+
+        <Button
+          v-else
+          severity="secondary"
+          class="my-2 text-center"
+          @click="handleLoginRequest"
+        >
+          <div class="w-full flex justify-center items-center">
+            <i class="mr-2 text-xl i-solar-login-3-bold" />
+            <span>Login To Save This Phrase</span>
+          </div>
+        </Button>
       </section>
 
       <template v-if="store">
@@ -97,9 +109,12 @@ import SaveWordSection from "../components/SaveWordSection.vue";
 
 import Fieldset from "primevue/fieldset";
 import Carousel from "primevue/carousel";
+import Button from "primevue/button";
 
 import { useRoute } from "vue-router";
 import { useMarkerStore } from "../../stores/marker";
+import { sendMessage } from "../../common/helper/massage";
+import { OpenLoginWindowMessage } from "../../common/types/messaging";
 
 const route = useRoute();
 
@@ -183,6 +198,10 @@ function fetchWordDetail() {
     .translateByDictionaryapi(cleaned)
     .then((res) => (store.value = res))
     .finally(() => (pending.value = false));
+}
+
+function handleLoginRequest() {
+  sendMessage(new OpenLoginWindowMessage());
 }
 
 onMounted(() => {

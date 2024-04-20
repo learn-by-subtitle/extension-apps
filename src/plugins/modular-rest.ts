@@ -1,6 +1,6 @@
 import { GlobalOptions, authentication } from "@modular-rest/client";
 
-import { sendMessage, sendMessageToTabs } from "../popup/helper/massage";
+import { sendMessage, sendMessageToTabs } from "../common/helper/massage";
 
 import {
   GetLoginStatusMessage,

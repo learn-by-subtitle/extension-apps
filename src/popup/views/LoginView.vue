@@ -76,7 +76,7 @@ import {
   LoginStatusResponse,
   StoreUserTokenMessage,
 } from "../../common/types/messaging";
-import { sendMessage, sendMessageToTabs } from "../helper/massage";
+import { sendMessage, sendMessageToTabs } from "../../common/helper/massage";
 import { get } from "../helper/http";
 import { joinToBaseUrl } from "../../common/helper/url";
 import { loginWithLastSession, isLogin } from "../../plugins/modular-rest";
