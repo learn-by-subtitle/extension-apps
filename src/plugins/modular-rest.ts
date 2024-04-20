@@ -1,6 +1,6 @@
 import { GlobalOptions, authentication } from "@modular-rest/client";
 
-import { sendMessage, sendMessageToTabs } from "../module/popup/helper/massage";
+import { sendMessage, sendMessageToTabs } from "../popup/helper/massage";
 
 import {
   GetLoginStatusMessage,
@@ -9,7 +9,7 @@ import {
 import { ref } from "vue";
 
 GlobalOptions.set({
-  host: process.env.SUBTURTLE_WEBSITE || "",
+  host: process.env.SUBTURTLE_API_URL || "",
 });
 
 export {

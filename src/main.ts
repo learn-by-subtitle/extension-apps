@@ -4,10 +4,10 @@ import "./animation.scss";
 import "./tailwind.css";
 
 import { App, createApp } from "vue";
-import components from "./module/subtitle/components/components";
+import components from "./subtitle/components/components";
 
-import { netflix } from "./module/subtitle/web_netflix/initializer";
-import { youtube } from "./module/subtitle/web_youtube/initializer";
+import { netflix } from "./subtitle/web_netflix/initializer";
+import { youtube } from "./subtitle/web_youtube/initializer";
 import { AppInitializer } from "./common/types/general.type";
 import { cleanText } from "./common/helper/text";
 import { analytic } from "./plugins/mixpanel";
@@ -17,7 +17,7 @@ import { addPlugins } from "./plugins/install";
 import {
   registerGlobalEvents,
   unregisterGlobalEvents,
-} from "./module/subtitle/helpers/global-events";
+} from "./subtitle/helpers/global-events";
 import { loginWithLastSession } from "./plugins/modular-rest";
 
 let vueApp!: App;
