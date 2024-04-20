@@ -10,27 +10,16 @@
         ref="modalContentContainer"
       >
         <!-- Close button -->
-        <Button
-          rounded
-          severity="secondary"
-          @click="close"
-          size="small"
-          class="absolute right-[32px] left-[calc(100%-16px)] top-[-16px]"
-        >
-          <template #icon>
-            <span class="i-mdi-close text-white scale-[2]" />
-          </template>
-        </Button>
+        <div class="absolute right-[32px] left-[calc(100%-16px)] top-[-16px]">
+          <Button rounded severity="secondary" @click="close" size="small">
+            <template #icon>
+              <span class="i-mdi-close text-white scale-[2]" />
+            </template>
+          </Button>
+        </div>
 
         <!-- Content -->
-        <div
-          class="overflow-hidden"
-          v-if="contentSize.width"
-          :style="{
-            width: `${contentSize.width}px`,
-            height: `${contentSize.height}px`,
-          }"
-        >
+        <div class="overflow-hidden w-full h-full" v-if="contentSize.width">
           <slot :width="contentSize.width" :height="contentSize.height" />
         </div>
       </section>

@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-col items-center justify-start" :key="key">
     <div
-      class="select-text text-gray-900 flex flex-col px-20 justify-start items-center"
+      class="select-text text-gray-900 flex flex-col px-20 justify-end items-center"
       :style="{
-        height: `${frameSize?.height}px`,
+        height: '100%',
         width: `${Math.min(780, frameSize?.width!)}px`,
       }"
     >
