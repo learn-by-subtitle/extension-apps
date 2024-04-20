@@ -16,7 +16,6 @@
 import { mapActions, mapState } from "pinia";
 import { useMarkerStore } from "../../../stores/marker";
 import { defineComponent } from "vue";
-import { log } from "../../../common/helper/log";
 
 export default defineComponent({
   props: {
@@ -38,7 +37,11 @@ export default defineComponent({
 
     onMouseenter() {
       // Mark single word
-      if (!this.isMarkingMode) {
+      if (
+        !this.isMarkingMode &&
+        // refuse to mark if the word is already marked
+        !this.checkedSelected(this.id)
+      ) {
         this.clear();
         this.markWord(
           this.id,

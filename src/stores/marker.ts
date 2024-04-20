@@ -97,7 +97,7 @@ export const stopMarking = (e: KeyboardEvent) => {
   if (e.key !== "Control" && e.key !== "Meta") return;
 
   useMarkerStore().toggleMarkingMode(false);
-  document.body.style.cursor = "default";
 
+  document.body.style.cursor = "default";
   document.removeEventListener("keyup", stopMarking);
 };
