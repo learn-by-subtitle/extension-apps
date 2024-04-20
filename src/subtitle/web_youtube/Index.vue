@@ -9,10 +9,13 @@
           :textList="text"
           :textStyle="style"
         />
+
         <marker-border />
       </div>
     </teleport>
   </div>
+
+  <ConsoleCrane />
 </template>
 
 <script lang="ts">
@@ -24,7 +27,7 @@ import {
   SUBTITLE_LINE_CLASS,
 } from "./static";
 
-import { Interval, waitUntil } from "../../common/helper/promise";
+import { Interval } from "../../common/helper/promise";
 import SubtitleComponent from "./components/Subtitle.vue";
 import { getComputedStyles, mapStyleString } from "../../common/helper/object";
 import { log } from "../../common/helper/log";

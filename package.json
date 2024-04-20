@@ -40,6 +40,6 @@
     "text-cleaner": "^1.2.1",
     "tiny-emitter": "^2.1.0",
     "vue": "3.4.21",
-    "vue-router": "4"
+    "vue-router": "4.3.2"
   }
 }

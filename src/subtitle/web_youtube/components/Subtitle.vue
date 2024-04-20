@@ -33,7 +33,7 @@
                 :key="i2"
                 :id="getWordId(i, i2)"
                 :modelValue="word + ' '"
-                @click="onWordClicked(word)"
+                @click="toggleConsoleCrane"
               />
             </p>
           </div>
@@ -41,7 +41,7 @@
       </div>
     </transition>
 
-    <teleport to="body">
+    <!-- <teleport to="body">
       <modal v-model="showWordDetail" v-slot="{ height, width }">
         <word-detail
           :height="height"
@@ -50,7 +50,7 @@
           :translatedWord="translatedWords[clickedWord]"
         />
       </modal>
-    </teleport>
+    </teleport> -->
   </div>
 </template>
 
@@ -64,6 +64,7 @@ import { Dictionary } from "../../../common/types/general.type";
 import { analytic } from "../../../plugins/mixpanel";
 import { log } from "../../../common/helper/log";
 import TranslatedPhrase from "../../components/specific/TranslatedPhrase.vue";
+import { useConsoleCraneStore } from "../../../console-crane/stores/console-crane";
 
 interface DataModel {
   translatedWords: Dictionary;
@@ -168,9 +169,9 @@ export default defineComponent({
 
   methods: {
     ...mapActions(useMarkerStore, ["clear", "getWordId"]),
+    ...mapActions(useConsoleCraneStore, ["toggleConsoleCrane"]),
 
     onWordClicked(word) {
-      log("onWordClicked: isMarkingMode:", this.isMarkingMode, word);
       if (this.isMarkingMode) return;
 
       this.clickedWord = word;

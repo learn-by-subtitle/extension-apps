@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { CLOSE_ICON, TRANSLATE_ICON } from "../../../common/icons/icons";
+import { CLOSE_ICON, TRANSLATE_ICON } from "../../icons/icons";
 
 export default defineComponent({
   props: ["modelValue"],

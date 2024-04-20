@@ -76,20 +76,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
-import { cleanText, firstUpper } from "../../../common/helper/text";
-import { TranslateService } from "../../../common/services/translate.service";
+import { ref, computed, watch, onMounted } from "vue";
+import { cleanText, firstUpper } from "../../common/helper/text";
+import { TranslateService } from "../../common/services/translate.service";
 import {
   DefinitionStore,
   Meaning,
-} from "../../../common/types/dictionaryapi.type";
-import { analytic } from "../../../plugins/mixpanel";
-import Definition from "./Definition.vue";
+} from "../../common/types/dictionaryapi.type";
+import { log } from "../../common/helper/log";
+import { analytic } from "../../plugins/mixpanel";
+import { isLogin } from "../../plugins/modular-rest";
+import Definition from "../components/Definition.vue";
+import SaveWordSection from "../components/SaveWordSection.vue";
 
 import Fieldset from "primevue/fieldset";
-import SaveWordSection from "./SaveWordSection.vue";
 import Carousel from "primevue/carousel";
-import { isLogin } from "../../../plugins/modular-rest";
 
 const props = defineProps({
   word: String,
@@ -169,6 +170,10 @@ function fetchWordDetail() {
     .then((res) => (store.value = res))
     .finally(() => (pending.value = false));
 }
+
+onMounted(() => {
+  log("WordDetail mounted");
+});
 </script>
 
 <style lang="scss" scoped>

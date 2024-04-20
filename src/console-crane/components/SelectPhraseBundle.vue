@@ -42,9 +42,9 @@ import Button from "primevue/button";
 
 import { computed, onMounted, ref, watch } from "vue";
 
-import { COLLECTIONS, DATABASE } from "../../../common/static/global";
-import { PhraseBundleType } from "../../../common/types/phrase.type";
-import { wait } from "../../../common/helper/promise";
+import { COLLECTIONS, DATABASE } from "../../common/static/global";
+import { PhraseBundleType } from "../../common/types/phrase.type";
+import { wait } from "../../common/helper/promise";
 
 const props = defineProps<{
   selectedBundles: string[];

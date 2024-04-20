@@ -32,11 +32,11 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from "@vue/runtime-core";
-import { getDir, rtls } from "../../../common/helper/text";
-import { CLOSE_ICON, TRANSLATE_ICON } from "../../../common/icons/icons";
-import { TranslateService } from "../../../common/services/translate.service";
-import { Definition } from "../../../common/types/dictionaryapi.type";
-import { analytic } from "../../../plugins/mixpanel";
+import { getDir, rtls } from "../../common/helper/text";
+import { CLOSE_ICON, TRANSLATE_ICON } from "../../common/icons/icons";
+import { TranslateService } from "../../common/services/translate.service";
+import { Definition } from "../../common/types/dictionaryapi.type";
+import { analytic } from "../../plugins/mixpanel";
 import Divider from "primevue/divider";
 
 export default defineComponent({

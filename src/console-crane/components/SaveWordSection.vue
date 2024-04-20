@@ -27,10 +27,10 @@ import Inputgroup from "primevue/inputgroup";
 import SelectPhraseBundle from "./SelectPhraseBundle.vue";
 import { onMounted, ref, watch } from "vue";
 import { authentication, dataProvider } from "@modular-rest/client";
-import { COLLECTIONS, DATABASE } from "../../../common/static/global";
-import { TranslateService } from "../../../common/services/translate.service";
-import { PhraseType } from "../../../common/types/phrase.type";
-import { useDefaultBundleStore } from "../../../stores/default-bundle";
+import { COLLECTIONS, DATABASE } from "../../common/static/global";
+import { TranslateService } from "../../common/services/translate.service";
+import { PhraseType } from "../../common/types/phrase.type";
+import { useDefaultBundleStore } from "../../stores/default-bundle";
 
 const props = defineProps<{
   phrase: string;

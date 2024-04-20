@@ -41,7 +41,7 @@
 <script setup lang="ts">
 import Button from "primevue/button";
 import { ref, watch, onMounted, nextTick } from "vue";
-import { wait } from "../../../common/helper/promise";
+import { wait } from "../../common/helper/promise";
 
 const emit = defineEmits(["update:modelValue"]);
 const props = defineProps({
