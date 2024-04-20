@@ -20,16 +20,16 @@
         <Fieldset class="w-full" :legend="targetLanguageTitle">
           <div class="text-center">
             <span class="text-7xl white-shadow">{{
-              cleanText(props.translatedWord!)
+              cleanText(activeTranslate!)
             }}</span>
           </div>
         </Fieldset>
 
         <SaveWordSection
-          v-if="isLogin && props.translatedWord"
+          v-if="isLogin && activeTranslate"
           class="my-2"
           :phrase="cleanText(props.word!)"
-          :translation="cleanText(props.translatedWord!)"
+          :translation="cleanText(activeTranslate!)"
         />
       </section>
 
@@ -99,6 +99,7 @@ import Fieldset from "primevue/fieldset";
 import Carousel from "primevue/carousel";
 
 import { useRoute } from "vue-router";
+import { useMarkerStore } from "../../stores/marker";
 
 const route = useRoute();
 
@@ -107,20 +108,14 @@ const props = computed(() => {
 
   return data as unknown as {
     word: string;
-    translatedWord: string;
-    language: string;
   };
 });
 
 const frameSize = inject<{ width: number; height: number }>("frameSize");
 
-// const props = defineProps({
-//   word: String,
-//   translatedWord: String,
-//   language: String,
-// });
-
 const store = ref<DefinitionStore | null>(null);
+const markerStore = useMarkerStore();
+
 const pending = ref(false);
 const activeTab = ref("");
 const meaning = ref<Meaning>();
@@ -140,6 +135,10 @@ const phonetic = computed(() => {
   let phonetic = "";
   if (store.value) phonetic = store.value.phonetic;
   return phonetic;
+});
+
+const activeTranslate = computed(() => {
+  return markerStore.translatedWords[markerStore.selectedPhrase];
 });
 
 watch(
