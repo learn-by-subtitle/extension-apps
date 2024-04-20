@@ -136,11 +136,13 @@ async function loginWithGoogle() {
 
 function authorizeFromGoogleOAuthThroughAuthFlowAPI() {
   const redirectURL = chrome.identity.getRedirectURL();
-  // const redirectURL = joinToBaseUrl("/auth/google/code-login");
 
   console.log("redirectURL", redirectURL);
 
   // Client ID of web application (from Google Developer Console), not google extension.
+  // Remove the ".apps.googleusercontent.com" part from the client ID
+  // Ref: https://developers.google.com/identity/sign-in/web/server-side-flow#step_3_initialize_the_googleauth_object
+  //
   const clientID = process.env.GOOGLE_OAUTH_CLIENT_ID;
 
   const scopes = ["openid", "email", "profile"];
