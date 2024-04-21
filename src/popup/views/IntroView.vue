@@ -2,9 +2,10 @@
   <section class="h-screen pb-10 flex flex-col justify-between">
     <Carousel :value="slides">
       <template #item="{ data }">
-        <div class="flex justify-center items-center h-80">
+        <img :src="data.image" class="w-full h-auto" />
+        <!-- <div class="flex justify-center items-center h-80">
           {{ data.title }}
-        </div>
+        </div> -->
       </template>
     </Carousel>
 
@@ -36,6 +37,7 @@ import Carousel from "primevue/carousel";
 import Button from "primevue/button";
 import { OpenLoginWindowMessage } from "../../common/types/messaging";
 import { isLogin } from "../../plugins/modular-rest";
+import { getAsset } from "../helper/assets";
 
 function openLogin() {
   chrome.runtime.sendMessage(new OpenLoginWindowMessage());
@@ -45,19 +47,19 @@ const slides = [
   {
     title: "Welcome to Modular!",
     description: "Modular is a new way to manage your online accounts.",
-    image: "https://avatars.githubusercontent.com/u/81904220?s=200&v=4",
+    image: getAsset("/slides/slide02.png"),
   },
   {
     title: "Secure",
     description:
       "Modular uses the latest security standards to keep your data safe.",
-    image: "https://avatars.githubusercontent.com/u/81904220?s=200&v=4",
+    image: getAsset("/slides/slide01.png"),
   },
-  {
-    title: "Open Source",
-    description:
-      "Modular is open source, so you can be sure that your data is safe.",
-    image: "https://avatars.githubusercontent.com/u/81904220?s=200&v=4",
-  },
+  // {
+  //   title: "Open Source",
+  //   description:
+  //     "Modular is open source, so you can be sure that your data is safe.",
+  //   image: getAsset("/slides/slide01.png"),
+  // },
 ];
 </script>
