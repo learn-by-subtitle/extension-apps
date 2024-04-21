@@ -5,6 +5,7 @@
     :textStyle="style"
   />
   <marker-border />
+  <ConsoleCrane />
 </template>
 
 <script lang="ts">

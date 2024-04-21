@@ -37,7 +37,6 @@ import { defineComponent, PropType, StyleValue } from "vue";
 import { mapState, mapActions } from "pinia";
 import { useMarkerStore } from "../../../stores/marker";
 import { getDir, rtls, cleanText } from "../../../common/helper/text";
-import TranslatedPhrase from "../../components/specific/TranslatedPhrase.vue";
 
 interface DataModel {
   translatedLines: String[];
@@ -61,11 +60,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapState(useMarkerStore, [
-      "selectedPhrase",
-      "isMarkingMode",
-      "sourceLanguage",
-    ]),
+    ...mapState(useMarkerStore, ["selectedPhrase", "sourceLanguage"]),
 
     translateStyle(): StyleValue {
       let bottom = 20;

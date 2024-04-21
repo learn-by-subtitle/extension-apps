@@ -8,11 +8,7 @@
       :style="translateStyle"
       :dir="dir"
     >
-      <span v-if="activeTranslate.length" :style="textStyle">{{
-        cleanText(activeTranslate)
-      }}</span>
-
-      <SvgLoader v-else width="60px" asset="WORD_LOADING" />
+      <TranslatedPhrase :textStyle="textStyle" />
     </div>
 
     <!-- SUBTITLE
@@ -47,23 +43,12 @@
                 :key="i2"
                 :id="getWordId(i, i2)"
                 :modelValue="word + ' '"
-                @click="
-                  showWordDetail = true;
-                  activeWord = word;
-                "
               />
             </p>
           </div>
         </template>
       </div>
     </transition>
-
-    <modal v-model="showWordDetail">
-      <word-detail
-        :word="activeWord"
-        :translatedWord="translatedWords[activeWord]"
-      />
-    </modal>
   </div>
 </template>
 
@@ -74,14 +59,10 @@ import { useMarkerStore } from "../../../stores/marker";
 import { clamp } from "../../../common/helper/math";
 import { getDir, rtls, cleanText } from "../../../common/helper/text";
 import { TranslateService } from "../../../common/services/translate.service";
-import { Dictionary } from "../../../common/types/general.type";
-import { analytic } from "../../../plugins/mixpanel";
 
 interface DataModel {
-  translatedWords: Dictionary;
   translatedLines: String[];
-  activeWord: string;
-  sourceLanguage: string;
+
   showTranslatedSentence: boolean;
   showWordDetail: boolean;
 }
@@ -95,17 +76,14 @@ export default defineComponent({
 
   data(): DataModel {
     return {
-      translatedWords: {},
       translatedLines: [],
-      activeWord: "",
-      sourceLanguage: "en",
       showTranslatedSentence: false,
       showWordDetail: false,
     };
   },
 
   computed: {
-    ...mapState(useMarkerStore, ["selectedPhrase"]),
+    ...mapState(useMarkerStore, ["selectedPhrase", "sourceLanguage"]),
 
     lines() {
       let lines = this.translatedLines.length
@@ -144,10 +122,6 @@ export default defineComponent({
       };
     },
 
-    activeTranslate() {
-      return this.translatedWords[this.selectedPhrase] || "";
-    },
-
     iconContainerStyle() {
       return {
         height: this.positionRect?.height + "px",
@@ -183,13 +157,6 @@ export default defineComponent({
       if (!value || this.translatedLines.length) return;
       this.translateWholeCaption();
     },
-
-    selectedPhrase(value) {
-      if (value.length) {
-        this.translateWord(value);
-        analytic.track("Word hovered", { word: value });
-      }
-    },
   },
 
   methods: {
@@ -217,24 +184,8 @@ export default defineComponent({
       TranslateService.instance
         .translateByGoogle(translatingList)
         .then(({ list, lang }) => {
-          this.sourceLanguage = lang;
-
           translatingList.forEach((result, i) => {
             this.translatedLines.push(list[i]);
-          });
-        });
-    },
-
-    translateWord(word) {
-      let translatingList = [word];
-
-      TranslateService.instance
-        .translateByGoogle(translatingList)
-        .then(({ list, lang }) => {
-          this.sourceLanguage = lang;
-
-          translatingList.forEach((result, i) => {
-            this.translatedWords[result] = list[i];
           });
         });
     },
