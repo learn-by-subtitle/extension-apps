@@ -1,17 +1,14 @@
 <template>
   <div class="flex flex-col items-center justify-start" :key="key">
     <div
-      class="select-text text-gray-900 flex flex-col px-20 justify-end items-center"
+      class="select-text text-gray-900 flex flex-col px-20 justify-start items-center"
       :style="{
         height: '100%',
         width: `${Math.min(780, frameSize?.width!)}px`,
       }"
     >
       <!-- WORD -->
-      <section
-        class="h-1/2 px-[30px] mb-24 flex flex-col justify-end w-full"
-        @click.stop=""
-      >
+      <section class="px-[30px] mb-24 flex flex-col w-full" @click.stop="">
         <div class="flex items-center space-x-5 p-5">
           <h1 class="text-9xl white-shadow">{{ title }}</h1>
           <h3 class="text-5xl white-shadow mt-8">{{ phonetic }}</h3>
