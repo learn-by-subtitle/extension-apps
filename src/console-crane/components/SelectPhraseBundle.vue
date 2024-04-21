@@ -84,8 +84,8 @@ function createNewBundle() {
       },
     })
     .then((newBundle) => {
-      options.value.push(newBundle);
       searchedBundleName.value = "";
+      fetchOptions();
     })
     .finally(() => {
       isCreating.value = false;
@@ -113,6 +113,9 @@ function fetchOptions() {
       database: DATABASE.USER_CONTENT,
       collection: COLLECTIONS.PHRASE_BUNDLE,
       query: query,
+      options: {
+        sort: "-_id",
+      },
     })
     .then((data) => {
       options.value = data;
