@@ -33,7 +33,7 @@
   </MultiSelect>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { dataProvider, authentication } from "@modular-rest/client";
 import MultiSelect from "primevue/multiselect";
 import InputText from "primevue/inputtext";
@@ -44,7 +44,6 @@ import { computed, onMounted, ref, watch } from "vue";
 
 import { COLLECTIONS, DATABASE } from "../../common/static/global";
 import { PhraseBundleType } from "../../common/types/phrase.type";
-import { wait } from "../../common/helper/promise";
 
 const props = defineProps<{
   selectedBundles: string[];
@@ -119,13 +118,7 @@ function fetchOptions() {
       options.value = data;
     })
     .finally(async () => {
-      if (searchedBundleName.value.toString() !== title) {
-        await wait(0.5);
-        isFetching.value = false;
-        fetchOptions();
-      } else {
-        isFetching.value = false;
-      }
+      isFetching.value = false;
     });
 }
 
@@ -137,5 +130,11 @@ onMounted(() => {
 <style scoped>
 :deep(.p-multiselect-label) {
   font-size: 14px !important;
+}
+</style>
+
+<style>
+.p-multiselect-panel {
+  z-index: 9999 !important;
 }
 </style>
