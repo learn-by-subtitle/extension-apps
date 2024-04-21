@@ -1,9 +1,5 @@
 <template>
-  <Inputgroup>
-    <!-- <InputGroupAddon>
-      <i class="i-ep-collection" />
-    </InputGroupAddon> -->
-
+  <Inputgroup class="my-2">
     <SelectPhraseBundle v-model:selected-bundles="selectedBundles" />
 
     <Button
@@ -31,6 +27,7 @@ import { COLLECTIONS, DATABASE } from "../../common/static/global";
 import { TranslateService } from "../../common/services/translate.service";
 import { PhraseType } from "../../common/types/phrase.type";
 import { useDefaultBundleStore } from "../../stores/default-bundle";
+import { log } from "../../common/helper/log";
 
 const props = defineProps<{
   phrase: string;

@@ -3,7 +3,7 @@
     <div
       class="fixed bg-[#000000cc] z-[9999] w-screen h-screen"
       @click.self="close"
-      v-show="modelValue"
+      v-if="modelValue"
     >
       <section
         class="absolute rounded-md mx-60 my-32 top-0 left-0 right-0 bottom-0 gradient-background"

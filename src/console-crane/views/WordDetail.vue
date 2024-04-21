@@ -27,7 +27,6 @@
 
         <SaveWordSection
           v-if="isLogin && activeTranslate"
-          class="my-2"
           :phrase="cleanText(props.word!)"
           :translation="cleanText(activeTranslate!)"
         />
@@ -94,14 +93,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, inject } from "vue";
+import { ref, computed, watch, inject } from "vue";
 import { cleanText, firstUpper } from "../../common/helper/text";
 import { TranslateService } from "../../common/services/translate.service";
 import {
   DefinitionStore,
   Meaning,
 } from "../../common/types/dictionaryapi.type";
-import { log } from "../../common/helper/log";
+
 import { analytic } from "../../plugins/mixpanel";
 import { isLogin } from "../../plugins/modular-rest";
 import Definition from "../components/Definition.vue";
@@ -203,10 +202,6 @@ function fetchWordDetail() {
 function handleLoginRequest() {
   sendMessage(new OpenLoginWindowMessage());
 }
-
-onMounted(() => {
-  log("WordDetail mounted");
-});
 </script>
 
 <style lang="scss" scoped>
