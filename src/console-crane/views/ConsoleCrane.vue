@@ -8,14 +8,24 @@
  * - Settings
  */
 
-import { ref, computed, watch } from "vue";
 import { useConsoleCraneStore } from "../stores/console-crane";
-import { RouterView } from "vue-router";
+import { RouterView, useRouter } from "vue-router";
 import Modal from "../components/Modal.vue";
 import { SUBTURTLE_DASHBOARD_URL } from "../../common/static/global";
 import Button from "primevue/button";
+import { watch } from "vue";
 
 const store = useConsoleCraneStore();
+const router = useRouter();
+
+watch(
+  () => store.isActive,
+  (isActive) => {
+    if (isActive == false) {
+      router.push({ name: "empty" });
+    }
+  }
+);
 
 function goToDashboard() {
   window.open(SUBTURTLE_DASHBOARD_URL, "_blank");

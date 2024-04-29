@@ -24,7 +24,7 @@
 
         <SaveWordSection
           v-if="isLogin && activeTranslate"
-          :phrase="cleanText(props.word!)"
+          :phrase="cleanText(getProps().word!)"
           :translation="cleanText(activeTranslate!)"
         />
 
@@ -57,7 +57,7 @@
             :value="meaning?.definitions"
             :page="0"
             v-if="meaning?.definitions.length"
-            :key="props.word"
+            :key="getProps().word"
           >
             <template #item="{ data, index }">
               <Fieldset class="h-full" :legend="'Definition ' + (index + 1)">
@@ -81,7 +81,8 @@
       <template v-else>
         <div class="my-32 text-3xl text-center text-yellow-200">
           <span
-            >There is not any definition for {{ cleanText(props.word!) }}</span
+            >There is not any definition for
+            {{ cleanText(getProps().word!) }}</span
           >
         </div>
       </template>
@@ -114,13 +115,13 @@ import { OpenLoginWindowMessage } from "../../common/types/messaging";
 
 const route = useRoute();
 
-const props = computed(() => {
+function getProps() {
   const data = JSON.parse(window.atob(route.params.data as string));
 
   return data as unknown as {
     word: string;
   };
-});
+}
 
 const frameSize = inject<{ width: number; height: number }>("frameSize");
 
@@ -137,7 +138,7 @@ const targetLanguageTitle = computed(
 );
 
 const title = computed(() => {
-  let word = props.value.word;
+  let word = getProps().word;
   if (store.value) word = store.value.word;
   return firstUpper(word || "");
 });
@@ -153,7 +154,7 @@ const activeTranslate = computed(() => {
 });
 
 watch(
-  () => props.value.word,
+  () => getProps().word,
   (value) => {
     key.value = new Date().getTime();
     store.value = null;
@@ -186,7 +187,7 @@ watch(
 function fetchWordDetail() {
   pending.value = true;
 
-  const cleaned = cleanText(props.value.word as string);
+  const cleaned = cleanText(getProps().word as string);
 
   store.value = null;
 
